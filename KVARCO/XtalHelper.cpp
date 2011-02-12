@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "XtalHelper.h"
 #include <cassert>
 
@@ -24,31 +24,31 @@ void Init()
 }
 
 /*
-  ƒfƒtƒHƒ‹ƒg‚ÌƒGƒ‰[ƒnƒ“ƒhƒ‰
+  ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã‚¨ãƒ©ãƒ¼ãƒãƒ³ãƒ‰ãƒ©
 */
 bool defaultHandler(const xtal::StringPtr& errorMessage){
 	OutputDebugString(errorMessage->c_str());
-	int ret = MessageBox(NULL, errorMessage->c_str(), "XtalƒGƒ‰[", MB_ABORTRETRYIGNORE);
+	int ret = MessageBox(NULL, errorMessage->c_str(), "Xtalã‚¨ãƒ©ãƒ¼", MB_ABORTRETRYIGNORE);
 	switch(ret){
-		case IDABORT:	// I—¹
-			assert("’†’f‚µ‚Ü‚·B");
+		case IDABORT:	// çµ‚äº†
+			assert("ä¸­æ–­ã—ã¾ã™ã€‚");
 			return false;
 			break;
-		case IDRETRY:	// Äs
+		case IDRETRY:	// å†è©¦è¡Œ
 			CScriptManager::GetInst()->ReLoad();
 			return true;
-		case IDIGNORE:	// –³‹
+		case IDIGNORE:	// ç„¡è¦–
 			return false;
 		default:
-			assert("‚¢‚é‚Í‚¸‚ª‚È‚¢B");
+			assert("ã„ã‚‹ã¯ãšãŒãªã„ã€‚");
 			break;
 	}
 	return false;
 }
 
 /*
-  Xtal‚Ì—áŠO‚ğˆ—‚·‚é
-  —áŠO‚ª“f‚©‚ê‚Ä‚¢‚½‚çƒGƒ‰[ƒnƒ“ƒhƒ‰‚ğŒÄ‚Ño‚·
+  Xtalã®ä¾‹å¤–ã‚’å‡¦ç†ã™ã‚‹
+  ä¾‹å¤–ãŒåã‹ã‚Œã¦ã„ãŸã‚‰ã‚¨ãƒ©ãƒ¼ãƒãƒ³ãƒ‰ãƒ©ã‚’å‘¼ã³å‡ºã™
 */
 void processExcept(const xtal::StringPtr& errorHeader, bool* pIsFailed, bool* pIsRetry)
 {

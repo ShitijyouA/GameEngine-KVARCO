@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "KVARCO.h"
 
 const int MAX_BUTTON_NUM =40;

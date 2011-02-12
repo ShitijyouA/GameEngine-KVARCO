@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Bezier.h"
 
 CBezier::CBezier(xtal::ArrayPtr points,float speed,DWORD max_)

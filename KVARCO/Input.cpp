@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Input.h"
 
 void CInput::Update()
@@ -11,7 +11,7 @@ void CInput::Update()
 	int get_input=DX_INPUT_KEY_PAD1;
 	for(int i=0; i<JoypadNum || i<MAX_PLYER_NUM-1 ;i++)
 	{	
-		//•ûŒüƒL[‚Ì“ü—ÍŠl“¾
+		//æ–¹å‘ã‚­ãƒ¼ã®å…¥åŠ›ç²å¾—
 		int JoypadInput=GetJoypadInputState(get_input);
 
 		if(buf[KEY_INPUT_LEFT]	|| (JoypadInput & PAD_INPUT_LEFT))	States[i].Left	++;
@@ -30,7 +30,7 @@ void CInput::Update()
 		#define DX_KEY_INCLI_OR_ZERO(key_code_,index_)\
 			INCLIMENT_OR_ZERO(JoypadInput & (key_code_),index_)
 
-		//ƒRƒ}ƒ“ƒhƒL[‚Ì“ü—ÍŠl“¾
+		//ã‚³ãƒžãƒ³ãƒ‰ã‚­ãƒ¼ã®å…¥åŠ›ç²å¾—
 		DX_KEY_INCLI_OR_ZERO(PAD_INPUT_A	,0);
 		DX_KEY_INCLI_OR_ZERO(PAD_INPUT_B	,1);
 		DX_KEY_INCLI_OR_ZERO(PAD_INPUT_C	,2);
@@ -54,14 +54,14 @@ void CInput::Update()
 #undef INCLIMENT_OR_ZERO
 #undef DX_KEY_INCLI_OR_ZERO
 
-		//ƒAƒiƒƒOƒŒƒo[‚Ì”’lŠl“¾
+		//ã‚¢ãƒŠãƒ­ã‚°ãƒ¬ãƒãƒ¼ã®æ•°å€¤ç²å¾—
 
 		int bufX=States[i].AnalogX;
 		int bufY=States[i].AnalogY;
 
 		GetJoypadAnalogInput(&bufX,&bufY,i);
 		
-		//‚ä‚Æ‚è
+		//ã‚†ã¨ã‚Š
 		if(abs(bufX)<BORDER)	bufX=0;
 		if(abs(bufY)<BORDER)	bufY=0;
 

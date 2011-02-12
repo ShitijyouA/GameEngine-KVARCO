@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 #include "OpenAL_Ogg_Default.h"
 #include <cassert>
 
 //def switch
-#define NOT_CHECK	//CheckŠÖ”‚Å‚ÌƒGƒ‰[ƒ`ƒFƒbƒN‚ğoff‚É
-					//(ƒGƒ‰[ƒ`ƒFƒbƒN‚Å—áŠO‚ª”­¶‚·‚é‰Â”\«‚ª‚ ‚é)
+#define NOT_CHECK	//Checké–¢æ•°ã§ã®ã‚¨ãƒ©ãƒ¼ãƒã‚§ãƒƒã‚¯ã‚’offã«
+					//(ã‚¨ãƒ©ãƒ¼ãƒã‚§ãƒƒã‚¯ã§ä¾‹å¤–ãŒç™ºç”Ÿã™ã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹)
 
 const DWORD BUFFER_NUM	=2;
 const DWORD BUFFER_SIZE	=4096*4;
@@ -39,8 +39,8 @@ public:
 	COpenAL_Ogg_Stream(string path,DWORD loop_point,bool repeat);
 	~COpenAL_Ogg_Stream();
 
-	//Ä¶
-	bool StreamingPlay()			//Ä¶I—¹‚Åtrue‚ğ•Ô‚·
+	//å†ç”Ÿ
+	bool StreamingPlay()			//å†ç”Ÿçµ‚äº†ã§trueã‚’è¿”ã™
 		{
 			if(Update())		return true;
 			if(!PlayingNow())	PlayBack();

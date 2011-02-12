@@ -1,38 +1,38 @@
-#pragma once
+ï»¿#pragma once
 
-//Set%_Name()ŠÖ”‚ğì‚éB\‘¢‘Ì‚Í•s‰ÂBÀ‘Ô‚È‚µ
+//Set%_Name()é–¢æ•°ã‚’ä½œã‚‹ã€‚æ§‹é€ ä½“ã¯ä¸å¯ã€‚å®Ÿæ…‹ãªã—
 #ifndef SETTER_
 #define SETTER_(_Type,_Name) void Set##_Name(const _Type x);
 #endif
-//Get%_Name()ŠÖ”‚ğì‚éB\‘¢‘Ì‚Í•s‰ÂBÀ‘Ô‚È‚µ
+//Get%_Name()é–¢æ•°ã‚’ä½œã‚‹ã€‚æ§‹é€ ä½“ã¯ä¸å¯ã€‚å®Ÿæ…‹ãªã—
 #ifndef GETTER_
 #define GETTER_(_Type,_Name) _Type Get##_Name() const;
 #endif
 
-//SETTER‚ÆGETTER‚Ì‚Ü‚Æ‚ßBÀ‘Ô‚È‚µ
+//SETTERã¨GETTERã®ã¾ã¨ã‚ã€‚å®Ÿæ…‹ãªã—
 #ifndef SET_GET_
 #define SET_GET_(_Type,_Name)\
 	SETTER_(_Type,_Name);\
 	GETTER_(_Type,_Name);
 #endif
 
-//Set%_Name()ŠÖ”‚ğì‚éB\‘¢‘Ì‚Í•s‰Â
+//Set%_Name()é–¢æ•°ã‚’ä½œã‚‹ã€‚æ§‹é€ ä½“ã¯ä¸å¯
 #ifndef SETTER
 #define SETTER(_Type,_Name) void Set##_Name(const _Type x) { _Name=x; }
 #endif
-//Get%_Name()ŠÖ”‚ğì‚éB\‘¢‘Ì‚Í•s‰Â
+//Get%_Name()é–¢æ•°ã‚’ä½œã‚‹ã€‚æ§‹é€ ä½“ã¯ä¸å¯
 #ifndef GETTER
 #define GETTER(_Type,_Name) _Type Get##_Name() const { return _Name; }
 #endif
 
-//SETTER‚ÆGETTER‚Ì‚Ü‚Æ‚ß
+//SETTERã¨GETTERã®ã¾ã¨ã‚
 #ifndef SET_GET
 #define SET_GET(_Type,_Name)\
 	SETTER(_Type,_Name)\
 	GETTER(_Type,_Name)
 #endif
 
-//XtalƒoƒCƒ“ƒh—pƒ}ƒNƒ
+//Xtalãƒã‚¤ãƒ³ãƒ‰ç”¨ãƒã‚¯ãƒ­
 #ifndef BIND_XTAL_FUN_DEFNAME
 #define BIND_XTAL_FUN_DEFNAME(x) xtal::lib()->def(Xid(x),xtal::fun(&x) )
 #endif
@@ -46,7 +46,7 @@
 #endif
 
 //singleton pattern
-//Xtal‚ÉƒoƒCƒ“ƒh‚µ‚È‚¢class
+//Xtalã«ãƒã‚¤ãƒ³ãƒ‰ã—ãªã„class
 #define SINGLETON_PATTERN(_class,_class_ptr)\
 private:\
 	_class() { ;}\
@@ -54,11 +54,11 @@ public:\
 	static _class_ptr GetInst();\
 	void Release()	{ }
 
-//Xtal‚ÉƒoƒCƒ“ƒh‚·‚éclass
-//Release()‚ÍŠe©‚Å—pˆÓ‚·‚é
-//friend‚Íg—p‚·‚éXtal‚É‚æ‚Á‚Äˆá‚¤‚Ì‚Å’ˆÓ
-//ƒRƒ“ƒpƒCƒ‹ƒGƒ‰[‚ª‹N‚«‚½ê‡‚Í‚±‚ÌfriendéŒ¾‚ğ‘S‚Äíœ‚µA
-//ƒRƒ“ƒpƒCƒ‹ƒGƒ‰[‚ğQl‚É‘‚«‚È‚¨‚µ‚Ä‚­‚¾‚³‚¢
+//Xtalã«ãƒã‚¤ãƒ³ãƒ‰ã™ã‚‹class
+//Release()ã¯å„è‡ªã§ç”¨æ„ã™ã‚‹
+//friendã¯ä½¿ç”¨ã™ã‚‹Xtalã«ã‚ˆã£ã¦é•ã†ã®ã§æ³¨æ„
+//ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã‚¨ãƒ©ãƒ¼ãŒèµ·ããŸå ´åˆã¯ã“ã®friendå®£è¨€ã‚’å…¨ã¦å‰Šé™¤ã—ã€
+//ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã‚¨ãƒ©ãƒ¼ã‚’å‚è€ƒã«æ›¸ããªãŠã—ã¦ãã ã•ã„
 #define SINGLETON_PATTERNX(_class,_class_ptr)\
 private:\
 	friend xtal::SmartPtr<_class> xtal::xnew();\
@@ -69,4 +69,4 @@ private:\
 public:\
 	static _class_ptr GetInst();
 
-//tRECT,tPOINT‚ğƒCƒ“ƒXƒ^ƒ“ƒX‰»‚µ‚½‚à‚Ì‚ÌSmartPtr
+//tRECT,tPOINTã‚’ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–ã—ãŸã‚‚ã®ã®SmartPtr

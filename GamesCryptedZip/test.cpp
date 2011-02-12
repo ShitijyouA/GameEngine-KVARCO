@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CryptedZip.h"
 using namespace KVARCO::CryptedZip;
 

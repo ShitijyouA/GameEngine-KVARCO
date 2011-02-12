@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-//‹éŒ`‚ğ•Û‘¶‚·‚é‚½‚ß‚Ì\‘¢‘Ì
+//çŸ©å½¢ã‚’ä¿å­˜ã™ã‚‹ãŸã‚ã®æ§‹é€ ä½“
 template<typename NUM=long>
 class tRECT
 {
@@ -20,7 +20,7 @@ typedef tRECT<float>	dRECT;
 typedef xtal::SmartPtr<lRECT>	lRECTPtr;
 typedef xtal::SmartPtr<dRECT>	dRECTPtr;
 
-//À•W‚ğ•Û‘¶‚·‚é‚½‚ß‚Ì\‘¢‘Ì
+//åº§æ¨™ã‚’ä¿å­˜ã™ã‚‹ãŸã‚ã®æ§‹é€ ä½“
 template<typename NUM=long>
 class tPOINT
 {
@@ -36,7 +36,7 @@ typedef tPOINT<float>	dPOINT;
 typedef xtal::SmartPtr<lPOINT>	lPOINTPtr;
 typedef xtal::SmartPtr<dPOINT>	dPOINTPtr;
 
-//OŠpŠÖ”‚Ì’l‚ğ•Û‘¶‚·‚é‚½‚ß‚Ì\‘¢‘Ì
+//ä¸‰è§’é–¢æ•°ã®å€¤ã‚’ä¿å­˜ã™ã‚‹ãŸã‚ã®æ§‹é€ ä½“
 class TriFunc
 {
 public:

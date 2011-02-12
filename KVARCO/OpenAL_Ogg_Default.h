@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <OpenAL/alut.h>
 #include <OpenAL/al.h>

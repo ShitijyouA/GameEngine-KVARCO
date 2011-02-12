@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #define _CRT_SECURE_NO_WARNINGS
 #include <xtal_lib/xtal_cstdiostream.h>
 #include <xtal_lib/xtal_winthread.h>
@@ -13,7 +13,7 @@ namespace XtalHelper
 	extern void processExcept(const xtal::StringPtr& errorHeader, bool* pIsFailed, bool* pIsRetry);
 
 /*
-  Any::call, Any::send‚Ìƒ‰ƒbƒp(Qlƒ\[ƒX : by @sukai1989)
+  Any::call, Any::sendã®ãƒ©ãƒƒãƒ‘(å‚è€ƒã‚½ãƒ¼ã‚¹ : by @sukai1989)
 */
 
 	extern xtal::AnyPtr send(const xtal::AnyPtr& p,const xtal::IDPtr& primary_key);

@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "LoadingThread.h"
 //#include <process.h>
 
@@ -45,7 +45,7 @@ bool CLoadingThread::IsEnded()
 	return false;
 }
 
-//XtalˆË‘¶
+//Xtalä¾å­˜
 void CLoadingThread::AnyPtrToVector_CloadItem(xtal::AnyPtr load_list)
 {
 	xtal::ArrayPtr xlist=load_list.to_a();
@@ -53,7 +53,7 @@ void CLoadingThread::AnyPtrToVector_CloadItem(xtal::AnyPtr load_list)
 
 	for(DWORD i=0; i<xlist->size(); i++)
 	{
-		//€‚ñ‚Å‚à¶ƒ|‚ğÁ‚³‚È‚¢SmartPtr‚É“ü‚ê‚é
+		//æ­»ã‚“ã§ã‚‚ç”Ÿãƒã‚’æ¶ˆã•ãªã„SmartPtrã«å…¥ã‚Œã‚‹
 		xtal::SmartPtr<LoadItem::CBaseLoadItem> tmp=
 			xtal::unchecked_ptr_cast<LoadItem::CBaseLoadItem>(xlist->at(i));
 		LoadFileList.push_back(tmp);

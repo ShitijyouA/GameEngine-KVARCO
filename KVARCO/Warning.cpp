@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Warning.h"
 
 int Warning::Retry_LoadGraph(string FileName,string ErrorMes , int RetryTime , int NotUse3DFlag)
@@ -10,7 +10,7 @@ int Warning::Retry_LoadGraph(string FileName,string ErrorMes , int RetryTime , i
 		{
 			string tmp=ErrorMes; tmp.append(FileName);
 			int result=
-				MessageBox(NULL,tmp.c_str(),"ƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½",MB_RETRYCANCEL | MB_ICONWARNING);
+				MessageBox(NULL,tmp.c_str(),"ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ",MB_RETRYCANCEL | MB_ICONWARNING);
 			if(result==IDCANCEL)	exit(0);
 			else					GrHandle=i=0;
 		}
@@ -32,7 +32,7 @@ int Warning::Retry_LoadDivGraph(string FileName, int AllNum, int XNum, int YNum,
 		{
 			string tmp=ErrorMes; tmp.append(FileName);
 			int result=
-				MessageBox(GetMainWindowHandle(),tmp.c_str(),"ƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½",MB_RETRYCANCEL | MB_ICONWARNING);
+				MessageBox(GetMainWindowHandle(),tmp.c_str(),"ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ",MB_RETRYCANCEL | MB_ICONWARNING);
 			if(result==IDCANCEL)	exit(0);
 			else					{ go=false; i=0; result=0; }
 		}

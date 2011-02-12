@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Layer2.h"
 
 CLayer::CLayer()
@@ -24,7 +24,7 @@ void CLayer::DrawThis()
 {
 	KVARCO::SetDrawArea(Area);
 
-	//Z’l‚ª¬‚³‚¢‚à‚Ì‚©‚ç•`‰æ
+	//Zå€¤ãŒå°ã•ã„ã‚‚ã®ã‹ã‚‰æç”»
 	ActorList_tag_Z& list=Actors.get<tag_Z>();
 	BOOST_FOREACH(const xtal::AnyPtr& i,list)
 	{
@@ -66,7 +66,7 @@ dPOINT	CLayer::TransPointGlobal(float x,float y)
 
 void CLayer::AddActor(ActorPtr actor)
 {
-	//BaseActor‚ğŒp³‚µ‚Ä‚È‚©‚Á‚½‚ç’e‚­
+	//BaseActorã‚’ç¶™æ‰¿ã—ã¦ãªã‹ã£ãŸã‚‰å¼¾ã
 	if(!xtal::can_cast<CBaseActor>(actor))	return;
 	Actors.push_back(actor);
 }
@@ -123,7 +123,7 @@ void CLayerManager::DrawAll()
 {
 	LayerMap_tag_Z& layer_z_list=Layers.get<tag_Z>();
 
-#if 1		//begin‚©‚çend‚Ö
+#if 1		//beginã‹ã‚‰endã¸
 	LayerMap_tag_Z::iterator i;
 	for(i=layer_z_list.begin(); i!=layer_z_list.end(); i++)
 #else
@@ -140,7 +140,7 @@ void CLayerManager::DrawLayer(int layer_handle)
 	GetPtr(layer_handle)->DrawThis();
 }
 
-//‚±‚±‚©‚ç‚ÍCLayer‚Ìƒƒ“ƒoŠÖ”‚ÌƒAƒ_ƒvƒ^[
+//ã“ã“ã‹ã‚‰ã¯CLayerã®ãƒ¡ãƒ³ãƒé–¢æ•°ã®ã‚¢ãƒ€ãƒ—ã‚¿ãƒ¼
 
 template<typename T1,typename void(CLayer::*Func)(const T1)>
 inline void SetByLayerHandle(int layer_handle,const T1& val)
@@ -173,7 +173,7 @@ inline T1 ByLayerHandle1(int layer_handle,P2& val0)
 	return T1();
 }
 
-//‚»‚ÌƒCƒ“ƒXƒ^ƒ“ƒX
+//ãã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 void	CLayerManager::SetArea(int layer_handle,dRECT area)
 {	SetByLayerHandle<dRECT,&CLayer::SetArea>(layer_handle,area);	}
 void	CLayerManager::SetZ(int layer_handle,int z)
@@ -209,7 +209,7 @@ void	CLayerManager::AddActor(int layer_handle,ActorPtr actor)
 void	CLayerManager::EraseActor(int layer_handle,ActorPtr actor)
 {	 SetByLayerHandle<ActorPtr,&CLayer::EraseActor>(layer_handle,actor);	}
 
-//Layer‚Ì‘€ì
+//Layerã®æ“ä½œ
 int CLayerManager::NewLayer(xtal::StringPtr layer_name,int z,dRECT area)
 {
 	if(xtal::is_undefined(layer_name) || xtal::is_null(layer_name))	return 0;

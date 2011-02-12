@@ -1,15 +1,15 @@
-#pragma once
+ï»¿#pragma once
 #include "ScManager.h"
 #include "XtalHelper.h"
 #include "LoadingThread.h"
 
-//FPSŒv‘ª—p’è”
+//FPSè¨ˆæ¸¬ç”¨å®šæ•°
 #define FRAME_COUNT			30
 
-//—Dæ‡ˆÊ‚ğã‚°‚é‚Æ‚«‚Ì–ÚˆÀ
+//å„ªå…ˆé †ä½ã‚’ä¸Šã’ã‚‹ã¨ãã®ç›®å®‰
 #define UpToHigh			20
 
-//CGame‚Ìİ’è\‘¢‘Ì
+//CGameã®è¨­å®šæ§‹é€ ä½“
 class CGameBootSetting
 {
 public:
@@ -39,22 +39,22 @@ public:
 
 class CGame
 {
-	//ŒÅ’èƒtƒŒ[ƒ€ƒŒ[ƒg’²®—p
+	//å›ºå®šãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¬ãƒ¼ãƒˆèª¿æ•´ç”¨
 	LARGE_INTEGER LastHiCount;
 	DWORD LastTickCount;
 	float Elapsed;
 	void ResetTime();
 
-	//‰Â•ÏƒtƒŒ[ƒ€ƒŒ[ƒg’²ß—p
+	//å¯å¤‰ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¬ãƒ¼ãƒˆèª¿ç¯€ç”¨
 	DWORD FrameTimes[FRAME_COUNT];
 	float RealFPS;
 	void SetRealFPS();
 
-	bool ConfirmExit;	//I—¹Šm”F
+	bool ConfirmExit;	//çµ‚äº†ç¢ºèª
 
 	int IconID;
 
-	//‰æ–ÊƒTƒCƒYAƒŠƒtƒŒƒbƒVƒ…ƒŒ[ƒg
+	//ç”»é¢ã‚µã‚¤ã‚ºã€ãƒªãƒ•ãƒ¬ãƒƒã‚·ãƒ¥ãƒ¬ãƒ¼ãƒˆ
 	int WindowWidth, WindowHeight,
 		FullScreenWidth, FullScreenHeight,
 		RefreshRate;
@@ -65,31 +65,31 @@ class CGame
 
 public:
 
-	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	CGame(CGameBootSetting gs,xtal::AnyPtr FrameWork);
-	//‰Šú‰»
+	//åˆæœŸåŒ–
 	void Init();
 
-	//I—¹
+	//çµ‚äº†
 	void UnInit();
 
-	// ƒQ[ƒ€‚ÌÀs
+	// ã‚²ãƒ¼ãƒ ã®å®Ÿè¡Œ
 	void Main();
 	
-	// Šeíİ’è
+	// å„ç¨®è¨­å®š
 	float FPS;
 	bool DropFrame;
 	bool UpPriority;
 
-	// Šeíî•ñ‚Ìæ“¾
+	// å„ç¨®æƒ…å ±ã®å–å¾—
 	int		GetRefreshRate()	{ return RefreshRate;	}
 	bool	GetFullScreen()		{ return FullScreen;	}
 	float	GetRealFPS()		{ return RealFPS;		}
 	
-	void SetConfirmExit(bool ce)	{ ConfirmExit	=ce;	} // I—¹Šm”F
+	void SetConfirmExit(bool ce)	{ ConfirmExit	=ce;	} // çµ‚äº†ç¢ºèª
 	void SetFullScreen(bool fs)		{ FullScreen	=fs;	}
 	
-	//XV‚Æ•`‰æ
+	//æ›´æ–°ã¨æç”»
 	void Run();
 	void Draw();
 
@@ -103,10 +103,10 @@ public:
 
 namespace KVARCO
 {
-	//ƒCƒ[ƒW–¼‚ÆƒCƒ[ƒWƒnƒ“ƒhƒ‹‚ğ“o˜^‚·‚émap
+	//ã‚¤ãƒ¡ãƒ¼ã‚¸åã¨ã‚¤ãƒ¡ãƒ¼ã‚¸ãƒãƒ³ãƒ‰ãƒ«ã‚’ç™»éŒ²ã™ã‚‹map
 	extern unordered_map<string,GR_INFO>	ImageNameList;
 
-	//ƒ[ƒfƒBƒ“ƒOƒNƒ‰ƒX‚Ìƒ|ƒCƒ“ƒ^BÀs‚µ‚Ä‚È‚¢‚ÆNULL
+	//ãƒ­ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°ã‚¯ãƒ©ã‚¹ã®ãƒã‚¤ãƒ³ã‚¿ã€‚å®Ÿè¡Œã—ã¦ãªã„ã¨NULL
 	extern CLoadingThread*	LoadingThread;
 	
 	extern	void Boot(string IniFile);

@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "BaseActor.h"
 #include "XtalHelper.h"
 #include "LoadingThread.h"
@@ -11,45 +11,45 @@ shared_ptr<CGame>	Game;
 unordered_map<string,GR_INFO>	KVARCO::ImageNameList;
 CLoadingThread*					KVARCO::LoadingThread;
 
-//ƒXƒNƒŠƒvƒgƒ[ƒh‚È‚Ç‚Ì‚ÝB‰æ‘œƒ[ƒh‚È‚Ç‚Ís‚í‚È‚¢
+//ã‚¹ã‚¯ãƒªãƒ—ãƒˆãƒ­ãƒ¼ãƒ‰ãªã©ã®ã¿ã€‚ç”»åƒãƒ­ãƒ¼ãƒ‰ãªã©ã¯è¡Œã‚ãªã„
 namespace KVARCO
 {
 	void Boot(string IniFile)
 	{
 		OutputLog("*********************************************************");
 		OutputLog("    -KVARCO ver1.00- %s","2011-02-11");
-		OutputLog("“®ìƒƒO");
+		OutputLog("å‹•ä½œãƒ­ã‚°");
 		OutputLog("*********************************************************\n");
 
 		OutputLog("----------------[Boot]----------------\n");
 
-		//ƒƒ‚ƒŠƒŠ[ƒN‚ðŒŸo
+		//ãƒ¡ãƒ¢ãƒªãƒªãƒ¼ã‚¯ã‚’æ¤œå‡º
 		_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 
 		XtalHelper::Init();
-		OutputLog("Xtal‚ð‰Šú‰»");
+		OutputLog("Xtalã‚’åˆæœŸåŒ–");
 
 		CGameBootSetting params=InitFromIniFile(KVARCO::ExePath+IniFile);
 		params.FullScreen=!params.FullScreen;
-		OutputLog("‹N“®ƒpƒ‰ƒ[ƒ^‚ðÝ’è");
+		OutputLog("èµ·å‹•ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¨­å®š");
 
 		CGame::bind();
-		OutputLog("ŠeŽíƒoƒCƒ“ƒhŠ®—¹");
+		OutputLog("å„ç¨®ãƒã‚¤ãƒ³ãƒ‰å®Œäº†");
 
 		xtal::ArrayPtr list=CScriptManager::GetInst()->LoadOneFile(params.LoadFileList.c_str()).to_a();
 		CScriptManager::GetInst()->LoadFiles(list);
-		OutputLog("ƒXƒNƒŠƒvƒg‚ðƒ[ƒh");
+		OutputLog("ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’ãƒ­ãƒ¼ãƒ‰");
 
 		xtal::AnyPtr framework=xtal::lib()->member(Xid(GameFramework));
 		Game=shared_ptr<CGame>(new CGame(params,framework));
 		Game->Init();
-		OutputLog("\nKVARCO‰Šú‰»Š®—¹");
+		OutputLog("\nKVARCOåˆæœŸåŒ–å®Œäº†");
 		
-		//ƒQ[ƒ€ŠJŽn
+		//ã‚²ãƒ¼ãƒ é–‹å§‹
 		OutputLog("\n----------------[Game]----------------\n");
 	}
 
-	// ƒtƒ@ƒCƒ‹–¼‚©‚çƒpƒX‚ðŽæ‚èo‚µ‚Ä•Ô‚·
+	// ãƒ•ã‚¡ã‚¤ãƒ«åã‹ã‚‰ãƒ‘ã‚¹ã‚’å–ã‚Šå‡ºã—ã¦è¿”ã™
 	string GetFilePath(string s)
 	{
 		int pos=s.rfind("\\");
@@ -57,7 +57,7 @@ namespace KVARCO
 		return s.substr(0, pos+1);
 	}
 
-	// ŽÀsƒtƒ@ƒCƒ‹‚ÌƒpƒX‚ð•Ô‚·i––”ö‚É\‚ª•t‚­j
+	// å®Ÿè¡Œãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ã‚’è¿”ã™ï¼ˆæœ«å°¾ã«\ãŒä»˜ãï¼‰
 	string GetExePath()
 	{
 		char buf[MAX_PATH+1];
@@ -68,7 +68,7 @@ namespace KVARCO
 	string ExePath=GetExePath();
 }
 
-//–ˆƒtƒŒ[ƒ€‚ÌŒo‰ßŽžŠÔ‚ðFRAME_COUNT‰ñŒv‘ª‚µA‚»‚Ì•½‹Ï‚ðo‚·Bo—Í‚ÍFPS‚ÌŒ`
+//æ¯Žãƒ•ãƒ¬ãƒ¼ãƒ ã®çµŒéŽæ™‚é–“ã‚’FRAME_COUNTå›žè¨ˆæ¸¬ã—ã€ãã®å¹³å‡ã‚’å‡ºã™ã€‚å‡ºåŠ›ã¯FPSã®å½¢
 void CGame::SetRealFPS()
 {
 	for(int i=FRAME_COUNT-1; i>=1; i--)
@@ -114,51 +114,51 @@ CGame::CGame(CGameBootSetting gs,xtal::AnyPtr Framework)
 	SetWindowIconID(gs.UseIcon);
 	SetMainWindowText(gs.Title.c_str());
 
-	//‰æ–Ê‰ð‘œ“x
+	//ç”»é¢è§£åƒåº¦
 	WindowWidth=		gs.WndWidth;
 	WindowHeight=		gs.WndWidth;
 
-	//ƒtƒ‹ƒXƒNƒŠ[ƒ“‚Å‚Ì‰ð‘œ“x
+	//ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã§ã®è§£åƒåº¦
 	FullScreenWidth=	StdWndWidth;
 	FullScreenHeight=	StdWndHeight;
 
-	//ˆê•bŠÔ‚ÌXV‰ñ”
+	//ä¸€ç§’é–“ã®æ›´æ–°å›žæ•°
 	FPS=60;			RefreshRate=60;
 
-	//ŒÅ’èƒtƒŒ[ƒ€ƒŒ[ƒg—p
+	//å›ºå®šãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¬ãƒ¼ãƒˆç”¨
 	Elapsed=		0;
 	DropFrame=		false;
 	ZeroMemory(&LastHiCount,sizeof(LastHiCount));
 	LastTickCount=	0;
 
-	//ƒtƒŒ[ƒ€ƒŒ[ƒgŒv‘ª—p
+	//ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¬ãƒ¼ãƒˆè¨ˆæ¸¬ç”¨
 	ZeroMemory(&FrameTimes,sizeof(FrameTimes));
 	RealFPS=		60;
 
 	ConfirmExit=	false;
 	SetAlwaysRunFlag((int )gs.AlwaysRun);
 
-	//ŽÀs—Dæ‡ˆÊ‚ðã‚°‚é‚©‚Ç‚¤‚©
+	//å®Ÿè¡Œå„ªå…ˆé †ä½ã‚’ä¸Šã’ã‚‹ã‹ã©ã†ã‹
 	UpPriority=		gs.UpPG_Priority;
 	
-	//ƒtƒ‹ƒXƒNƒŠ[ƒ“
+	//ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³
 	FullScreen=gs.FullScreen;
 	ChangeWindowMode((int )gs.FullScreen);
 
-	//‰Šú‰»
+	//åˆæœŸåŒ–
 	if( DxLib_Init() == -1 )
 	{
-		MessageBox(NULL,"DirectX‚Ì‰Šú‰»‚ÉŽ¸”s‚µ‚Ü‚µ‚½","ƒGƒ‰[",0);
+		MessageBox(NULL,"DirectXã®åˆæœŸåŒ–ã«å¤±æ•—ã—ã¾ã—ãŸ","ã‚¨ãƒ©ãƒ¼",0);
 		exit(0);
 	}
 
-	//ƒEƒBƒ“ƒhƒEÝ’è
+	//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦è¨­å®š
 	SetWindowSizeExtendRate(gs.WndWidth/StdWndWidth);
 
 	Setting=gs;
 	DxLib::SetMultiThreadFlag(TRUE);
 
-	//o—ˆ‚ê‚Î‚±‚Ìƒ^ƒCƒ~ƒ“ƒO‚ÅShowWindow()
+	//å‡ºæ¥ã‚Œã°ã“ã®ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã§ShowWindow()
 }
 
 void CGame::Init()
@@ -244,31 +244,31 @@ void CGame::UnInit()
 {
 	KVARCO::OutputLog("\n----------------[Release]----------------\n");
 	GameFramework=xtal::null;
-	KVARCO::OutputLog("GameFramework‚ðŠJ•ú");
+	KVARCO::OutputLog("GameFrameworkã‚’é–‹æ”¾");
 
-	//ƒ[ƒfƒBƒ“ƒOƒXƒŒƒbƒhŽÀs’†‚ÉI—¹‚µ‚½ê‡‚Íkill
+	//ãƒ­ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°ã‚¹ãƒ¬ãƒƒãƒ‰å®Ÿè¡Œä¸­ã«çµ‚äº†ã—ãŸå ´åˆã¯kill
 	if(!KVARCO::IsLoadingEnd())
 	{
 		CLoadingThread::Release();
 		SAFE_DELETE(KVARCO::LoadingThread);
 	}
 
-	KVARCO::OutputLog("--ŠeŽíƒVƒ“ƒOƒ‹ƒgƒ“ƒNƒ‰ƒX‚ÌŠJ•ú");
-	CInput::GetInst()		->Release();	KVARCO::OutputLog("CInputƒNƒ‰ƒX‚ðŠJ•ú");
-	CActorManager::GetInst()->Release();	KVARCO::OutputLog("CActorManagerƒNƒ‰ƒX‚ðŠJ•ú");
-	CLayerManager::GetInst()->Release();	KVARCO::OutputLog("CLayerManagerƒNƒ‰ƒX‚ðŠJ•ú");
-	CSceneManager::GetInst()->Release();	KVARCO::OutputLog("CSceneManagerƒNƒ‰ƒX‚ðŠJ•ú");
-	CAudioManager::GetInst()->Release();	KVARCO::OutputLog("CAudioManagerƒNƒ‰ƒX‚ðŠJ•ú");
-	CColPolygon::Destroy();					KVARCO::OutputLog("CColPolygon::VoidPolygon‚ðŠJ•ú");
+	KVARCO::OutputLog("--å„ç¨®ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚¯ãƒ©ã‚¹ã®é–‹æ”¾");
+	CInput::GetInst()		->Release();	KVARCO::OutputLog("CInputã‚¯ãƒ©ã‚¹ã‚’é–‹æ”¾");
+	CActorManager::GetInst()->Release();	KVARCO::OutputLog("CActorManagerã‚¯ãƒ©ã‚¹ã‚’é–‹æ”¾");
+	CLayerManager::GetInst()->Release();	KVARCO::OutputLog("CLayerManagerã‚¯ãƒ©ã‚¹ã‚’é–‹æ”¾");
+	CSceneManager::GetInst()->Release();	KVARCO::OutputLog("CSceneManagerã‚¯ãƒ©ã‚¹ã‚’é–‹æ”¾");
+	CAudioManager::GetInst()->Release();	KVARCO::OutputLog("CAudioManagerã‚¯ãƒ©ã‚¹ã‚’é–‹æ”¾");
+	CColPolygon::Destroy();					KVARCO::OutputLog("CColPolygon::VoidPolygonã‚’é–‹æ”¾");
 	KVARCO::OutputLog("----------------");
 
-	xtal::uninitialize();	KVARCO::OutputLog("Xtal‚ðŠJ•ú");
-	DxLib::DxLib_End();		KVARCO::OutputLog("DirectX‚ðŠJ•ú");
+	xtal::uninitialize();	KVARCO::OutputLog("Xtalã‚’é–‹æ”¾");
+	DxLib::DxLib_End();		KVARCO::OutputLog("DirectXã‚’é–‹æ”¾");
 
-	OpenAL_Ogg::UnInit();	KVARCO::OutputLog("OpenAL‚ðŠJ•ú");
+	OpenAL_Ogg::UnInit();	KVARCO::OutputLog("OpenALã‚’é–‹æ”¾");
 
 	KVARCO::OutputLog("----------------");
-	KVARCO::OutputLog("KVARCO‚ðŠJ•ú");
+	KVARCO::OutputLog("KVARCOã‚’é–‹æ”¾");
 	KVARCO::OutputLog("\n----------------[End]----------------");
 	fclose(KVARCO::LogFile);
 }

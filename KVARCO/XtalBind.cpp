@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Game.h"
 
 #include "Utillity.h"
@@ -11,7 +11,7 @@
 #include "AudioManager.h"
 #include "Bezier.h"
 
-//’Êí‚ÌƒNƒ‰ƒXƒoƒCƒ“ƒh
+//é€šå¸¸ã®ã‚¯ãƒ©ã‚¹ãƒã‚¤ãƒ³ãƒ‰
 
 XTAL_PREBIND(CBaseActor)
 {
@@ -61,7 +61,7 @@ XTAL_BIND(CBezier)
 	CBezier::bind(it);
 }
 
-//ƒ}ƒl[ƒWƒƒŒn(Singleton)
+//ãƒãƒãƒ¼ã‚¸ãƒ£ç³»(Singleton)
 XTAL_PREBIND(CActorManager)
 {
 	it->def_ctor0<CActorManager>();
@@ -112,7 +112,7 @@ XTAL_BIND(CAudioManager)
 	CAudioManager::bind(it);
 }
 
-//Šeí\‘¢‘Ì‚ÌƒoƒCƒ“ƒh
+//å„ç¨®æ§‹é€ ä½“ã®ãƒã‚¤ãƒ³ãƒ‰
 XTAL_PREBIND(CGameBootSetting)
 {
 	it->def_ctor0<CGameBootSetting>();
@@ -238,16 +238,16 @@ void CGame::bind()
 	xtal::ClassPtr Actors=xtal::xnew<xtal::Class>();
 	Actors->set_singleton();
 	Actors->def(Xid(BaseActor),xtal::cpp_class<CBaseActor>());
-	xtal::lib()->def(Xid(Actor),Actors);	//‘S•”lib‚É’è‹`
+	xtal::lib()->def(Xid(Actor),Actors);	//å…¨éƒ¨libã«å®šç¾©
 
 	//singleton KeyCode
-	//GE_KeyCode‚ÌƒoƒCƒ“ƒh
+	//GE_KeyCodeã®ãƒã‚¤ãƒ³ãƒ‰
 	xtal::ClassPtr KeyCode=xtal::xnew<xtal::Class>();
 	KeyCode->set_singleton();
 	KVARCO::GE_KeyCode_bind(KeyCode);
 	xtal::lib()->def(Xid(KeyCode),KeyCode);
 
-	//Singleton‚ÌƒoƒCƒ“ƒh
+	//Singletonã®ãƒã‚¤ãƒ³ãƒ‰
 #define XTAL_BIND_SINGLETON(_class,_name)\
 	XTAL_BIND_CLASS_DEFNAME(_class);\
 	xtal::lib()->def(Xid(_name),\

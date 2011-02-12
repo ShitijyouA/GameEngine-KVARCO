@@ -1,9 +1,9 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "KVARCO.h"
 using namespace KVARCO;
 
 ///////////////////////////////////////////
-/////////ƒOƒ‰ƒtƒBƒbƒNƒnƒ“ƒhƒ‹w’èŒ^//////////
+/////////ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒãƒ³ãƒ‰ãƒ«æŒ‡å®šå‹//////////
 ///////////////////////////////////////////
 void KVARCO::DrawGraph_H(int GrHandle,long x,long y,bool Trans,bool call_alpha)
 {
@@ -76,7 +76,7 @@ void KVARCO::DrawRotaZoom_H(int GrHandle,float ZoomRateX,float ZoomRateY,float A
 	float cos_=cos(Angle);
 
 	dPOINT res[4];
-	//‰Á–@’è—
+	//åŠ æ³•å®šç†
 	for(int i=0; i<4; i++)
 	{
 		res[i].x=	_sin_*	tmp[i].y+	cos_*	tmp[i].x+	cx;
@@ -102,7 +102,7 @@ void KVARCO::DrawRotaZoomAlpha_H(int GrHandle,float ZoomRateX,float ZoomRateY,fl
 
 
 ///////////////////////////////////////////
-//////////ƒOƒ‰ƒtƒBƒbƒNƒl[ƒ€w’èŒ^///////////
+//////////ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒãƒ¼ãƒ æŒ‡å®šå‹///////////
 ///////////////////////////////////////////
 #define USE_GR_HANDLE(grhandle,name) int grhandle=GetGrHandle(name);if(grhandle!=-1)
 

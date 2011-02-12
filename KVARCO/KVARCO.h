@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-//•W€ƒEƒBƒ“ƒhƒEƒTƒCƒY
+//æ¨™æº–ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚º
 const DWORD StdWndWidth		=640;
 const DWORD StdWndHeight	=480;
 
@@ -8,7 +8,7 @@ const DWORD StdWndHeight	=480;
 template<typename T>
 inline void SAFE_DELETE(T*& x) { delete x; x=NULL; }
 
-//”Šw’è”
+//æ•°å­¦å®šæ•°
 #ifndef M_PI
 const float M_PI		=3.141592653589793;
 const float M_PI2		=6.283185307179586;
@@ -36,45 +36,45 @@ struct GR_INFO
 
 namespace KVARCO
 {
-	extern void Boot(string LoadFileList);		//ƒQ[ƒ€‚Ì‹N“®
-	extern string ExePath;							//‚±‚ÌÀsƒtƒ@ƒCƒ‹‚ª‚ ‚éƒtƒHƒ‹ƒ_‚Ìâ‘ÎƒpƒX
+	extern void Boot(string LoadFileList);		//ã‚²ãƒ¼ãƒ ã®èµ·å‹•
+	extern string ExePath;							//ã“ã®å®Ÿè¡Œãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚‹ãƒ•ã‚©ãƒ«ãƒ€ã®çµ¶å¯¾ãƒ‘ã‚¹
 	extern string GetFilePath(string s);
 	extern string GetExePath();
 
-	//Handle’l
+	//Handleå€¤
 	extern DWORD MakeHandle();
 
-	//“ü—ÍŠÖŒW
+	//å…¥åŠ›é–¢ä¿‚
 	extern DWORD GetKeyState(DWORD Key,int PlayerNo_=0);
 
-	//•`‰æ”ÍˆÍŠÖŒW
+	//æç”»ç¯„å›²é–¢ä¿‚
 	extern void SetDrawArea(lRECT Area);
 	extern void SetDrawArea(dRECT Area);
 	extern void SetDrawArea_default();
 
-	//‰æ‘œŠÖŒWŠÖ”
-	//GrName‚à‚µ‚­‚ÍNewName‚ª"NULL"(•¶š—ñ)‚¾‚ÆAƒOƒ[ƒoƒ‹ƒe[ƒuƒ‹‚É“o˜^‚³‚ê‚È‚¢
-	extern int	LoadGraph(xtal::String GrName,xtal::String RelaPath);	//ƒ[ƒh
+	//ç”»åƒé–¢ä¿‚é–¢æ•°
+	//GrNameã‚‚ã—ãã¯NewNameãŒ"NULL"(æ–‡å­—åˆ—)ã ã¨ã€ã‚°ãƒ­ãƒ¼ãƒãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã«ç™»éŒ²ã•ã‚Œãªã„
+	extern int	LoadGraph(xtal::String GrName,xtal::String RelaPath);	//ãƒ­ãƒ¼ãƒ‰
 
-	//ƒOƒ‰ƒtƒBƒbƒNƒl[ƒ€‚©‚ç‚Ì•ÏŠ·
-	extern int		GetGrHandle(xtal::String GrName);	//ƒOƒ‰ƒtƒBƒbƒNƒl[ƒ€‚©‚çƒOƒ‰ƒtƒBƒbƒNƒnƒ“ƒhƒ‹‚Ö‚Ì•ÏŠ·
+	//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒãƒ¼ãƒ ã‹ã‚‰ã®å¤‰æ›
+	extern int		GetGrHandle(xtal::String GrName);	//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒãƒ¼ãƒ ã‹ã‚‰ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒãƒ³ãƒ‰ãƒ«ã¸ã®å¤‰æ›
 	extern lRECTPtr	GetGrSize(xtal::String GrName);
 	extern GR_INFO	GetGrInfo(xtal::String GrName);
-	extern GR_INFO*	GetGrInfo_p(xtal::String GrName);	//ƒOƒ‰ƒtƒBƒbƒNƒe[ƒuƒ‹‚É‚ ‚éƒCƒ“ƒXƒ^ƒ“ƒX‚Ìƒ|ƒCƒ“ƒ^
+	extern GR_INFO*	GetGrInfo_p(xtal::String GrName);	//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒ†ãƒ¼ãƒ–ãƒ«ã«ã‚ã‚‹ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ãƒã‚¤ãƒ³ã‚¿
 
-		//ƒOƒ‰ƒtƒBƒbƒNƒl[ƒ€w’èŒ^
-	extern int	LoadCutGraph_H(xtal::String NewName,int GrHandle,long x,long y,long w,long h);		//ƒ[ƒhÏ‚İ‚Ì‰æ‘œ‚©‚çˆê•”‚ğØ‚èo‚µAV‚µ‚¢‰æ‘œ‚Æ‚µ‚Ä—˜—po—ˆ‚é‚æ‚¤‚É‚·‚éBØ‚èo‚µŒ³‚ªíœ‚³‚ê‚é‚Æ—˜—p‚Å‚«‚È‚­‚È‚é
-	extern void	DeleteGraph_H(int GrHandle);	//‰æ‘œíœ
+		//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒãƒ¼ãƒ æŒ‡å®šå‹
+	extern int	LoadCutGraph_H(xtal::String NewName,int GrHandle,long x,long y,long w,long h);		//ãƒ­ãƒ¼ãƒ‰æ¸ˆã¿ã®ç”»åƒã‹ã‚‰ä¸€éƒ¨ã‚’åˆ‡ã‚Šå‡ºã—ã€æ–°ã—ã„ç”»åƒã¨ã—ã¦åˆ©ç”¨å‡ºæ¥ã‚‹ã‚ˆã†ã«ã™ã‚‹ã€‚åˆ‡ã‚Šå‡ºã—å…ƒãŒå‰Šé™¤ã•ã‚Œã‚‹ã¨åˆ©ç”¨ã§ããªããªã‚‹
+	extern void	DeleteGraph_H(int GrHandle);	//ç”»åƒå‰Šé™¤
 
-		//ƒOƒ‰ƒtƒBƒbƒNƒnƒ“ƒhƒ‹w’èŒ^
-	extern int	LoadCutGraph_N(xtal::String NewName,xtal::String GrName,long x,long y,long w,long h);		//ƒ[ƒhÏ‚İ‚Ì‰æ‘œ‚©‚çˆê•”‚ğØ‚èo‚µAV‚µ‚¢‰æ‘œ‚Æ‚µ‚Ä—˜—po—ˆ‚é‚æ‚¤‚É‚·‚éBØ‚èo‚µŒ³‚ªíœ‚³‚ê‚é‚Æ—˜—p‚Å‚«‚È‚­‚È‚é
-	extern void	DeleteGraph_N(xtal::String GrName);	//‰æ‘œíœ
+		//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒãƒ³ãƒ‰ãƒ«æŒ‡å®šå‹
+	extern int	LoadCutGraph_N(xtal::String NewName,xtal::String GrName,long x,long y,long w,long h);		//ãƒ­ãƒ¼ãƒ‰æ¸ˆã¿ã®ç”»åƒã‹ã‚‰ä¸€éƒ¨ã‚’åˆ‡ã‚Šå‡ºã—ã€æ–°ã—ã„ç”»åƒã¨ã—ã¦åˆ©ç”¨å‡ºæ¥ã‚‹ã‚ˆã†ã«ã™ã‚‹ã€‚åˆ‡ã‚Šå‡ºã—å…ƒãŒå‰Šé™¤ã•ã‚Œã‚‹ã¨åˆ©ç”¨ã§ããªããªã‚‹
+	extern void	DeleteGraph_N(xtal::String GrName);	//ç”»åƒå‰Šé™¤
 
-	//‰æ‘œƒuƒŒƒ“ƒhİ’è(Œy—Ê‰»)
+	//ç”»åƒãƒ–ãƒ¬ãƒ³ãƒ‰è¨­å®š(è»½é‡åŒ–)
 	extern inline void SetDrawBlendModeLight(BYTE mode,BYTE param);
 
-	//•`‰æŠÖ”
-		//ƒOƒ‰ƒtƒBƒbƒNƒnƒ“ƒhƒ‹w’èŒ^
+	//æç”»é–¢æ•°
+		//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒãƒ³ãƒ‰ãƒ«æŒ‡å®šå‹
 	extern void DrawGraph_H(int GrHandle,long x,long y,bool Trans=true,bool call_alpha=false);
 	extern void DrawRotaGraph_H(int GrHandle,float Angle,long cx,long cy,bool Trans=true,bool call_alpha=false);
 	extern void DrawRotaGraph2_H(int GrHandle,float Angle,long x,long y,long cx,long cy,bool Trans=true,bool call_alpha=false);
@@ -89,7 +89,7 @@ namespace KVARCO
 	extern void DrawRotaZoomAlpha_H(int GrHandle,float ZoomRateX,float ZoomRateY,float Angle,long cx,long cy,int Alpha,bool Trans=true);
 	//extern void DrawRotaZoomAlpha2_H(int GrHandle,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans=true);
 
-		//ƒOƒ‰ƒtƒBƒbƒNƒl[ƒ€w’èŒ^
+		//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒãƒ¼ãƒ æŒ‡å®šå‹
 	extern void DrawGraph_N(xtal::String GrName,long x,long y,bool Trans=true);
 	extern void DrawRotaGraph_N(xtal::String GrName,float Angle,long cx,long cy,bool Trans=true);
 	extern void DrawRotaGraph2_N(xtal::String GrName,float Angle,long x,long y,long cx,long cy,bool Trans=true);
@@ -104,23 +104,23 @@ namespace KVARCO
 	extern void DrawRotaZoomAlpha_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long cx,long cy,int Alpha,bool Trans=true);
 	//extern void DrawRotaZoomAlpha2_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans=true);
 
-	//•¶š—ñ•`‰æ
+	//æ–‡å­—åˆ—æç”»
 	extern DWORD GetColorHandle(int r,int g,int b);
 	extern void DrawString( long x, long y, xtal::String str, int Color, int EdgeColor = 0 );
 
-	//}Œ`•`‰æ
+	//å›³å½¢æç”»
 	extern void DrawLine(long x1,long y1,long x2,long y2, int color,bool thickness=false);
 	extern void DrawdRECT(dRECT rect, bool fill,int color);
 
-	//ƒ[ƒfƒBƒ“ƒO
+	//ãƒ­ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°
 	extern void StartGraphLoading(xtal::AnyPtr LoadPathList);
 	extern bool IsLoadingEnd(void);
 
-	//•Ö—˜ŠÖ”
-	extern xtal::StringPtr SplitOption(xtal::String Src,xtal::String Opt);	//[]“à‚Ìw’èƒIƒvƒVƒ‡ƒ“‚ğæ‚èo‚·B"-OPTION ARG"‚ÌŒ`
-	extern xtal::StringPtr SplitWords(xtal::String Src);	//[]‚ÌŒã‚Ì•¶š—ñ‚ğæ‚èo‚·B‘OŒã‚Ì‹ó”’‚Ííœ‚³‚ê‚é
+	//ä¾¿åˆ©é–¢æ•°
+	extern xtal::StringPtr SplitOption(xtal::String Src,xtal::String Opt);	//[]å†…ã®æŒ‡å®šã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚’å–ã‚Šå‡ºã™ã€‚"-OPTION ARG"ã®å½¢
+	extern xtal::StringPtr SplitWords(xtal::String Src);	//[]ã®å¾Œã®æ–‡å­—åˆ—ã‚’å–ã‚Šå‡ºã™ã€‚å‰å¾Œã®ç©ºç™½ã¯å‰Šé™¤ã•ã‚Œã‚‹
 
-	//—”(mt19937g—p)
+	//ä¹±æ•°(mt19937ä½¿ç”¨)
 	extern CRealRandom RealRandom;
 	extern void RandSeed();
 	extern float Rand(float min_,float max_);
@@ -129,16 +129,16 @@ namespace KVARCO
 	//Info
 	extern float GetNowFPS();
 
-	//ƒoƒCƒ“ƒh
+	//ãƒã‚¤ãƒ³ãƒ‰
 	extern void bind();
 	extern void GE_KeyCode_bind(xtal::ClassPtr it);
 
-	//ƒfƒoƒbƒO
+	//ãƒ‡ãƒãƒƒã‚°
 	extern FILE* LogFile;
 	extern void OutputLog(const char* format_str,...);
 	extern void DebugOut(xtal::StringPtr str);
 
-	//I—¹
+	//çµ‚äº†
 	extern void Exit();
 };
 

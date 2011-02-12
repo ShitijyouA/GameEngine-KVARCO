@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "KVARCO.h"
 #include "BaseScene.h"
 #include "XtalHelper.h"
@@ -13,16 +13,16 @@ class CSceneManager
 	DWORD RunningScenePos;
 	bool ToDoCleanPrevScene;
 
-	void CleanPrevScene_();	//CleanPrevScene()‚Ì–{‘Ì
+	void CleanPrevScene_();	//CleanPrevScene()ã®æœ¬ä½“
 public:
 	GETTER(DWORD,RunningScenePos);
 
 	DWORD SetNextScene(xtal::AnyPtr scene);
-	void StartNextScene();					//‚Ğ‚Æ‚Â‚¾‚¯Ÿ‚ÌƒV[ƒ“‚Éi‚Ş
-	void StartScene(int rela_pos);			//‘Š‘Î“I
+	void StartNextScene();					//ã²ã¨ã¤ã ã‘æ¬¡ã®ã‚·ãƒ¼ãƒ³ã«é€²ã‚€
+	void StartScene(int rela_pos);			//ç›¸å¯¾çš„
 
-	xtal::AnyPtr GetSceneRlt(int by);		//‘Š‘Î“I
-	xtal::AnyPtr GetSceneAbs(DWORD pos);	//â‘Î“I
+	xtal::AnyPtr GetSceneRlt(int by);		//ç›¸å¯¾çš„
+	xtal::AnyPtr GetSceneAbs(DWORD pos);	//çµ¶å¯¾çš„
 
 	void Run();
 	void Draw();
@@ -31,7 +31,7 @@ public:
 
 	static void bind(const xtal::ClassPtr it); 
 	//singleton pattern
-	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ğ‘‚©‚È‚­‚Ä‚Í‚È‚ç‚È‚©‚Á‚½‚Ì‚Åƒ}ƒNƒ‚Íg‚í‚¸‚É
+	//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚’æ›¸ã‹ãªãã¦ã¯ãªã‚‰ãªã‹ã£ãŸã®ã§ãƒã‚¯ãƒ­ã¯ä½¿ã‚ãšã«
 private:
 	friend xtal::SmartPtr<CSceneManager> xtal::xnew();
 	friend class xtal::SmartPtr<CSceneManager>;

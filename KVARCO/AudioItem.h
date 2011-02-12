@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "PlayThread.h"
 #include "SimplePlay.h"
 #include "Utillity.h"

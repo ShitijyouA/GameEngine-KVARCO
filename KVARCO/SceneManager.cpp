@@ -1,4 +1,4 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "SceneManager.h"
 
 CSceneManager::CSceneManager()
@@ -40,7 +40,7 @@ xtal::AnyPtr CSceneManager::GetSceneAbs(DWORD pos)
 
 void CSceneManager::CleanPrevScene_()
 {
-	Scenes[0]=Scenes[RunningScenePos];	//Ç∏ÇÁÇ∑
+	Scenes[0]=Scenes[RunningScenePos];	//„Åö„Çâ„Åô
 	RunningScenePos=0;
 	for(DWORD i=1; i<MAX_SCENE_NUM; i++)
 	{

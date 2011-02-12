@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "AudioItem.h"
 
 CBGM_Item::CBGM_Item(xtal::StringPtr path,DWORD loop_point,bool do_repeat)

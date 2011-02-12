@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "ScManager.h"
 #include "BaseActor.h"
 #include <boost/multi_index_container.hpp>
@@ -27,7 +27,7 @@ typedef multi_index_container
 		<
 			sequenced<			tag<tag_Seq> >,
 			ordered_non_unique<	tag<tag_Z>,			global_fun<xtal::AnyPtr,DWORD,KVARCO::GetZ_BaseActor>	>,
-			hashed_unique<		tag<tag_ID>,		global_fun<xtal::AnyPtr,DWORD,KVARCO::GetID_BaseActor>	>,	//Z(LayerManager�ƘA�g)
+			hashed_unique<		tag<tag_ID>,		global_fun<xtal::AnyPtr,DWORD,KVARCO::GetID_BaseActor>	>,	//Z(LayerManagerと連携)
 			ordered_non_unique<	tag<tag_Type>,		global_fun<xtal::AnyPtr,DWORD,KVARCO::GetType_BaseActor> >	//ActorType
 		>
 	> ActorList;

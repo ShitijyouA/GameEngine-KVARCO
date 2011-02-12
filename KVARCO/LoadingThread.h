@@ -1,10 +1,10 @@
-#pragma once
+Ôªø#pragma once
 #include "KVARCO.h"
 #include "LoadItem.h"
 typedef xtal::SmartPtr<LoadItem::CBaseLoadItem>	CLoadBasePtr;
 typedef vector<CLoadBasePtr>					CLoadBase_v;
 
-//xtal::AnyPtr(CLoadItemì¸ÇËxtal::array)Ç©ÇÁvector<CLoadItem_std>Ç÷
+//xtal::AnyPtr(CLoadItemÂÖ•„Çäxtal::array)„Åã„Çâvector<CLoadItem_std>„Å∏
 extern CLoadBase_v& AnyPtrToVector_CloadItem(xtal::AnyPtr load_list);
 
 class CLoadingThread

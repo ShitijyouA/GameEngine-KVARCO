@@ -1,19 +1,19 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "SimplePlay.h"
 
 CSource::CSource(string path)
 {
 	if(!OpenAL_Ogg::OpenALInited) OpenAL_Ogg::Init();
 
-	//ƒƒ“ƒo•Ï”‚Ì‰Šú‰»
+	//ãƒ¡ãƒ³ãƒå¤‰æ•°ã®åˆæœŸåŒ–
 	Format		=0;
 	Frequency	=0;
 
-	//Oggƒtƒ@ƒCƒ‹‚ğŠJ‚­
+	//Oggãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
 	int open_res=ov_fopen(path.c_str(),&OggFile);
 	if(open_res!=0)	throw string("Couldn't Open OggFile(at ov_open())");
 	
-	//ƒtƒ@ƒCƒ‹‚Ìİ’è‚ğæ“¾
+	//ãƒ•ã‚¡ã‚¤ãƒ«ã®è¨­å®šã‚’å–å¾—
 	vorbis_info* info=ov_info(&OggFile, -1);
 	Format		=(info->channels==1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
 	Frequency	=info->rate;
@@ -21,7 +21,7 @@ CSource::CSource(string path)
 
 void CSource::Load()
 {
-	//“Ç‚İ‚İ
+	//èª­ã¿è¾¼ã¿
 	char data[BUFFER_SIZE];
 	int section	=0;
 	int bytes	=0;
@@ -46,11 +46,11 @@ CSimplePlay::CSimplePlay(CSource* source,char volume)
 {
 	Source=source;
 
-	//ƒ\[ƒX‚Æƒoƒbƒtƒ@‚Ìì¬
+	//ã‚½ãƒ¼ã‚¹ã¨ãƒãƒƒãƒ•ã‚¡ã®ä½œæˆ
 	alGenBuffers(1, &BufferID);
 	alGenSources(1, &SourceID);
 
-	//Ä¶‚Ì‰Šúİ’è
+	//å†ç”Ÿã®åˆæœŸè¨­å®š
 	alSource3f(SourceID, AL_POSITION,		0.0, 0.0, 0.0);
 	alSource3f(SourceID, AL_VELOCITY,		0.0, 0.0, 0.0);
 	alSource3f(SourceID, AL_DIRECTION,		0.0, 0.0, 0.0);
@@ -58,10 +58,10 @@ CSimplePlay::CSimplePlay(CSource* source,char volume)
 	alSourcei (SourceID, AL_SOURCE_RELATIVE,AL_TRUE      );
 	alSourcef (SourceID, AL_GAIN,			volume*0.01f);
 
-	//ƒoƒbƒtƒ@‚ÉÄ¶ƒf[ƒ^‚ğƒZƒbƒg
+	//ãƒãƒƒãƒ•ã‚¡ã«å†ç”Ÿãƒ‡ãƒ¼ã‚¿ã‚’ã‚»ãƒƒãƒˆ
 	alBufferData(BufferID,Source->Format,&Source->Buffer[0],static_cast<ALsizei>(Source->Buffer.size()),Source->Frequency);
 
-	//ƒ\[ƒX‚Éƒoƒbƒtƒ@‚ğƒZƒbƒg
+	//ã‚½ãƒ¼ã‚¹ã«ãƒãƒƒãƒ•ã‚¡ã‚’ã‚»ãƒƒãƒˆ
 	alSourcei(SourceID, AL_BUFFER, BufferID);
 }
 

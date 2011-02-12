@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 namespace LoadItem
 {
@@ -12,7 +12,7 @@ namespace LoadItem
 
 	public:
 
-		//ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚¾‚¯XtalˆË‘¶
+		//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã ã‘Xtalä¾å­˜
 		CBaseLoadItem(xtal::StringPtr name,xtal::StringPtr path)
 			:Loaded(false)
 		{
@@ -25,7 +25,7 @@ namespace LoadItem
 		~CBaseLoadItem() {}
 	};
 
-	//Graphƒ[ƒfƒBƒ“ƒO—p
+	//Graphãƒ­ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°ç”¨
 	class CGraphLoadItem : public CBaseLoadItem
 	{
 	public:
@@ -38,7 +38,7 @@ namespace LoadItem
 			if(!Loaded)
 			{
 				KVARCO::LoadGraph(Name.c_str(),Path.c_str());
-				KVARCO::OutputLog("%s‚ğƒ[ƒh",Path.c_str());
+				KVARCO::OutputLog("%sã‚’ãƒ­ãƒ¼ãƒ‰",Path.c_str());
 				Loaded=true;
 			}
 		}

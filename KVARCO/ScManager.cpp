@@ -1,7 +1,7 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "ScManager.h"
 
-//==‚Åtrue,!=‚Åfalse
+//==ã§true,!=ã§false
 
 optional<CLoadedFile> CScriptManager::FindLoadedFile(string path) const
 {
@@ -63,15 +63,15 @@ xtal::CodePtr CScriptManager::CompileOneFile(const xtal::StringPtr& FileName)
 
 optional<FILETIME> CScriptManager::GetTimeStamp(const string path) const
 {
-	//ƒ^ƒCƒ€ƒXƒ^ƒ“ƒvŠl“¾
+	//ã‚¿ã‚¤ãƒ ã‚¹ã‚¿ãƒ³ãƒ—ç²å¾—
 	HANDLE file;
 	FILETIME time_stamp;
 
-	//ƒtƒ@ƒCƒ‹‚ğŠJ‚­
+	//ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
 	file=CreateFile(path.c_str(),
 		GENERIC_READ,0,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
 	if(file==INVALID_HANDLE_VALUE){
-		assert("ƒtƒ@ƒCƒ‹‚ªŠJ‚¯‚Ü‚¹‚ñB\n");
+		assert("ãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ã¾ã›ã‚“ã€‚\n");
 		return optional<FILETIME>();
 	}
 

@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Collision.h"
 #include "ActorManager.h"
 
@@ -127,7 +127,7 @@ CColPolygonPtr CColPolygon::Move(float cx,float cy,float deg)
 	DWORD size=Polygon.size()-1;
 	CColPolygonPtr out=xtal::xnew<CColPolygon>(size);
 
-	//æ‚ÉŒvZ‚µ‚Ä‚¨‚­
+	//å…ˆã«è¨ˆç®—ã—ã¦ãŠã
 	if(deg==0.0)
 	{
 		for(DWORD i=0; i<size; ++i)

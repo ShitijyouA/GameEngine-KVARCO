@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "KVARCO.h"
 #include "XtalHelper.h"
 #include "Utillity.h"
@@ -6,7 +6,7 @@
 class CLoadedFile;
 class CScriptManager;
 
-//#define COMPLATE_CODING_SERIALIZE	//ƒVƒŠƒAƒ‰ƒCƒYü‚è‚ªŠ®—¹‚µ‚½‚ç
+//#define COMPLATE_CODING_SERIALIZE	//ã‚·ãƒªã‚¢ãƒ©ã‚¤ã‚ºå‘¨ã‚ŠãŒå®Œäº†ã—ãŸã‚‰
 
 class CLoadedFile
 {
@@ -53,8 +53,8 @@ public:
 	void ReLoad();
 
 #ifdef COMPLATE_CODING_SERIALIZE
-	//ƒoƒCƒgƒR[ƒh•Û‘¶E“Ç‚İ‚İ
-	bool SaveByteCode(string rela_path);	//‚·‚×‚ÄƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚ñ‚Å‚©‚çÀs
+	//ãƒã‚¤ãƒˆã‚³ãƒ¼ãƒ‰ä¿å­˜ãƒ»èª­ã¿è¾¼ã¿
+	bool SaveByteCode(string rela_path);	//ã™ã¹ã¦ã‚¹ã‚¯ãƒªãƒ—ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚“ã§ã‹ã‚‰å®Ÿè¡Œ
 	xtal::CodePtr ReadByteCode(string rela_path);
 	bool LoadByteCode(string path);
 #endif

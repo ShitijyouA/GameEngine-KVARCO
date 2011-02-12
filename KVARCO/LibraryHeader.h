@@ -1,4 +1,4 @@
-//STLƒwƒbƒ_
+ï»¿//STLãƒ˜ãƒƒãƒ€
 #include <list>
 #include <cstdio>
 #include <cstdlib>
@@ -62,7 +62,7 @@ using namespace boost::multi_index;
 #include <xtal.h>
 #include <xtal_macro.h>
 
-//Œ³TYEPDEF.h
+//å…ƒTYEPDEF.h
 typedef unsigned long		DWORD;
 typedef unsigned char		BYTE;
 typedef unsigned short		WORD;

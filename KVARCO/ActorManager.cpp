@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "ActorManager.h"
 
 void CActorManager::AddActor(xtal::AnyPtr actor,bool debug)
@@ -17,8 +17,8 @@ void CActorManager::RunAll(bool debug,bool gc)
 	DWORD size=list.size();
 	while(i!=list.end())
 	{
-		//ƒLƒƒƒXƒg
-		BaseActorPtr	it=xtal::unchecked_ptr_cast<CBaseActor>(*i);	//AddActor‚ÅŠm”FÏ‚İ
+		//ã‚­ãƒ£ã‚¹ãƒˆ
+		BaseActorPtr	it=xtal::unchecked_ptr_cast<CBaseActor>(*i);	//AddActorã§ç¢ºèªæ¸ˆã¿
 
 		if(!xtal::is_null(it->Run)) XtalHelper::call(it->Run);
 
@@ -30,13 +30,13 @@ void CActorManager::RunAll(bool debug,bool gc)
 				KVARCO::DebugOut(buf);
 			}
 			
-			//íœ
+			//å‰Šé™¤
 			it->Run->send(Xid(halt)); xtal::vmachine()->catch_except();
 			i=list.erase(i);
 			CLayerManager::GetInst()->EraseActor(CLayerManager::GetInst()->GetHandle(it->LayerName),it);
-			it->Run=xtal::null;	//Actor‚Ì‘§‚Ìª‚ğ~‚ß‚é
+			it->Run=xtal::null;	//Actorã®æ¯ã®æ ¹ã‚’æ­¢ã‚ã‚‹
 
-			//ˆê‰GC‚©‚¯‚Ä‚¨‚­
+			//ä¸€å¿œGCã‹ã‘ã¦ãŠã
 			if(gc)	xtal::gc();
 
 			continue;
@@ -108,7 +108,7 @@ void CActorManager::CleanUpItemBox()
 	ActorMap::iterator i=ActorsMap.begin();
 	while(i!=ActorsMap.end())
 	{
-		BaseActorPtr	it=xtal::unchecked_ptr_cast<CBaseActor>((*i).second);	//AddActor‚ÅŠm”FÏ‚İ
+		BaseActorPtr	it=xtal::unchecked_ptr_cast<CBaseActor>((*i).second);	//AddActorã§ç¢ºèªæ¸ˆã¿
 		if(xtal::is_null(it->Run) || !it->Run->is_alive() || it->IsDead())
 		{
 			i=ActorsMap.erase(i);
@@ -130,23 +130,23 @@ ActorMngrPtr CActorManager::GetInst()
 
 void CActorManager::ReleaseAllActor()
 {
-	//AllActors‚©‚ç‘S‚Äíœ
+	//AllActorsã‹ã‚‰å…¨ã¦å‰Šé™¤
 	{
 		ActorList_tag_Type& list=AllActors.get<tag_Type>();
 		ActorList_tag_Type::iterator i=list.begin();
 		while(i!=list.end())
 		{
-			//ƒLƒƒƒXƒg
-			BaseActorPtr	it=xtal::unchecked_ptr_cast<CBaseActor>(*i);	//AddActor‚ÅŠm”FÏ‚İ
+			//ã‚­ãƒ£ã‚¹ãƒˆ
+			BaseActorPtr	it=xtal::unchecked_ptr_cast<CBaseActor>(*i);	//AddActorã§ç¢ºèªæ¸ˆã¿
 
-			//íœ
+			//å‰Šé™¤
 			i=list.erase(i);
 			CLayerManager::GetInst()->EraseActor(CLayerManager::GetInst()->GetHandle(it->LayerName),it);
-			it->Run=xtal::null;	//Actor‚Ì‘§‚Ìª‚ğ~‚ß‚é
+			it->Run=xtal::null;	//Actorã®æ¯ã®æ ¹ã‚’æ­¢ã‚ã‚‹
 		}
 	}
 
-	//ActorsMap‚©‚ç‘S‚Äíœ
+	//ActorsMapã‹ã‚‰å…¨ã¦å‰Šé™¤
 	{
 		CleanUpItemBox();
 		ActorMap::iterator i=ActorsMap.begin();
@@ -154,7 +154,7 @@ void CActorManager::ReleaseAllActor()
 		{
 			i=ActorsMap.erase(i);
 
-			BaseActorPtr	it=xtal::unchecked_ptr_cast<CBaseActor>((*i).second);	//AddActor‚ÅŠm”FÏ‚İ
+			BaseActorPtr	it=xtal::unchecked_ptr_cast<CBaseActor>((*i).second);	//AddActorã§ç¢ºèªæ¸ˆã¿
 			it->Run=xtal::null;
 		}
 	}

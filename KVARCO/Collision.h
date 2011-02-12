@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "GeoStruct.h"
 
 class CColPolygon;
@@ -9,7 +9,7 @@ class CColPolygon
 {
 protected:
 //	friend class CColPolygon;
-	POLYGON Polygon;		//Še’¸“_
+	POLYGON Polygon;		//å„é ‚ç‚¹
 	lRECT	AABB;			//AABB
 
 	bool ColWithPoint(dPOINT point);
@@ -18,14 +18,14 @@ protected:
 	static CColPolygonPtr VoidPolygon;
 
 	virtual void SetAABB();
-	bool CheckAABB(CColPolygonPtr col);						//‘åG”c‚È”»’è‚ğ‚·‚é
+	bool CheckAABB(CColPolygonPtr col);						//å¤§é›‘æŠŠãªåˆ¤å®šã‚’ã™ã‚‹
 public:
-	CColPolygon(DWORD poly_num);							//’¸“_”
-	virtual void SetBox(float width,float height);			//‹éŒ`‚ğƒZƒbƒg
-	virtual void SetPolygon(float radius,float offset_deg);	//³poly_numŠpŒ`‚ğƒZƒbƒgBsize‚Í”¼Œa
+	CColPolygon(DWORD poly_num);							//é ‚ç‚¹æ•°
+	virtual void SetBox(float width,float height);			//çŸ©å½¢ã‚’ã‚»ãƒƒãƒˆ
+	virtual void SetPolygon(float radius,float offset_deg);	//æ­£poly_numè§’å½¢ã‚’ã‚»ãƒƒãƒˆã€‚sizeã¯åŠå¾„
 	virtual void SetPolygon2(xtal::ArrayPtr polygon);
 
-	CColPolygonPtr Movep(dPOINT cpoint,float deg);			//‰ñ“]AˆÚ“®
+	CColPolygonPtr Movep(dPOINT cpoint,float deg);			//å›è»¢ã€ç§»å‹•
 	CColPolygonPtr Move(float cx,float cy,float deg);
 
 	bool Check(CColPolygonPtr col);

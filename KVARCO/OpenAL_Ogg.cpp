@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "OpenAL_Ogg.h"
 #include <iostream>
 using namespace std;
@@ -32,22 +32,22 @@ COpenAL_Ogg_Stream::COpenAL_Ogg_Stream(string path,DWORD loop_point,bool repeat)
 {
 	if(!OpenAL_Ogg::OpenALInited) OpenAL_Ogg::Init();
 
-	//ƒƒ“ƒo•Ï”‚Ì‰Šú‰»
+	//ãƒ¡ãƒ³ãƒå¤‰æ•°ã®åˆæœŸåŒ–
 	for(int i=0; i<BUFFER_NUM; i++)	Buffers[i]=0;
 	SourceID	=0;
 	Format		=0;
 	Frequency	=0;
 
-	//Oggƒtƒ@ƒCƒ‹‚ğŠJ‚­
+	//Oggãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
 	int open_res=ov_fopen(path.c_str(),&OggFile);
 	if(open_res!=0)	throw string("Couldn't Open OggFile(at ov_open())");
 	
-	//ƒtƒ@ƒCƒ‹‚Ìİ’è‚ğæ“¾
+	//ãƒ•ã‚¡ã‚¤ãƒ«ã®è¨­å®šã‚’å–å¾—
 	vorbis_info* info=ov_info(&OggFile, -1);
 	Format		=(info->channels==1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
 	Frequency	=info->rate;
 
-	//ƒoƒbƒtƒ@Eƒ\[ƒX‚Ìì¬
+	//ãƒãƒƒãƒ•ã‚¡ãƒ»ã‚½ãƒ¼ã‚¹ã®ä½œæˆ
 	alGenBuffers(BUFFER_NUM,Buffers);
 	OpenAL_Ogg::Check("on alGenBuffers()");
 	alGenSources(1, &SourceID);
@@ -56,7 +56,7 @@ COpenAL_Ogg_Stream::COpenAL_Ogg_Stream(string path,DWORD loop_point,bool repeat)
 	DoRepeat	=repeat;
 	LoopPoint	=loop_point;
 
-	//Ä¶‚Ì‰Šúİ’è
+	//å†ç”Ÿã®åˆæœŸè¨­å®š
 	alSource3f(SourceID, AL_POSITION,		0.0, 0.0, 0.0);
 	alSource3f(SourceID, AL_VELOCITY,		0.0, 0.0, 0.0);
 	alSource3f(SourceID, AL_DIRECTION,		0.0, 0.0, 0.0);
@@ -64,12 +64,12 @@ COpenAL_Ogg_Stream::COpenAL_Ogg_Stream(string path,DWORD loop_point,bool repeat)
 	alSourcei (SourceID, AL_SOURCE_RELATIVE,AL_TRUE      );
 }
 
-//‘Ò‹@‚È‚ñ‚©‚Å–‘«‚µ‚Ä‚ñ‚¶‚á‚Ë‚¥
-//–½‚ğ‚©‚¯‚Ä‚½‚Á‚½ˆê‚Â‚ÌOggƒtƒ@ƒCƒ‹‚ğÄ¶‚µ‚Ä‚¦‚ñ‚¶‚á‚È‚¢‚Ì‚©‚æ?
-//‚¾‚Á‚½‚çÄ¶‚Í‘S‘RI‚í‚Á‚Ä‚Ë‚¦!! n‚Ü‚Á‚Ä‚·‚ç‚¢‚Ë‚¦!!
-//‚¿‚Á‚Æ‚®‚ç‚¢’·‚¢ˆ—ŠÔ‚Åâ–]‚µ‚Ä‚ñ‚¶‚á‚Ë‚¦‚æ!!
-//è‚ğL‚Î‚¹‚Î“Í‚­‚ñ‚¾
-//‚¢‚¢‰ÁŒ¸‚Én‚ß‚æ‚¤‚ºBOpenAL!
+//å¾…æ©Ÿãªã‚“ã‹ã§æº€è¶³ã—ã¦ã‚“ã˜ã‚ƒã­ã‡
+//å‘½ã‚’ã‹ã‘ã¦ãŸã£ãŸä¸€ã¤ã®Oggãƒ•ã‚¡ã‚¤ãƒ«ã‚’å†ç”Ÿã—ã¦ãˆã‚“ã˜ã‚ƒãªã„ã®ã‹ã‚ˆ?
+//ã ã£ãŸã‚‰å†ç”Ÿã¯å…¨ç„¶çµ‚ã‚ã£ã¦ã­ãˆ!! å§‹ã¾ã£ã¦ã™ã‚‰ã„ã­ãˆ!!
+//ã¡ã£ã¨ãã‚‰ã„é•·ã„å‡¦ç†æ™‚é–“ã§çµ¶æœ›ã—ã¦ã‚“ã˜ã‚ƒã­ãˆã‚ˆ!!
+//æ‰‹ã‚’ä¼¸ã°ã›ã°å±Šãã‚“ã 
+//ã„ã„åŠ æ¸›ã«å§‹ã‚ã‚ˆã†ãœã€‚OpenAL!
 
 bool COpenAL_Ogg_Stream::Stream(ALuint buffers)
 {
@@ -122,7 +122,7 @@ bool COpenAL_Ogg_Stream::Update()
 	return res;
 }
 
-//I—¹‚·‚é‚È‚çtrue
+//çµ‚äº†ã™ã‚‹ãªã‚‰true
 void COpenAL_Ogg_Stream::PlayBack()
 {
 	if(PlayingNow()) return;
@@ -139,7 +139,7 @@ COpenAL_Ogg_Stream::~COpenAL_Ogg_Stream()
 {
 	alSourceStop(SourceID);
 
-	//‘S‚ÄƒLƒ…[‚©‚çæ‚èo‚µíœ
+	//å…¨ã¦ã‚­ãƒ¥ãƒ¼ã‹ã‚‰å–ã‚Šå‡ºã—å‰Šé™¤
 	int num=0;
 	while (alGetSourcei(SourceID, AL_BUFFERS_PROCESSED, &num), num>0)
 	{

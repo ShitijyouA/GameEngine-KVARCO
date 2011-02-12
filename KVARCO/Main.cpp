@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Game.h"
 
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR lpCmdLine, int nCmdShow )
@@ -7,5 +7,5 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR lpCmdLine
 
 	Game->Main();
 
-	return 0 ;		// ƒ\ƒtƒg‚ÌI—¹
+	return 0 ;		// ã‚½ãƒ•ãƒˆã®çµ‚äº†
 }

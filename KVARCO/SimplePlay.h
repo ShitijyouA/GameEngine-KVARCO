@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "OpenAL_Ogg.h"
 #include <vector>
 

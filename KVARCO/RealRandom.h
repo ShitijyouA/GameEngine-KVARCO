@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <boost/random.hpp>
 using namespace boost;
 

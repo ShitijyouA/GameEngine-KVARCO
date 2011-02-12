@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "AudioManager.h"
 
 CAudioManager::CAudioManager()
@@ -33,13 +33,13 @@ void CAudioManager::PlayAudio(string name)
 {
 	AudioMap_i i=FindItem(name);
 
-	//dynamic_cast‚Åí—Ş”»•Ê
+	//dynamic_castã§ç¨®é¡åˆ¤åˆ¥
 	CBGM_ItemPtr tmp=xtal::ptr_cast<CBGM_Item>(i->second);
 
 	if(!xtal::is_null(tmp))		i->second->Play(BGM_Volume);
 	else						i->second->Play(SE_Volume);
 
-	//BGM‚Í“¯‚Éˆê‹È‚Ì‚İ
+	//BGMã¯åŒæ™‚ã«ä¸€æ›²ã®ã¿
 	if(tmp)
 	{
 		if(!xtal::is_null(CurrentBGM)) CurrentBGM->Stop();
@@ -59,8 +59,8 @@ void CAudioManager::SetBGM_Volume(const BYTE x)
 	if(!xtal::is_null(CurrentBGM)) CurrentBGM->SetVolume(x);
 }
 
-//BGM‚©‚Ç‚¤‚©‚Í•ª‚©‚ç‚È‚¢‚Ì‚Åˆê’â~‚É‚È‚é‚©‚Í•s’è
-//SE‚Å‚àƒGƒ‰[‚É‚Í‚È‚ç‚È‚¢
+//BGMã‹ã©ã†ã‹ã¯åˆ†ã‹ã‚‰ãªã„ã®ã§ä¸€æ™‚åœæ­¢ã«ãªã‚‹ã‹ã¯ä¸å®š
+//SEã§ã‚‚ã‚¨ãƒ©ãƒ¼ã«ã¯ãªã‚‰ãªã„
 void CAudioManager::PauseBGM(string name)
 {
 	AudioMap_i i=FindItem(name);

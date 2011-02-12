@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Game.h"
 #include "KVARCO.h"
 #include "BaseActor.h"
@@ -15,7 +15,7 @@ DWORD MakeHandle()
 	return Num;
 }
 
-//“ü—ÍŠÖŒW
+//å…¥åŠ›é–¢ä¿‚
 DWORD KVARCO::GetKeyState(DWORD Key,int PlayerNo_)
 {
 	const InputStatePtr state=CInput::GetInst()->GetState(PlayerNo_);
@@ -39,7 +39,7 @@ DWORD KVARCO::GetKeyState(DWORD Key,int PlayerNo_)
 	return 0;
 }
 
-//•`‰æ”ÍˆÍŠÖŒW
+//æç”»ç¯„å›²é–¢ä¿‚
 void SetDrawArea(lRECT Area)
 {
 	DxLib::SetDrawArea(Area.left,Area.top,Area.right,Area.bottom);
@@ -65,7 +65,7 @@ void SetDrawArea_default()
 	KVARCO::SetDrawArea(area);
 }
 
-//ƒOƒ‰ƒtƒBƒbƒNŠÖŒW
+//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯é–¢ä¿‚
 int	LoadGraph(xtal::String GrName,xtal::String RelaPath)
 {
 	string name=GrName.c_str();
@@ -74,10 +74,10 @@ int	LoadGraph(xtal::String GrName,xtal::String RelaPath)
 	GR_INFO grinfo;
 	grinfo.GrHandle=Warning::Retry_LoadGraph(path.c_str());
 
-	//"NULL"‚Ì‚ÍGrHadle‚ğ•Ô‚·‚¾‚¯
+	//"NULL"ã®æ™‚ã¯GrHadleã‚’è¿”ã™ã ã‘
 	if(name!="NULL")
 	{
-		//ƒTƒCƒYŠl“¾
+		//ã‚µã‚¤ã‚ºç²å¾—
 		int r,b;
 		GetGraphSize(grinfo.GrHandle,&r,&b);
 		grinfo.Size.left	=0;	grinfo.Size.top		=0;
@@ -122,7 +122,7 @@ lRECTPtr GetGrSize(xtal::String GrName)
 	return lRECTPtr();
 }
 
-//ƒOƒ‰ƒtƒBƒbƒNƒnƒ“ƒhƒ‹w’èŒ^
+//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒãƒ³ãƒ‰ãƒ«æŒ‡å®šå‹
 int	LoadCutGraph_H(xtal::String NewName,int GrHandle,long x,long y,long w,long h)
 {
 	GR_INFO grnew;
@@ -145,7 +145,7 @@ void DeleteGraph_H(int GrHandle)
 	if(GrHandle!=-1)	DxLib::DeleteGraph(GrHandle);
 }
 
-//ƒOƒ‰ƒtƒBƒbƒNƒl[ƒ€w’èŒ^
+//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒãƒ¼ãƒ æŒ‡å®šå‹
 int	LoadCutGraph_N(xtal::String NewName,xtal::String GrName,long x,long y,long w,long h)
 {
 	int GrHandle=GetGrHandle(GrName);
@@ -173,7 +173,7 @@ void SetDrawBlendModeLight(BYTE mode,BYTE param)
 	}
 }
 
-//•`‰æ
+//æç”»
 void DrawLine(long x1,long y1,long x2,long y2, int color,bool thickness)
 {
 	DxLib::DrawLine(x1,y1,x2,y2,color,(int )thickness);
@@ -202,7 +202,7 @@ xtal::StringPtr SplitOption(xtal::String src_x,xtal::String opt_x)
 	string src_=src_x.c_str();
 	string option=opt_x.c_str();
 
-	//[]‚Ì•”•ª‚ğØ‚èo‚·
+	//[]ã®éƒ¨åˆ†ã‚’åˆ‡ã‚Šå‡ºã™
 	str_index psh,pse;
 	psh=src_.find("[");pse=src_.find_last_of("]");
 	if(psh==string::npos || pse==string::npos) return "";
@@ -211,7 +211,7 @@ xtal::StringPtr SplitOption(xtal::String src_x,xtal::String opt_x)
 	str_index ph,nph;
 	str_index src_size=src.size();
 
-	ph=src.find(option);				//w’è‚³‚ê‚½-PARAM‚ÌˆÊ’u
+	ph=src.find(option);				//æŒ‡å®šã•ã‚ŒãŸ-PARAMã®ä½ç½®
 	if(ph==string::npos) return xtal::StringPtr("");
 	ph+=option.size();
 
@@ -248,7 +248,7 @@ xtal::StringPtr SplitWords(xtal::String src_x)
 	string src=src_.substr(pse+1,string::npos);
 	str_index src_size=src.size();
 
-	//—¼’[‚©‚ç
+	//ä¸¡ç«¯ã‹ã‚‰
 	str_index i,ii;
 	for(i=0; i<src_size; i++)
 	{
@@ -268,7 +268,7 @@ xtal::StringPtr SplitWords(xtal::String src_x)
 //LoadingThread
 void StartGraphLoading(xtal::AnyPtr LoadList)
 {
-	OutputLog("ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ—p‚ÌƒXƒŒƒbƒh‚ğ‹N“®");
+	OutputLog("ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿ç”¨ã®ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’èµ·å‹•");
 	KVARCO::LoadingThread=new CLoadingThread(LoadList);
 }
 
@@ -278,7 +278,7 @@ bool IsLoadingEnd()
 	else
 	if(!KVARCO::LoadingThread->IsEnded())	return false;
 
-	OutputLog("ƒXƒŒƒbƒhI—¹BŠJ•ú‚µ‚Ü‚·");
+	OutputLog("ã‚¹ãƒ¬ãƒƒãƒ‰çµ‚äº†ã€‚é–‹æ”¾ã—ã¾ã™");
 	SAFE_DELETE(KVARCO::LoadingThread);
 	return true;
 }
@@ -352,8 +352,8 @@ void bind()
 	BIND_XTAL_FUN_DEFNAME(LoadCutGraph_N);
 	BIND_XTAL_FUN_DEFNAME(DeleteGraph_N);
 
-	//•`‰æŠÖ”
-	//ƒOƒ‰ƒtƒBƒbƒNƒnƒ“ƒhƒ‹w’èŒ^
+	//æç”»é–¢æ•°
+	//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒãƒ³ãƒ‰ãƒ«æŒ‡å®šå‹
 #define BIND_XTAL_FUN_DEFNAME_PEND(x) xtal::lib()->def(Xid(x),xtal::fun(&x)
 	BIND_XTAL_FUN_DEFNAME_PEND(DrawGraph_H)				->param(4,Xid(trans),true)->param(5,Xid(call_alpha),false));
 	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaGraph_H)			->param(5,Xid(trans),true)->param(6,Xid(call_alpha),false));
@@ -366,7 +366,7 @@ void bind()
 	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaZoom_H)			->param(7,Xid(trans),true)->param(8,Xid(call_alpha),false));
 	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaZoomAlpha_H)		->param(8,Xid(trans),true));
 
-	//ƒOƒ‰ƒtƒBƒbƒNƒl[ƒ€w’èŒ^
+	//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒãƒ¼ãƒ æŒ‡å®šå‹
 	BIND_XTAL_FUN_DEFNAME_PEND(DrawGraph_N)				->param(4,Xid(trans),true));
 	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaGraph_N)			->param(5,Xid(trans),true));
 	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaGraph2_N)		->param(7,Xid(trans),true));
@@ -378,26 +378,26 @@ void bind()
 	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaZoom_N)			->param(7,Xid(trans),true));
 	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaZoomAlpha_N)		->param(8,Xid(trans),true));
 
-	//•¶š—ñ•`‰æ
+	//æ–‡å­—åˆ—æç”»
 	BIND_XTAL_FUN_DEFNAME(GetColorHandle);
 	BIND_XTAL_FUN_DEFNAME(DrawString);
 
-	//}Œ`•`‰æ
+	//å›³å½¢æç”»
 	BIND_XTAL_FUN_DEFNAME(DrawLine);
 	BIND_XTAL_FUN_DEFNAME(DrawdRECT);
 
 	//Info
 	BIND_XTAL_FUN_DEFNAME(GetNowFPS);
 
-	//ƒ[ƒfƒBƒ“ƒO
+	//ãƒ­ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°
 	BIND_XTAL_FUN_DEFNAME(StartGraphLoading);
 	BIND_XTAL_FUN_DEFNAME(IsLoadingEnd);
 
-	//•Ö—˜ŠÖ”
+	//ä¾¿åˆ©é–¢æ•°
 	BIND_XTAL_FUN_DEFNAME(SplitOption);
 	BIND_XTAL_FUN_DEFNAME(SplitWords);
 	
-	//—”(mt19937g—p)
+	//ä¹±æ•°(mt19937ä½¿ç”¨)
 	BIND_XTAL_FUN_DEFNAME(RandSeed);
 	BIND_XTAL_FUN_DEFNAME(Rand);
 	BIND_XTAL_FUN_DEFNAME(RandInt);

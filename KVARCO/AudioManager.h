@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "KVARCO.h"
 #include "AudioItem.h"
 
@@ -20,7 +20,7 @@ class CAudioManager
 	AudioMap_i FindItem(string& name);
 	void ReleaseAllAudioItem();
 
-	//“¯‚ÉÄ¶‚Å‚«‚éBGMƒAƒCƒeƒ€‚Íˆê‚Â‚Ì‚İ
+	//åŒæ™‚ã«å†ç”Ÿã§ãã‚‹BGMã‚¢ã‚¤ãƒ†ãƒ ã¯ä¸€ã¤ã®ã¿
 	CBGM_ItemPtr CurrentBGM;
 
 public:
@@ -67,7 +67,7 @@ public:
 	static void bind(xtal::ClassPtr it);
 
 	//Singleton Pattern
-	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ª©‘O‚È‚Ì‚Å”ñƒ}ƒNƒ
+	//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãŒè‡ªå‰ãªã®ã§éãƒã‚¯ãƒ­
 private:
 	friend xtal::SmartPtr<CAudioManager> xtal::xnew();
 	friend class xtal::SmartPtr<CAudioManager>;
