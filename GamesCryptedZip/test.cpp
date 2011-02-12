@@ -20,13 +20,13 @@ int main()
 			PathList path_list;
 			path_list+=MakePathPair(SAMPLE_DIR/"artificl");
 
-			CEncryptedZip zipper(path_list,1234567,DO_CRYPT);
+			CEncryptedZip zipper(path_list,5,0xAAAAAAAA,1234567,DO_CRYPT);
 			zipper.OutputToFile(SAMPLE_DIR/"sample.kva");
 		}
 
 		//de
 		{
-			CDecryptedUnZip unzipper(SAMPLE_DIR/"sample.kva",DO_CRYPT);
+			CDecryptedUnZip unzipper(SAMPLE_DIR/"sample.kva",5,0xAAAAAAAA,DO_CRYPT);
 			CHeader_op ch=unzipper.FindFile(path("\\artificl\\a.txt"));
 			if(!ch) throw bad_exception("couldn't find the file at Zip file");
 

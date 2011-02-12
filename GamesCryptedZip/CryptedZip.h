@@ -2,7 +2,6 @@
 #include "pch.h"
 
 //cryption's parametar
-const DWORD KEY_LENGTH		=SHA256_BIN_BUFFER_SIZE;
 const DWORD MEANINGLESS_NUM	=128;
 extern const char* HEADER;
 
@@ -57,7 +56,7 @@ namespace CryptedZip
 			DWORD	FilePos;
 			DWORD	ZipedFileSize;
 			DWORD	Key;
-			BYTE	Hash[SHA256_BIN_BUFFER_SIZE];
+			DWORD	CRC;
 
 			DWORD		NameLen;
 			path_char*	Name;
@@ -118,6 +117,9 @@ namespace CryptedZip
 		PathList	InputPathList;
 		void AddFilesFromDirPath_(const path& dir,const path& parent_dir);
 
+		BYTE		RotateBits;
+		DWORD		XorKey;
+
 	protected:
 		BYTE inline Encrypt1Byte_(BYTE x,BYTE prev_x);
 
@@ -125,17 +127,20 @@ namespace CryptedZip
 		DWORD EncryptStream_(BYTE* buffer,BYTE* stream,DWORD length);
 
 	public:
-		CEncryptedZip(PathList path_list,DWORD key,bool enable_crypt=true);
+		CEncryptedZip(PathList path_list,BYTE rotate_bits,DWORD xor_key,DWORD key,bool enable_crypt=true);
 		void OutputToFile(path out_path);
 	};
 
 	typedef optional<Header::CentralHeader> CHeader_op;
 	class CDecryptedUnZip : public CBaseCryptedZip
 	{
-		path InputFilePath;
-		FILE* InputFile;
+		path		InputFilePath;
+		FILE*		InputFile;
 
-		CHeaderMap CentralHeaderMap;
+		CHeaderMap	CentralHeaderMap;
+
+		BYTE		RotateBits;
+		DWORD		XorKey;
 
 	protected:
 		BYTE inline Decrypt1Byte_(BYTE x,BYTE prev_x);
@@ -148,7 +153,7 @@ namespace CryptedZip
 		void ReadCHeaders_();
 
 	public:
-		CDecryptedUnZip(path path,bool enable_crypt=true);
+		CDecryptedUnZip(path path,BYTE rotate_bits,DWORD xor_key,bool enable_crypt=true);
 
 		CHeader_op FindFile(path& file_path);
 		void OutputToSmallFile(path& out_path,Header::CentralHeader& file_header);	//directory path

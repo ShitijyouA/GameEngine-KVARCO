@@ -70,8 +70,9 @@ void CEncryptedZip::AddFilesFromDirPath_(const path& dir,const path& parent_dir)
 	}
 }
 
-CEncryptedZip::CEncryptedZip(PathList path_list,DWORD key,bool enable_crypt)
-	:CBaseCryptedZip(enable_crypt),InputPathList(path_list)
+CEncryptedZip::CEncryptedZip(PathList path_list,BYTE rotate_bits,DWORD xor_key,DWORD key,bool enable_crypt)
+	:RotateBits(rotate_bits%8),XorKey(xor_key),
+	CBaseCryptedZip(enable_crypt),InputPathList(path_list)
 {
 	//BOOST_FOREACH(PathAndParent& i,InputPathList)
 	for(PathList::iterator i=InputPathList.begin(); i!=InputPathList.end(); )
@@ -93,7 +94,7 @@ CEncryptedZip::CEncryptedZip(PathList path_list,DWORD key,bool enable_crypt)
 		else
 		{
 			Header::CentralHeader tmp;
-			memset(tmp.Hash,0,sizeof(tmp.Hash));
+			tmp.CRC			=0;
 			tmp.FilePos		=0;
 
 			if(EnableCrypt)	tmp.Key=DiceDWORD();
@@ -121,7 +122,7 @@ BYTE CEncryptedZip::Encrypt1Byte_(BYTE x,BYTE prev_x)
 {
 	x^=prev_x;												//CBC mode
 
-	BYTE cipher=Detail::BitLeftRotate<BYTE>(x,ROTATE_BITS);	//bit rotate
+	BYTE cipher=Detail::BitLeftRotate<BYTE>(x,RotateBits);	//bit rotate
 	BYTE rand_byte=DiceBYTE();
 	cipher^=rand_byte;										//XOR with random byte
 
@@ -162,9 +163,6 @@ void CEncryptedZip::OutputToFile(path out_path)
 	FILE* output_file;
 	fopen_s_cz(&output_file,out_path.c_str(),TEXT_PATH("wb"));
 	if(!output_file) throw bad_exception();
-	
-	//alloc for SHA-256
-	DKC_SHA256* individual_hash=dkcAllocSHA256();
 
 	BOOST_FOREACH(HeaderAndParent& i,CentralHeaderList)
 	{
@@ -176,8 +174,8 @@ void CEncryptedZip::OutputToFile(path out_path)
 		//set FilePos
 		i.first.FilePos=ftell(output_file);
 
-		//init for SHA-256
-		dkcSHA256Init(individual_hash);
+		//init for CRC32
+		crc_32_type crc_result;
 
 		//init for crypting
 		if(EnableCrypt)
@@ -187,14 +185,14 @@ void CEncryptedZip::OutputToFile(path out_path)
 			fwrite(&PrevCiper,sizeof(BYTE),1,output_file);
 		}
 
-		DWORD begin_wtite_pos=ftell(output_file);
+		DWORD begin_write_pos=ftell(output_file);
 		//copy & crypting
 		while(!feof(input_file))
 		{
 			BYTE buf[BUFFER_SIZE];
 			DWORD num=fread(buf,sizeof(char),BUFFER_SIZE,input_file);
 			if(!num) break;
-			dkcSHA256Load(individual_hash,buf,num);
+			crc_result.process_bytes(buf,num);
 
 			if(EnableCrypt)
 			{
@@ -205,15 +203,11 @@ void CEncryptedZip::OutputToFile(path out_path)
 			else
 				fwrite(buf,sizeof(BYTE),num,output_file);
 		}
-		i.first.ZipedFileSize=ftell(output_file)-begin_wtite_pos;
-
-		dkcSHA256FinalDigest(individual_hash,i.first.Hash,SHA256_BIN_BUFFER_SIZE);
+		i.first.ZipedFileSize	=ftell(output_file)-begin_write_pos;
+		i.first.CRC				=crc_result.checksum();
 
 		fclose(input_file);
 	}
-
-	//free for SHA-256
-	dkcFreeSHA256(&individual_hash);
 
 	//ready for writing CentralHeader
 	Header.CentralPos=ftell(output_file);
@@ -238,6 +232,7 @@ void CEncryptedZip::OutputToFile(path out_path)
 			i.first.NameLen	=filename.native().size();
 		}
 
+		i.first.Key^=XorKey;
 		fwrite(&i,sizeof(CentralHeader),1,output_file);
 		fwrite(i.first.Name,sizeof(path_char),i.first.NameLen+1,output_file);
 	}
@@ -250,8 +245,9 @@ void CEncryptedZip::OutputToFile(path out_path)
 	fclose(output_file);
 }
 
-CDecryptedUnZip::CDecryptedUnZip(path path,bool enable_crypt)
-	:CBaseCryptedZip(enable_crypt),InputFilePath(path)
+CDecryptedUnZip::CDecryptedUnZip(path path,BYTE rotate_bits,DWORD xor_key,bool enable_crypt)
+	:RotateBits(rotate_bits%8),XorKey(xor_key),
+	CBaseCryptedZip(enable_crypt),InputFilePath(path)
 {
 	fopen_s_cz(&InputFile,InputFilePath.c_str(),TEXT_PATH("rb"));
 
@@ -267,7 +263,7 @@ BYTE inline CDecryptedUnZip::Decrypt1Byte_(BYTE x,BYTE prev_x)
 {
 	BYTE rand_byte=DiceBYTE();
 	BYTE tmp1=x^rand_byte;
-	BYTE plain=BitRightRotate<BYTE>(tmp1,ROTATE_BITS);
+	BYTE plain=BitRightRotate<BYTE>(tmp1,RotateBits);
 	plain^=prev_x;
 
 	return plain;
@@ -360,7 +356,7 @@ DWORD CDecryptedUnZip::OutputToMemory(BYTE* buffer,DWORD buffer_size,Header::Cen
 	DWORD num=0;
 	if(EnableCrypt)
 	{
-		InitDecrypt_(InputFile,file_header.Key);
+		InitDecrypt_(InputFile,file_header.Key^XorKey);
 		BYTE* buf=new BYTE[file_header.ZipedFileSize];
 		DWORD num_tmp=fread(buf,sizeof(BYTE),file_header.ZipedFileSize,InputFile);
 		num=DecryptStream_(buffer,buf,num_tmp);

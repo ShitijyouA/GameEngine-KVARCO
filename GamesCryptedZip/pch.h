@@ -16,6 +16,7 @@ using namespace std;
 #include <boost/unordered_map.hpp>
 #include <boost/optional.hpp>
 #include <boost/assert.hpp>
+#include <boost/crc.hpp>
 using namespace boost;
 
 #define BOOST_FILESYSTEM_VERSION 3
@@ -24,15 +25,6 @@ using namespace boost::filesystem;
 
 //dKingyoUtillity
 #pragma warning(disable:4244)
-
-#include <dkcCryptograph.h>
-#ifdef _DEBUG
-	#pragma comment(lib, "dkcCryptographd.lib")
-	#pragma comment(lib, "dkcCommond.lib")
-#else
-	#pragma comment(lib, "dkcCryptograph.lib")
-	#pragma comment(lib, "dkcCommon.lib")
-#endif
 
 //typedef
 typedef unsigned long DWORD;
