@@ -15,6 +15,7 @@ int main()
 {
 	try
 	{
+#if 0
 		//en
 		{
 			PathList path_list;
@@ -23,14 +24,15 @@ int main()
 			CEncryptedZip zipper(path_list,5,0xAAAAAAAA,1234567,DO_CRYPT);
 			zipper.OutputToFile(SAMPLE_DIR/"sample.kva");
 		}
+#endif
 
 		//de
 		{
 			CDecryptedUnZip unzipper(SAMPLE_DIR/"sample.kva",5,0xAAAAAAAA,DO_CRYPT);
-			CHeader_op ch=unzipper.FindFile(path("\\artificl\\a.txt"));
+			CHeader_op ch=unzipper.FindFile(path("\\artificl\\alphabet.txt"));
 			if(!ch) throw bad_exception("couldn't find the file at Zip file");
 
-			unzipper.OutputToSmallFile(SAMPLE_DIR/"sample_out.txt",*ch);
+			unzipper.OutputToFile(SAMPLE_DIR/"sample_out.txt",*ch);
 		}
 	}
 	catch(std::exception& e)

@@ -23,9 +23,11 @@ namespace boost
 	}
 }
 
-const BYTE ROTATE_BITS	=5;		//set num which is smaller than 8
-const char* HEADER		="GCZ";
-const path_char* ErrorMes_FileOpen=TEXT_PATH("could not open this file : ");
+//constant
+const BYTE ROTATE_BITS				=5;		//set num which is smaller than 8
+const char* Header::HEADER			="GCZ";
+const DWORD Header::HEADER_LENGTH	=4;
+const path_char* ErrorMes_FileOpen	=TEXT_PATH("could not open this file : ");
 
 //CBaseCryptedZip
 CBaseCryptedZip::CBaseCryptedZip(const bool enable_crypt)
@@ -109,7 +111,7 @@ CEncryptedZip::CEncryptedZip(PathList path_list,BYTE rotate_bits,DWORD xor_key,D
 		 ++i;
 	}
 
-	Header.Header=HEADER;
+	Header.Header=const_cast<char*>(Header::HEADER);
 }
 
 void CEncryptedZip::InitPrevCiper()
@@ -146,9 +148,10 @@ DWORD CEncryptedZip::EncryptStream_(BYTE* buffer,BYTE* stream,DWORD length)
 			--i;
 		}
 		else
+		{
 			buffer[res_len]=Encrypt1Byte_(stream[i],PrevCiper);
-
-		PrevCiper=buffer[res_len];
+			PrevCiper=buffer[res_len];
+		}
 
 		++ElapsedByte;
 		++res_len;
@@ -240,6 +243,7 @@ void CEncryptedZip::OutputToFile(path out_path)
 	//add TerminalHeader
 	Header.FileNum=InputPathList.size();
 	fwrite(&Header,sizeof(TerminalHeader),1,output_file);
+	fwrite(Header.Header,sizeof(char),Header::HEADER_LENGTH,output_file);
 
 	//close output file
 	fclose(output_file);
@@ -250,12 +254,18 @@ CDecryptedUnZip::CDecryptedUnZip(path path,BYTE rotate_bits,DWORD xor_key,bool e
 	CBaseCryptedZip(enable_crypt),InputFilePath(path)
 {
 	fopen_s_cz(&InputFile,InputFilePath.c_str(),TEXT_PATH("rb"));
+	fseek(InputFile,-static_cast<long>(sizeof(TerminalHeader)+Header::HEADER_LENGTH),SEEK_END);
+	//fseek(InputFile,-static_cast<long>(sizeof(TerminalHeader)+Header::HEADER_LENGTH),SEEK_END);
 
-	fseek(InputFile,-static_cast<long>(sizeof(TerminalHeader)),SEEK_END);
 	fread(&Header,sizeof(TerminalHeader),1,InputFile);
-	if(!CheckHeader_(Header))
-		throw bad_exception("this is not KVARCO::CryptedZip file");
 
+	//check terminal header
+	//Header.Header=new char[Header::HEADER_LENGTH];
+	//fread(Header.Header,sizeof(char),Header::HEADER_LENGTH,InputFile);
+	//if(!CheckHeader_(Header))
+	//	throw bad_exception("this is not KVARCO::CryptedZip file");
+
+	//read central headers
 	ReadCHeaders_();
 }
 
@@ -279,7 +289,7 @@ DWORD CDecryptedUnZip::DecryptStream_(BYTE* buffer,BYTE* stream,DWORD length)
 	//main loop
 	DWORD res_len;
 	DWORD i;
-	for(i=0,res_len=0; i<length; ++i)
+	for(i=0,res_len=0; i<length; ++i,++res_len,++ElapsedByte)
 	{
 		if(ElapsedByte==MeaninglessChar[MeaninglessIndex])
 		{
@@ -293,12 +303,10 @@ DWORD CDecryptedUnZip::DecryptStream_(BYTE* buffer,BYTE* stream,DWORD length)
 			--length;
 		}
 		else
+		{
 			buffer[i]=Decrypt1Byte_(stream[res_len],PrevCiper);
-
-		PrevCiper=stream[res_len];
-
-		++ElapsedByte;
-		++res_len;
+			PrevCiper=stream[res_len];
+		}
 	}
 
 	return i;
@@ -307,7 +315,7 @@ DWORD CDecryptedUnZip::DecryptStream_(BYTE* buffer,BYTE* stream,DWORD length)
 
 bool CDecryptedUnZip::CheckHeader_(TerminalHeader& header)
 {
-	return (strcmp(header.Header,HEADER)==0);
+	return (strcmp(header.Header,Header::HEADER)==0);
 }
 
 void CDecryptedUnZip::ReadCHeaders_()
@@ -384,26 +392,46 @@ void CDecryptedUnZip::OutputToSmallFile(path& out_path,CentralHeader& file_heade
 
 void CDecryptedUnZip::OutputToFile(path out_path,Header::CentralHeader& file_header)
 {
-	/*
 	FILE* output_file;
 	fopen_s_cz(&output_file,out_path.c_str(),TEXT_PATH("wb"));
 	BOOST_ASSERT(output_file);
 
+	fseek(InputFile,file_header.FilePos,SEEK_SET);
+	InitDecrypt_(InputFile,file_header.Key^XorKey);
+
 	BYTE buffer[BUFFER_SIZE];
+	BYTE plain_buffer[BUFFER_SIZE];
+
 	DWORD rest_bytes=file_header.ZipedFileSize;
 	while(rest_bytes)
 	{
-		rest_bytes
+		if(EnableCrypt)
+		{
+			DWORD num_tmp	=fread(buffer,sizeof(BYTE),(rest_bytes>BUFFER_SIZE) ? BUFFER_SIZE:rest_bytes,InputFile);
+			rest_bytes	   -=num_tmp;
+			DWORD num		=DecryptStream_(plain_buffer,buffer,num_tmp);
+			fwrite(plain_buffer,sizeof(BYTE),num,output_file);
+		}
+		else
+		{
+			DWORD num=fread(buffer,sizeof(BYTE),BUFFER_SIZE,InputFile);
+			fwrite(buffer,sizeof(BYTE),num,output_file);
+		}
 	}
-	
-	fwrite(buffer,sizeof(BYTE),num,output_file);
 
 	fclose(output_file);
-	delete[] buffer;
-	*/
 }
 
 CDecryptedUnZip::~CDecryptedUnZip()
 {
 	fclose(InputFile);
+
+	typedef pair<path,CentralHeader> CHeaderMapItem;
+	BOOST_FOREACH(CHeaderMapItem i,CentralHeaderMap)
+	{
+		delete[] i.second.Name;
+		i.second.Name=NULL;
+	}
+	//delete[] Header.Header;
+	//Header.Header=NULL;
 }

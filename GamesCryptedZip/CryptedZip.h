@@ -3,7 +3,6 @@
 
 //cryption's parametar
 const DWORD MEANINGLESS_NUM	=128;
-extern const char* HEADER;
 
 //for path
 #ifdef BOOST_WINDOWS_API
@@ -13,10 +12,17 @@ extern const char* HEADER;
 
 	#ifndef TEXT_PATH
 		#define TEXT_PATH(text)			L##text
-	#else
-		#define TEXT_PATH(text)
+	#endif
+#else
+	#ifndef fopen_s_cz
+		#define fopen_s_cz				fopen_s
+	#endif
+
+	#ifndef TEXT_PATH
+		#define TEXT_PATH(text)			text
 	#endif
 #endif
+
 typedef filesystem3::path::value_type	path_char;
 typedef filesystem3::path::string_type	path_string;
 
@@ -45,7 +51,7 @@ namespace CryptedZip
 	{
 		struct TerminalHeader
 		{
-			const char*	Header;
+			char*	Header;
 
 			DWORD		FileNum;
 			DWORD		CentralPos;
@@ -64,8 +70,10 @@ namespace CryptedZip
 
 		typedef pair<CentralHeader,path>	HeaderAndParent;
 
-		const DWORD BUFFER_SIZE			=(1<<10)*10;	//10KiB
+		const DWORD BUFFER_SIZE	=(1<<10)*10;	//10KiB
 		extern const path_char* ErrorMes_FileOpen;
+		extern const char* HEADER;
+		extern const DWORD HEADER_LENGTH;
 	}
 
 	typedef pair<path,path>				PathAndParent;
