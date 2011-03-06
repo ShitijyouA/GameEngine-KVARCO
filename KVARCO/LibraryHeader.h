@@ -55,6 +55,10 @@ using namespace boost::multi_index;
 #define BOOST_DATE_TIME_NO_LIB
 #include <boost/thread.hpp>
 
+#define BOOST_FILESYSTEM_VERSION 3
+#include <boost/filesystem.hpp>
+using namespace boost::filesystem;
+
 //xtal::
 #define DONOT_USE_STRING_LT
 #define XTAL_DEBUG_PRINT

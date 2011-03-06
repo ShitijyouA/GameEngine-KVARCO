@@ -42,7 +42,7 @@ public:
 			COpenAL_Ogg_Stream::Stop();
 		}
 
-	void ChangeVolume(long volume)
+	void ChangeVolume(BYTE volume)
 		{
 			mutex::scoped_lock look(ThreadSync);
 			ThreadState.wait(ThreadSync);

@@ -160,10 +160,10 @@ ScriptMngrPtr CScriptManager::GetInst()
 
 void CScriptManager::bind(const xtal::ClassPtr it)
 {
-	//xtal::lib()->def(Xid(LoadOneFile),xtal::fun(LoadOneFile));
+	USE_XDEFZ(CScriptManager);
 
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CScriptManager,LoadOneFile);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CScriptManager,CompileOneFile);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CScriptManager,LoadFiles);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CScriptManager,ReLoad);
+	Xdef_method(LoadOneFile);
+	Xdef_method(CompileOneFile);
+	Xdef_method(LoadFiles);
+	Xdef_method(ReLoad);
 }

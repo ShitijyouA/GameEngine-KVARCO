@@ -31,7 +31,7 @@ const DWORD		LOG_MAX_LENGTH	=256;
 struct GR_INFO
 {
 	int		GrHandle;
-	lRECT	Size;
+	lRect	Size;
 };
 
 namespace KVARCO
@@ -48,8 +48,8 @@ namespace KVARCO
 	extern DWORD GetKeyState(DWORD Key,int PlayerNo_=0);
 
 	//描画範囲関係
-	extern void SetDrawArea(lRECT Area);
-	extern void SetDrawArea(dRECT Area);
+	extern void SetDrawArea(lRect Area);
+	extern void SetDrawArea(dRect Area);
 	extern void SetDrawArea_default();
 
 	//画像関係関数
@@ -58,7 +58,7 @@ namespace KVARCO
 
 	//グラフィックネームからの変換
 	extern int		GetGrHandle(xtal::String GrName);	//グラフィックネームからグラフィックハンドルへの変換
-	extern lRECTPtr	GetGrSize(xtal::String GrName);
+	extern lRectPtr	GetGrSize(xtal::String GrName);
 	extern GR_INFO	GetGrInfo(xtal::String GrName);
 	extern GR_INFO*	GetGrInfo_p(xtal::String GrName);	//グラフィックテーブルにあるインスタンスのポインタ
 
@@ -110,7 +110,7 @@ namespace KVARCO
 
 	//図形描画
 	extern void DrawLine(long x1,long y1,long x2,long y2, int color,bool thickness=false);
-	extern void DrawdRECT(dRECT rect, bool fill,int color);
+	extern void DrawdRect(dRect Rect, bool fill,int color);
 
 	//ローディング
 	extern void StartGraphLoading(xtal::AnyPtr LoadPathList);

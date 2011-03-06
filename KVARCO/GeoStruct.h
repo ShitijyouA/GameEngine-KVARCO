@@ -2,7 +2,7 @@
 
 //矩形を保存するための構造体
 template<typename NUM=long>
-class tRECT
+class tRect
 {
 public:
 	NUM	left;
@@ -10,31 +10,31 @@ public:
 	NUM	right;
 	NUM	bottom;
 
-	tRECT(NUM left_=0,NUM top_=0,NUM right_=0,NUM bottom_=0)
+	tRect(NUM left_=0,NUM top_=0,NUM right_=0,NUM bottom_=0)
 		:left(left_),top(top_),
 		right(right_),bottom(bottom_)
 	{}
 };
-typedef tRECT<long>		lRECT;
-typedef tRECT<float>	dRECT;
-typedef xtal::SmartPtr<lRECT>	lRECTPtr;
-typedef xtal::SmartPtr<dRECT>	dRECTPtr;
+typedef tRect<long>		lRect;
+typedef tRect<float>	dRect;
+typedef xtal::SmartPtr<lRect>	lRectPtr;
+typedef xtal::SmartPtr<dRect>	dRectPtr;
 
 //座標を保存するための構造体
 template<typename NUM=long>
-class tPOINT
+class tPoint
 {
 public:
 	NUM	x;
 	NUM	y;
-	tPOINT(NUM x_=0,NUM y_=0)
+	tPoint(NUM x_=0,NUM y_=0)
 		:x(x_),y(y_)
 	{}
 };
-typedef tPOINT<long>	lPOINT;
-typedef tPOINT<float>	dPOINT;
-typedef xtal::SmartPtr<lPOINT>	lPOINTPtr;
-typedef xtal::SmartPtr<dPOINT>	dPOINTPtr;
+typedef tPoint<long>	lPoint;
+typedef tPoint<float>	dPoint;
+typedef xtal::SmartPtr<lPoint>	lPointPtr;
+typedef xtal::SmartPtr<dPoint>	dPointPtr;
 
 //三角関数の値を保存するための構造体
 class TriFunc
@@ -47,3 +47,21 @@ public:
 		:sin(s),cos(c)
 	{}
 };
+
+//サイズ(縦横)を示す構造体
+template<typename NUM=long>
+class tSize
+{
+public:
+	NUM width;
+	NUM height;
+
+	tSize(NUM w=0,NUM h=0)
+		:width(w),height(h)
+	{}
+};
+
+typedef tSize<long>		lSize;
+typedef tSize<float>	dSize;
+typedef xtal::SmartPtr<lSize>	lSizePtr;
+typedef xtal::SmartPtr<dSize>	dSizePtr;

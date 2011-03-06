@@ -14,7 +14,7 @@ CColPolygon::CColPolygon(DWORD poly_num)
 
 	if(poly_num<=2) poly_num=3;
 	Polygon.resize(poly_num+1); Polygon.clear();
-	for(DWORD i=0; i<(poly_num+1); i++) Polygon.push_back(dPOINT());
+	for(DWORD i=0; i<(poly_num+1); i++) Polygon.push_back(dPoint());
 }
 
 void CColPolygon::SetAABB()
@@ -22,7 +22,7 @@ void CColPolygon::SetAABB()
 	AABB.top	=LONG_MIN;	AABB.bottom	=LONG_MAX;
 	AABB.left	=LONG_MIN;	AABB.right	=LONG_MAX;
 
-	BOOST_FOREACH(dPOINT& i,Polygon)
+	BOOST_FOREACH(dPoint& i,Polygon)
 	{
 		long ix=static_cast<long>(i.x);
 		long iy=static_cast<long>(i.y);
@@ -101,9 +101,9 @@ bool CColPolygon::ColWithPoint(float x,float y)
 	return count&1;
 }
 
-bool CColPolygon::ColWithPoint(dPOINT point)
+bool CColPolygon::ColWithPoint(dPoint Point)
 {
-	return ColWithPoint(point.x,point.y);
+	return ColWithPoint(Point.x,Point.y);
 }
 
 bool CColPolygon::Check(CColPolygonPtr col)
@@ -155,9 +155,9 @@ CColPolygonPtr CColPolygon::Move(float cx,float cy,float deg)
 	return out;
 }
 
-CColPolygonPtr CColPolygon::Movep(dPOINT cpoint,float deg)
+CColPolygonPtr CColPolygon::Movep(dPoint cPoint,float deg)
 {
-	return Move(cpoint.x,cpoint.y,deg);
+	return Move(cPoint.x,cPoint.y,deg);
 }
 
 void CColPolygon::SetBox(float width,float height)
@@ -196,8 +196,8 @@ void CColPolygon::SetPolygon2(xtal::ArrayPtr polygon)
 
 	for(DWORD i=0; i<polygon->size(); ++i)
 	{
-		xtal::SmartPtr<dPOINT> tmp=xtal::unchecked_ptr_cast<dPOINT>(polygon->at(i));
-		Polygon.push_back(dPOINT(tmp->x,tmp->y));
+		xtal::SmartPtr<dPoint> tmp=xtal::unchecked_ptr_cast<dPoint>(polygon->at(i));
+		Polygon.push_back(dPoint(tmp->x,tmp->y));
 	}
 
 	DWORD end_index		=Polygon.size()-1;
@@ -209,7 +209,7 @@ void CColPolygon::DrawCollision(xtal::String layer_name,DWORD color)
 {
 	if(Polygon.size() <= 2) return;
 
-	dRECTPtr area=CLayerManager::GetInst()->GetArea(CLayerManager::GetInst()->GetHandle(layer_name.c_str()));
+	dRectPtr area=CLayerManager::GetInst()->GetArea(CLayerManager::GetInst()->GetHandle(layer_name.c_str()));
 	for(DWORD i=0; i<Polygon.size()-1; i++)
 	{
 		KVARCO::DrawLine(

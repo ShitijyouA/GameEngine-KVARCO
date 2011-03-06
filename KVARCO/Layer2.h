@@ -9,7 +9,7 @@ typedef CLayerManager*	LayerMngrPtr;
 
 class CLayer
 {
-	dRECT		Area;
+	dRect		Area;
 	ActorList	Actors;
 
 	int Z;
@@ -22,7 +22,7 @@ public:
 	void Init(xtal::String name);	//Call from CLayerManager only.
 
 	void DrawThis();
-	SET_GET(dRECT,Area)
+	SET_GET(dRect,Area)
 
 	SET_GET(int,Z)
 	GETTER(xtal::String,Name)
@@ -33,10 +33,10 @@ public:
 
 	GETTER(int,Handle)
 
-	dPOINT TransPointLocal_p(dPOINT point);
-	dPOINT TransPointGlobal_p(dPOINT point);
-	dPOINT TransPointLocal(float x,float y);
-	dPOINT TransPointGlobal(float x,float y);
+	dPoint TransPointLocal_p(dPoint Point);
+	dPoint TransPointGlobal_p(dPoint Point);
+	dPoint TransPointLocal(float x,float y);
+	dPoint TransPointGlobal(float x,float y);
 
 	void AddActor(ActorPtr actor);
 	void EraseActor(ActorPtr actor);
@@ -75,22 +75,22 @@ public:
 	void	DrawAll();
 	void	DrawLayer	(int layer_handle);
 
-	void		SetArea		(int layer_handle,dRECT area);
+	void		SetArea		(int layer_handle,dRect area);
 	void		SetZ		(int layer_handle,int z);
-	dRECTPtr	GetArea		(int layer_handle);
+	dRectPtr	GetArea		(int layer_handle);
 	int			GetZ		(int layer_handle);
 	xtal::StringPtr GetName(int layer_handle);
 
-	dPOINTPtr	TransPointLocal_p(int layer_handle,dPOINT point);
-	dPOINTPtr	TransPointGlobal_p(int layer_handle,dPOINT point);
-	dPOINTPtr	TransPointLocal(int layer_handle,float x,float y);
-	dPOINTPtr	TransPointGlobal(int layer_handle,float x,float y);
+	dPointPtr	TransPointLocal_p(int layer_handle,dPoint Point);
+	dPointPtr	TransPointGlobal_p(int layer_handle,dPoint Point);
+	dPointPtr	TransPointLocal(int layer_handle,float x,float y);
+	dPointPtr	TransPointGlobal(int layer_handle,float x,float y);
 
 	void	AddActor	(int layer_handle,ActorPtr actor);
 	void	EraseActor	(int layer_handle,ActorPtr actor);
 
 	//Layer	//Use LayerPool
-	int		NewLayer(xtal::StringPtr layer_name,int z,dRECT area);
+	int		NewLayer(xtal::StringPtr layer_name,int z,dRect area);
 	void	DeleteLayer(xtal::String layer_name);
 
 	static void	bind(const xtal::ClassPtr it);

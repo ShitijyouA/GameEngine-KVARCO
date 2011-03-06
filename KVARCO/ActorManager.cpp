@@ -162,14 +162,14 @@ void CActorManager::ReleaseAllActor()
 
 void CActorManager::bind(xtal::ClassPtr it)
 {
-	it->def(Xid(AddActor),
-		xtal::method(&CActorManager::AddActor)->param(2,Xid(debug),false));
+	USE_XDEFZ(CActorManager);
 
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CActorManager,RunAll);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CActorManager,GetByType);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CActorManager,GetAllActor);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CActorManager,AddItem);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CActorManager,GetItem);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CActorManager,DeleteItem);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CActorManager,CleanUpItemBox);
+	it->def(Xid(AddActor),xtal::method(&AddActor)->param(2,Xid(debug),false));
+	Xdef_method(RunAll);
+	Xdef_method(GetByType);
+	Xdef_method(GetAllActor);
+	Xdef_method(AddItem);
+	Xdef_method(GetItem);
+	Xdef_method(DeleteItem);
+	Xdef_method(CleanUpItemBox);
 }

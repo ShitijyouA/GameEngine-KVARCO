@@ -3,11 +3,11 @@
 
 CBezier::CBezier(xtal::ArrayPtr points,float speed,DWORD max_)
 {
-	const DWORD	DIVIDE=ceil(max_/speed);
+	const DWORD	DIVIDE=static_cast<DWORD>(ceil(max_/speed));
 	const WORD	Dimension=3;
 
 	vector<float> mPs;
-	const float InvU=1.0/(DIVIDE-1);
+	const float InvU=1.0f/(DIVIDE-1);
 	for(DWORD i=0; i<DIVIDE; i++)
 	{
 		float u=i*InvU;
@@ -18,10 +18,10 @@ CBezier::CBezier(xtal::ArrayPtr points,float speed,DWORD max_)
 			mPs.push_back(mP);
 		}
 
-		dPOINTPtr ptr=xtal::xnew<dPOINT>();
+		dPointPtr ptr=xtal::xnew<dPoint>();
 		for(WORD ii=0; ii<Dimension; ii++)
 		{
-			dPOINTPtr sp=xtal::ptr_cast<dPOINT>(points->at(ii));
+			dPointPtr sp=xtal::ptr_cast<dPoint>(points->at(ii));
 			if(xtal::is_null(sp)) continue;
 			ptr->x+=sp->x*mPs[ii];
 			ptr->y+=sp->y*mPs[ii];
@@ -32,14 +32,15 @@ CBezier::CBezier(xtal::ArrayPtr points,float speed,DWORD max_)
 	}
 }
 
-dPOINTPtr CBezier::GetPoint(DWORD pos)
+dPointPtr CBezier::GetPoint(DWORD pos)
 {	return Points[pos];		}
 
-dPOINTPtr CBezier::GetNextPoint()
+dPointPtr CBezier::GetNextPoint()
 {	return GetPoint(Pos++);	}
 
 void CBezier::bind(xtal::ClassPtr it)
 {
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CBezier,GetPoint);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CBezier,GetNextPoint);
+	USE_XDEFZ(CBezier);
+	Xdef_method(GetPoint);
+	Xdef_method(GetNextPoint);
 }

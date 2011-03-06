@@ -8,7 +8,7 @@ class CBaseActor
 
 public:
 
-	dPOINT	Point;
+	dPoint	Point;
 	int		Z;
 
 	DWORD ID;
@@ -48,17 +48,19 @@ public:
 
 	static void bind(xtal::ClassPtr it)
 	{
-		XTAL_BIND_VAR_DEFNAME(CBaseActor,Point);
-		XTAL_BIND_VAR_DEFNAME(CBaseActor,Z);
-		XTAL_BIND_VAR_DEFNAME(CBaseActor,ID);
-		XTAL_BIND_VAR_DEFNAME(CBaseActor,ActorType);
-		XTAL_BIND_VAR_DEFNAME(CBaseActor,Parent);
-		XTAL_BIND_VAR_DEFNAME(CBaseActor,LayerName);
-		XTAL_BIND_VAR_DEFNAME(CBaseActor,Run);
+		USE_XDEFZ(CBaseActor);
 
-		BIND_XTAL_CLASSFUN_DEFNAME_IT(CBaseActor,init);
-		BIND_XTAL_CLASSFUN_DEFNAME_IT(CBaseActor,Die);
-		BIND_XTAL_CLASSFUN_DEFNAME_IT(CBaseActor,IsDead);
+		Xdef_var(Point);
+		Xdef_var(Z);
+		Xdef_var(ID);
+		Xdef_var(ActorType);
+		Xdef_var(Parent);
+		Xdef_var(LayerName);
+		Xdef_var(Run);
+
+		Xdef_method(init);
+		Xdef_method(Die);
+		Xdef_method(IsDead);
 	}
 };
 

@@ -18,12 +18,16 @@ DWORD CSceneManager::SetNextScene(xtal::AnyPtr scene)
 void CSceneManager::StartNextScene()
 {
 	if(RunningScenePos+1<MAX_SCENE_NUM) RunningScenePos++;
+
+	xtal::full_gc();
 }
 
 void CSceneManager::StartScene(int rela_pos)
 {
 	if(RunningScenePos+rela_pos>0 && RunningScenePos+rela_pos<MAX_SCENE_NUM)
 		RunningScenePos+=rela_pos;
+
+	xtal::full_gc();
 }
 
 xtal::AnyPtr CSceneManager::GetSceneRlt(int by)
@@ -53,6 +57,8 @@ void CSceneManager::CleanPrevScene_()
 
 		Scenes[i]=xtal::null;
 	}
+
+	xtal::full_gc();
 }
 
 void CSceneManager::Run()
@@ -83,10 +89,8 @@ void CSceneManager::Draw()
 	}
 }
 
-//SceneMngrPtr CSceneManager::Inst=NULL;
 SceneMngrPtr CSceneManager::GetInst()
 {
-	//if(Inst==NULL) Inst=new CSceneManager;
 	static CSceneManager Inst;
 	return &Inst;
 }
@@ -108,13 +112,15 @@ void CSceneManager::ReleaseAllScene()
 
 void CSceneManager::bind(const xtal::ClassPtr it)
 {
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CSceneManager,GetRunningScenePos);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CSceneManager,SetNextScene);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CSceneManager,StartNextScene);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CSceneManager,StartScene);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CSceneManager,GetSceneRlt);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CSceneManager,GetSceneAbs);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CSceneManager,CleanPrevScene);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CSceneManager,Run);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CSceneManager,Draw);
+	USE_XDEFZ(CSceneManager);
+
+	Xdef_method(GetRunningScenePos);
+	Xdef_method(SetNextScene);
+	Xdef_method(StartNextScene);
+	Xdef_method(StartScene);
+	Xdef_method(GetSceneRlt);
+	Xdef_method(GetSceneAbs);
+	Xdef_method(CleanPrevScene);
+	Xdef_method(Run);
+	Xdef_method(Draw);
 }

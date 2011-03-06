@@ -45,8 +45,8 @@ void KVARCO::DrawZoom_H(int GrHandle,float ZoomRateX,float ZoomRateY,long cx,lon
 {
 	int w,h;
 	DxLib::GetGraphSize(GrHandle,&w,&h);
-	long Halfx=(w/2)	*ZoomRateX;
-	long Halfy=(h/2)	*ZoomRateY;
+	long Halfx=static_cast<long>(w*ZoomRateX*0.5f);
+	long Halfy=static_cast<long>(h*ZoomRateY*0.5f);
 	if(!call_alpha) SetDrawBlendModeLight(DX_BLENDMODE_NOBLEND,255);
 	DxLib::DrawExtendGraph(cx-Halfx,cy-Halfy,cx+Halfx,cy+Halfy,GrHandle,(int )Trans);
 }
@@ -64,7 +64,7 @@ void KVARCO::DrawRotaZoom_H(int GrHandle,float ZoomRateX,float ZoomRateY,float A
 	float Halfx=(w/2)	*ZoomRateX;
 	float Halfy=(h/2)	*ZoomRateY;
 
-	dPOINT tmp[4];
+	dPoint tmp[4];
 
 	tmp[0].x=cx-Halfx;	tmp[0].y=cy-Halfy;
 	tmp[1].x=cx+Halfx;	tmp[1].y=cy-Halfy;
@@ -75,7 +75,7 @@ void KVARCO::DrawRotaZoom_H(int GrHandle,float ZoomRateX,float ZoomRateY,float A
 	float _sin_=-sin_;
 	float cos_=cos(Angle);
 
-	dPOINT res[4];
+	dPoint res[4];
 	//加法定理
 	for(int i=0; i<4; i++)
 	{

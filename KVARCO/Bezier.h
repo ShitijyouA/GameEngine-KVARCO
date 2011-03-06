@@ -4,11 +4,11 @@
 class CBezier
 {
 	DWORD Pos;
-	vector<dPOINTPtr> Points;
+	vector<dPointPtr> Points;
 public:
-	CBezier(xtal::ArrayPtr points,float speed,DWORD max_=1024);
-	dPOINTPtr GetPoint(DWORD pos);
-	dPOINTPtr GetNextPoint();
+	CBezier(xtal::ArrayPtr Points,float speed,DWORD max_=1024);
+	dPointPtr GetPoint(DWORD pos);
+	dPointPtr GetNextPoint();
 
 	static void bind(xtal::ClassPtr it);
 };

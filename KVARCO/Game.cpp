@@ -66,6 +66,11 @@ namespace KVARCO
 	}
 
 	string ExePath=GetExePath();
+
+	GameBootSettingPtr GetGameSetting()
+	{
+		return &Game->Setting;
+	}
 }
 
 //毎フレームの経過時間をFRAME_COUNT回計測し、その平均を出す。出力はFPSの形
@@ -148,7 +153,7 @@ CGame::CGame(CGameBootSetting gs,xtal::AnyPtr Framework)
 	//初期化
 	if( DxLib_Init() == -1 )
 	{
-		MessageBox(NULL,"DirectXの初期化に失敗しました","エラー",0);
+		MessageBox(NULL,"DiRectXの初期化に失敗しました","エラー",0);
 		exit(0);
 	}
 
@@ -263,7 +268,7 @@ void CGame::UnInit()
 	KVARCO::OutputLog("----------------");
 
 	xtal::uninitialize();	KVARCO::OutputLog("Xtalを開放");
-	DxLib::DxLib_End();		KVARCO::OutputLog("DirectXを開放");
+	DxLib::DxLib_End();		KVARCO::OutputLog("DiRectXを開放");
 
 	OpenAL_Ogg::UnInit();	KVARCO::OutputLog("OpenALを開放");
 

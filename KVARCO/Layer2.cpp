@@ -34,31 +34,31 @@ void CLayer::DrawThis()
 	KVARCO::SetDrawArea_default();
 }
 
-dPOINT CLayer::TransPointLocal_p(dPOINT point)
+dPoint CLayer::TransPointLocal_p(dPoint Point)
 {
-	dPOINT res;
-	res.x=point.x-Area.left;
-	res.y=point.y-Area.top;
+	dPoint res;
+	res.x=Point.x-Area.left;
+	res.y=Point.y-Area.top;
 	return res;
 }
 
-dPOINT CLayer::TransPointGlobal_p(dPOINT point)
+dPoint CLayer::TransPointGlobal_p(dPoint Point)
 {
-	dPOINT res;
-	res.x=point.x+Area.left;
-	res.y=point.y+Area.top;
+	dPoint res;
+	res.x=Point.x+Area.left;
+	res.y=Point.y+Area.top;
 	return res;
 }
-dPOINT CLayer::TransPointLocal(float x,float y)
+dPoint CLayer::TransPointLocal(float x,float y)
 {
-	dPOINT tmp;
+	dPoint tmp;
 	tmp.x=x;
 	tmp.y=y;
 	return TransPointLocal_p(tmp);
 }
-dPOINT	CLayer::TransPointGlobal(float x,float y)
+dPoint	CLayer::TransPointGlobal(float x,float y)
 {
-	dPOINT tmp;
+	dPoint tmp;
 	tmp.x=x;
 	tmp.y=y;
 	return TransPointGlobal_p(tmp);
@@ -174,34 +174,34 @@ inline T1 ByLayerHandle1(int layer_handle,P2& val0)
 }
 
 //そのインスタンス
-void	CLayerManager::SetArea(int layer_handle,dRECT area)
-{	SetByLayerHandle<dRECT,&CLayer::SetArea>(layer_handle,area);	}
+void	CLayerManager::SetArea(int layer_handle,dRect area)
+{	SetByLayerHandle<dRect,&CLayer::SetArea>(layer_handle,area);	}
 void	CLayerManager::SetZ(int layer_handle,int z)
 {	SetByLayerHandle<int,&CLayer::SetZ>		(layer_handle,z);		}
 
-dRECTPtr	CLayerManager::GetArea(int layer_handle)
-{	return xtal::xnew<dRECT>(GetByLayerHandle_const<dRECT,&CLayer::GetArea>(layer_handle));		}
+dRectPtr	CLayerManager::GetArea(int layer_handle)
+{	return xtal::xnew<dRect>(GetByLayerHandle_const<dRect,&CLayer::GetArea>(layer_handle));		}
 int		CLayerManager::GetZ(int layer_handle)
 {	return GetByLayerHandle_const<int,&CLayer::GetZ>(layer_handle);				}
 xtal::StringPtr CLayerManager::GetName(int layer_handle)
 {	return xtal::xnew<xtal::String>(GetByLayerHandle_const<xtal::String,&CLayer::GetName>(layer_handle));	}
 
-dPOINTPtr	CLayerManager::TransPointLocal_p(int layer_handle,dPOINT point)
-{	return xtal::xnew<dPOINT>(ByLayerHandle1<dPOINT,dPOINT,&CLayer::TransPointLocal_p>(layer_handle,point));	}
-dPOINTPtr	CLayerManager::TransPointGlobal_p(int layer_handle,dPOINT point)
-{	return xtal::xnew<dPOINT>(ByLayerHandle1<dPOINT,dPOINT,&CLayer::TransPointGlobal_p>(layer_handle,point));	}
-dPOINTPtr	CLayerManager::TransPointLocal(int layer_handle,float x,float y)
+dPointPtr	CLayerManager::TransPointLocal_p(int layer_handle,dPoint Point)
+{	return xtal::xnew<dPoint>(ByLayerHandle1<dPoint,dPoint,&CLayer::TransPointLocal_p>(layer_handle,Point));	}
+dPointPtr	CLayerManager::TransPointGlobal_p(int layer_handle,dPoint Point)
+{	return xtal::xnew<dPoint>(ByLayerHandle1<dPoint,dPoint,&CLayer::TransPointGlobal_p>(layer_handle,Point));	}
+dPointPtr	CLayerManager::TransPointLocal(int layer_handle,float x,float y)
 {
 	CLayer* ptr=CLayerManager::GetInst()->GetPtr(layer_handle);
-	if(ptr!=NULL) return xtal::xnew<dPOINT>(ptr->TransPointLocal(x,y));
-	return dPOINTPtr();
+	if(ptr!=NULL) return xtal::xnew<dPoint>(ptr->TransPointLocal(x,y));
+	return dPointPtr();
 }
 
-dPOINTPtr	CLayerManager::TransPointGlobal(int layer_handle,float x,float y)
+dPointPtr	CLayerManager::TransPointGlobal(int layer_handle,float x,float y)
 {
 	CLayer* ptr=CLayerManager::GetInst()->GetPtr(layer_handle);
-	if(ptr!=NULL) return xtal::xnew<dPOINT>(ptr->TransPointGlobal(x,y));
-	return dPOINTPtr();
+	if(ptr!=NULL) return xtal::xnew<dPoint>(ptr->TransPointGlobal(x,y));
+	return dPointPtr();
 }
 
 void	CLayerManager::AddActor(int layer_handle,ActorPtr actor)
@@ -210,7 +210,7 @@ void	CLayerManager::EraseActor(int layer_handle,ActorPtr actor)
 {	 SetByLayerHandle<ActorPtr,&CLayer::EraseActor>(layer_handle,actor);	}
 
 //Layerの操作
-int CLayerManager::NewLayer(xtal::StringPtr layer_name,int z,dRECT area)
+int CLayerManager::NewLayer(xtal::StringPtr layer_name,int z,dRect area)
 {
 	if(xtal::is_undefined(layer_name) || xtal::is_null(layer_name))	return 0;
 
@@ -267,20 +267,22 @@ LayerMngrPtr CLayerManager::GetInst()
 
 void CLayerManager::bind(const xtal::ClassPtr it)
 {
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CLayerManager,DrawAll);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CLayerManager,DrawLayer);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CLayerManager,SetArea);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CLayerManager,SetZ);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CLayerManager,GetArea);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CLayerManager,GetZ);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CLayerManager,GetName);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CLayerManager,TransPointLocal_p);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CLayerManager,TransPointGlobal_p);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CLayerManager,TransPointLocal);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CLayerManager,TransPointGlobal);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CLayerManager,AddActor);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CLayerManager,EraseActor);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CLayerManager,NewLayer);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CLayerManager,DeleteLayer);
-	BIND_XTAL_CLASSFUN_DEFNAME_IT(CLayerManager,GetHandle);
+	USE_XDEFZ(CLayerManager);
+
+	Xdef_method(DrawAll);
+	Xdef_method(DrawLayer);
+	Xdef_method(SetArea);
+	Xdef_method(SetZ);
+	Xdef_method(GetArea);
+	Xdef_method(GetZ);
+	Xdef_method(GetName);
+	Xdef_method(TransPointLocal_p);
+	Xdef_method(TransPointGlobal_p);
+	Xdef_method(TransPointLocal);
+	Xdef_method(TransPointGlobal);
+	Xdef_method(AddActor);
+	Xdef_method(EraseActor);
+	Xdef_method(NewLayer);
+	Xdef_method(DeleteLayer);
+	Xdef_method(GetHandle);
 }

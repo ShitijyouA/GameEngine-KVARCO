@@ -33,17 +33,8 @@
 #endif
 
 //Xtalバインド用マクロ
-#ifndef BIND_XTAL_FUN_DEFNAME
-#define BIND_XTAL_FUN_DEFNAME(x) xtal::lib()->def(Xid(x),xtal::fun(&x) )
-#endif
-
-#ifndef BIND_XTAL_CLASSFUN_DEFNAME_IT
-#define BIND_XTAL_CLASSFUN_DEFNAME_IT(_class,_fun) it->def(Xid(_fun),xtal::method(&_class::_fun))
-#endif
-
-#ifndef XTAL_BIND_VAR_DEFNAME
-#define XTAL_BIND_VAR_DEFNAME(_class,n) it->def_var(Xid(n),&_class::n)
-#endif
+#define USE_XDEFZ(class_)	typedef class_ Self
+//あとはXtal標準のXdef_fun,Xdef_method_Xdef_varを使用
 
 //singleton pattern
 //Xtalにバインドしないclass
@@ -58,7 +49,7 @@ public:\
 //Release()は各自で用意する
 //friendは使用するXtalによって違うので注意
 //コンパイルエラーが起きた場合はこのfriend宣言を全て削除し、
-//コンパイルエラーを参考に書きなおしてください
+//コンパイルエラーを参考に書きなおす
 #define SINGLETON_PATTERNX(_class,_class_ptr)\
 private:\
 	friend xtal::SmartPtr<_class> xtal::xnew();\
@@ -69,4 +60,20 @@ private:\
 public:\
 	static _class_ptr GetInst();
 
-//tRECT,tPOINTをインスタンス化したもののSmartPtr
+//XtalとC++をできるだけ分離するためのバインド用マクロ
+
+#define NAME_IN_X(name_)	name_##XTAL
+#define FOR_XTAL_NAMESPACE	ForXtal
+#define BEGIN_FOR_XTAL		namespace FOR_XTAL_NAMESPACE
+
+#ifndef Xdef_funx
+#define Xdef_funx(name_)	xtal::lib()->def(Xid(name_),xtal::fun(&NAME_IN_X(name_)))
+#endif
+
+#ifndef Xdef_methodx
+#define Xdef_methodx(name_) it->def(Xid(name_),xtal::method(&Self::NAME_IN_X(name_)))
+#endif
+
+#ifndef Xdef_varx
+#define Xdef_varx(name_)	it->def_var(Xid(name_),&Self::NAME_IN_X(name_))
+#endif

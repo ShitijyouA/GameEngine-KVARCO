@@ -40,12 +40,12 @@ DWORD KVARCO::GetKeyState(DWORD Key,int PlayerNo_)
 }
 
 //描画範囲関係
-void SetDrawArea(lRECT Area)
+void SetDrawArea(lRect Area)
 {
 	DxLib::SetDrawArea(Area.left,Area.top,Area.right,Area.bottom);
 }
 
-void SetDrawArea(dRECT Area)
+void SetDrawArea(dRect Area)
 {
 	DxLib::SetDrawArea(
 		static_cast<int>(Area.left),
@@ -57,10 +57,11 @@ void SetDrawArea(dRECT Area)
 
 void SetDrawArea_default()
 {
-	lRECT area;
-	area.left=0;area.top=0;
-	area.right=Game->Setting.WndWidth;
-	area.bottom=Game->Setting.WndHeight;
+	lRect area;
+	area.left	=0;
+	area.top	=0;
+	area.right	=Game->Setting.WndWidth;
+	area.bottom	=Game->Setting.WndHeight;
 
 	KVARCO::SetDrawArea(area);
 }
@@ -74,8 +75,8 @@ int	LoadGraph(xtal::String GrName,xtal::String RelaPath)
 	GR_INFO grinfo;
 	grinfo.GrHandle=Warning::Retry_LoadGraph(path.c_str());
 
-	//"NULL"の時はGrHadleを返すだけ
-	if(name!="NULL")
+	//""(NULL)の時はGrHadleを返すだけ
+	if(name!="")
 	{
 		//サイズ獲得
 		int r,b;
@@ -115,11 +116,11 @@ int GetGrHandle(xtal::String GrName)
 	return -1;
 }
 
-lRECTPtr GetGrSize(xtal::String GrName)
+lRectPtr GetGrSize(xtal::String GrName)
 {
 	GR_INFO* gr=GetGrInfo_p(GrName);
-	if(gr!=NULL) return xtal::xnew<lRECT>(gr->Size);
-	return lRECTPtr();
+	if(gr!=NULL) return xtal::xnew<lRect>(gr->Size);
+	return lRectPtr();
 }
 
 //グラフィックハンドル指定型
@@ -179,13 +180,13 @@ void DrawLine(long x1,long y1,long x2,long y2, int color,bool thickness)
 	DxLib::DrawLine(x1,y1,x2,y2,color,(int )thickness);
 }
 
-void DrawdRECT(dRECT rect, bool fill,int color)
+void DrawdRect(dRect Rect, bool fill,int color)
 {
 	DxLib::DrawBox(
-		static_cast<int>(rect.top),
-		static_cast<int>(rect.left),
-		static_cast<int>(rect.bottom),
-		static_cast<int>(rect.right),
+		static_cast<int>(Rect.top),
+		static_cast<int>(Rect.left),
+		static_cast<int>(Rect.bottom),
+		static_cast<int>(Rect.right),
 		static_cast<int>(fill),color
 		);
 }
@@ -298,7 +299,9 @@ float Rand(float min_,float max_)
 
 int RandInt(int min_,int max_)
 {
-	return static_cast<int>(RealRandom.Random(min_,max_));
+	return static_cast<int>(
+		RealRandom.Random(static_cast<float>(min_),static_cast<float>(max_))
+	);
 }
 
 //Info
@@ -340,115 +343,126 @@ void Exit()
 //Bind to Xtal
 void bind()
 {
-	BIND_XTAL_FUN_DEFNAME(MakeHandle);
-	BIND_XTAL_FUN_DEFNAME(GetKeyState);
+	//クラスでなくネームスペースでもXdefマクロを使うためのゴリ押し
+	#define Self	KVARCO
+	#define it		xtal::lib()
 
-	BIND_XTAL_FUN_DEFNAME(GetGrSize);
+	Xdef_fun(MakeHandle);
+	Xdef_fun(GetKeyState);
 
-	BIND_XTAL_FUN_DEFNAME(LoadGraph);
-	BIND_XTAL_FUN_DEFNAME(GetGrHandle);
-	BIND_XTAL_FUN_DEFNAME(LoadCutGraph_H);
-	BIND_XTAL_FUN_DEFNAME(DeleteGraph_H);
-	BIND_XTAL_FUN_DEFNAME(LoadCutGraph_N);
-	BIND_XTAL_FUN_DEFNAME(DeleteGraph_N);
+	Xdef_fun(GetGrSize);
+
+	Xdef_fun(LoadGraph);
+	Xdef_fun(GetGrHandle);
+	Xdef_fun(LoadCutGraph_H);
+	Xdef_fun(DeleteGraph_H);
+	Xdef_fun(LoadCutGraph_N);
+	Xdef_fun(DeleteGraph_N);
 
 	//描画関数
 	//グラフィックハンドル指定型
-#define BIND_XTAL_FUN_DEFNAME_PEND(x) xtal::lib()->def(Xid(x),xtal::fun(&x)
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawGraph_H)				->param(4,Xid(trans),true)->param(5,Xid(call_alpha),false));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaGraph_H)			->param(5,Xid(trans),true)->param(6,Xid(call_alpha),false));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaGraph2_H)		->param(7,Xid(trans),true)->param(8,Xid(call_alpha),false));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawGraphAlpha_H)		->param(5,Xid(trans),true));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaGraphAlpha_H)	->param(6,Xid(trans),true));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaGraphAlpha2_H)	->param(8,Xid(trans),true));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawZoom_H)				->param(6,Xid(trans),true)->param(7,Xid(call_alpha),false));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawZoomAlpha_H)			->param(7,Xid(trans),true));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaZoom_H)			->param(7,Xid(trans),true)->param(8,Xid(call_alpha),false));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaZoomAlpha_H)		->param(8,Xid(trans),true));
+	#define Xdef_param_(x) xtal::lib()->def(Xid(x),xtal::fun(&x)
+	Xdef_param_(DrawGraph_H)			->param(4,Xid(trans),true)->param(5,Xid(call_alpha),false));
+	Xdef_param_(DrawRotaGraph_H)		->param(5,Xid(trans),true)->param(6,Xid(call_alpha),false));
+	Xdef_param_(DrawRotaGraph2_H)		->param(7,Xid(trans),true)->param(8,Xid(call_alpha),false));
+	Xdef_param_(DrawGraphAlpha_H)		->param(5,Xid(trans),true));
+	Xdef_param_(DrawRotaGraphAlpha_H)	->param(6,Xid(trans),true));
+	Xdef_param_(DrawRotaGraphAlpha2_H)	->param(8,Xid(trans),true));
+	Xdef_param_(DrawZoom_H)				->param(6,Xid(trans),true)->param(7,Xid(call_alpha),false));
+	Xdef_param_(DrawZoomAlpha_H)		->param(7,Xid(trans),true));
+	Xdef_param_(DrawRotaZoom_H)			->param(7,Xid(trans),true)->param(8,Xid(call_alpha),false));
+	Xdef_param_(DrawRotaZoomAlpha_H)	->param(8,Xid(trans),true));
 
 	//グラフィックネーム指定型
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawGraph_N)				->param(4,Xid(trans),true));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaGraph_N)			->param(5,Xid(trans),true));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaGraph2_N)		->param(7,Xid(trans),true));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawGraphAlpha_N)		->param(5,Xid(trans),true));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaGraphAlpha_N)	->param(6,Xid(trans),true));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaGraphAlpha2_N)	->param(8,Xid(trans),true));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawZoom_N)				->param(6,Xid(trans),true));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawZoomAlpha_N)			->param(7,Xid(trans),true));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaZoom_N)			->param(7,Xid(trans),true));
-	BIND_XTAL_FUN_DEFNAME_PEND(DrawRotaZoomAlpha_N)		->param(8,Xid(trans),true));
+	Xdef_param_(DrawGraph_N)			->param(4,Xid(trans),true));
+	Xdef_param_(DrawRotaGraph_N)		->param(5,Xid(trans),true));
+	Xdef_param_(DrawRotaGraph2_N)		->param(7,Xid(trans),true));
+	Xdef_param_(DrawGraphAlpha_N)		->param(5,Xid(trans),true));
+	Xdef_param_(DrawRotaGraphAlpha_N)	->param(6,Xid(trans),true));
+	Xdef_param_(DrawRotaGraphAlpha2_N)	->param(8,Xid(trans),true));
+	Xdef_param_(DrawZoom_N)				->param(6,Xid(trans),true));
+	Xdef_param_(DrawZoomAlpha_N)		->param(7,Xid(trans),true));
+	Xdef_param_(DrawRotaZoom_N)			->param(7,Xid(trans),true));
+	Xdef_param_(DrawRotaZoomAlpha_N)	->param(8,Xid(trans),true));
+	#undef Xdef_param_
 
 	//文字列描画
-	BIND_XTAL_FUN_DEFNAME(GetColorHandle);
-	BIND_XTAL_FUN_DEFNAME(DrawString);
+	Xdef_fun(GetColorHandle);
+	Xdef_fun(DrawString);
 
 	//図形描画
-	BIND_XTAL_FUN_DEFNAME(DrawLine);
-	BIND_XTAL_FUN_DEFNAME(DrawdRECT);
+	Xdef_fun(DrawLine);
+	Xdef_fun(DrawdRect);
 
 	//Info
-	BIND_XTAL_FUN_DEFNAME(GetNowFPS);
+	Xdef_fun(GetNowFPS);
+	Xdef_fun(GetGameSetting);
 
 	//ローディング
-	BIND_XTAL_FUN_DEFNAME(StartGraphLoading);
-	BIND_XTAL_FUN_DEFNAME(IsLoadingEnd);
+	Xdef_fun(StartGraphLoading);
+	Xdef_fun(IsLoadingEnd);
 
 	//便利関数
-	BIND_XTAL_FUN_DEFNAME(SplitOption);
-	BIND_XTAL_FUN_DEFNAME(SplitWords);
+	Xdef_fun(SplitOption);
+	Xdef_fun(SplitWords);
 	
 	//乱数(mt19937使用)
-	BIND_XTAL_FUN_DEFNAME(RandSeed);
-	BIND_XTAL_FUN_DEFNAME(Rand);
-	BIND_XTAL_FUN_DEFNAME(RandInt);
+	Xdef_fun(RandSeed);
+	Xdef_fun(Rand);
+	Xdef_fun(RandInt);
 	
-	BIND_XTAL_FUN_DEFNAME(DebugOut);
+	Xdef_fun(DebugOut);
 
-	BIND_XTAL_FUN_DEFNAME(Exit);
+	Xdef_fun(Exit);
+
+	#undef Self
+	#undef it
 }
 
 void GE_KeyCode_bind(xtal::ClassPtr it)
 {
-#pragma warning(disable:4482)
-#define XTAL_BIND_CONST_DEFNAME(_name) it->def(Xid(_name),GE_KeyCode::_name)
-	XTAL_BIND_CONST_DEFNAME(KEY_LEFT);
-	XTAL_BIND_CONST_DEFNAME(KEY_UP);
-	XTAL_BIND_CONST_DEFNAME(KEY_RIGHT);
-	XTAL_BIND_CONST_DEFNAME(KEY_DOWN);
+	#define int_t	xtal::int_t		//boostを使う環境ではint_tが曖昧になる(boost::int_tがあるため)
+	#define Self					//GE_KeyCodeを設定してもいいが、警告がうるさい
 
-	XTAL_BIND_CONST_DEFNAME(KEY_Z);
-	XTAL_BIND_CONST_DEFNAME(KEY_X);
-	XTAL_BIND_CONST_DEFNAME(KEY_C);
-	XTAL_BIND_CONST_DEFNAME(KEY_A);
-	XTAL_BIND_CONST_DEFNAME(KEY_S);
-	XTAL_BIND_CONST_DEFNAME(KEY_D);
-	XTAL_BIND_CONST_DEFNAME(KEY_Q);
-	XTAL_BIND_CONST_DEFNAME(KEY_W);
-	XTAL_BIND_CONST_DEFNAME(KEY_ESC);
-	XTAL_BIND_CONST_DEFNAME(KEY_SPACE);
+	Xdef_const(KEY_LEFT);
+	Xdef_const(KEY_UP);
+	Xdef_const(KEY_RIGHT);
+	Xdef_const(KEY_DOWN);
+
+	Xdef_const(KEY_Z);
+	Xdef_const(KEY_X);
+	Xdef_const(KEY_C);
+	Xdef_const(KEY_A);
+	Xdef_const(KEY_S);
+	Xdef_const(KEY_D);
+	Xdef_const(KEY_Q);
+	Xdef_const(KEY_W);
+	Xdef_const(KEY_ESC);
+	Xdef_const(KEY_SPACE);
 	
-	XTAL_BIND_CONST_DEFNAME(KEY_F1);
-	XTAL_BIND_CONST_DEFNAME(KEY_F2);
-	XTAL_BIND_CONST_DEFNAME(KEY_F3);
-	XTAL_BIND_CONST_DEFNAME(KEY_F4);
-	XTAL_BIND_CONST_DEFNAME(KEY_F5);
-	XTAL_BIND_CONST_DEFNAME(KEY_F6);
-	XTAL_BIND_CONST_DEFNAME(KEY_F7);
-	XTAL_BIND_CONST_DEFNAME(KEY_F8);
-	XTAL_BIND_CONST_DEFNAME(KEY_F9);
-	XTAL_BIND_CONST_DEFNAME(KEY_F10);
-	XTAL_BIND_CONST_DEFNAME(KEY_F11);
-	XTAL_BIND_CONST_DEFNAME(KEY_F12);
-	XTAL_BIND_CONST_DEFNAME(KEY_F13);
-	XTAL_BIND_CONST_DEFNAME(KEY_F14);
-	XTAL_BIND_CONST_DEFNAME(KEY_F15);
-	XTAL_BIND_CONST_DEFNAME(KEY_F16);
+	Xdef_const(KEY_F1);
+	Xdef_const(KEY_F2);
+	Xdef_const(KEY_F3);
+	Xdef_const(KEY_F4);
+	Xdef_const(KEY_F5);
+	Xdef_const(KEY_F6);
+	Xdef_const(KEY_F7);
+	Xdef_const(KEY_F8);
+	Xdef_const(KEY_F9);
+	Xdef_const(KEY_F10);
+	Xdef_const(KEY_F11);
+	Xdef_const(KEY_F12);
+	Xdef_const(KEY_F13);
+	Xdef_const(KEY_F14);
+	Xdef_const(KEY_F15);
+	Xdef_const(KEY_F16);
 
-	XTAL_BIND_CONST_DEFNAME(KEY_SHIFT);
-	XTAL_BIND_CONST_DEFNAME(KEY_DELETE);
-	XTAL_BIND_CONST_DEFNAME(KEY_INSERT);
+	Xdef_const(KEY_SHIFT);
+	Xdef_const(KEY_DELETE);
+	Xdef_const(KEY_INSERT);
 
-#undef XTAL_BIND_CONST_DEFNAME
+	#undef Self
+	#undef int_t
 }
 
 }//KVARCO::

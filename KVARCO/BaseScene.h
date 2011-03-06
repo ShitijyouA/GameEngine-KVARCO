@@ -13,7 +13,8 @@ public:
 
 	static void bind(xtal::ClassPtr it)
 	{
-		XTAL_BIND_VAR_DEFNAME(CBaseScene,Run);
+		USE_XDEFZ(CBaseScene);
+		Xdef_var(Run);
 	}
 };
 

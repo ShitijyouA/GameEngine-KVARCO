@@ -297,6 +297,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Font.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Game.h"
 				>
 			</File>

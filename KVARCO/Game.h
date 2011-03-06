@@ -37,6 +37,8 @@ public:
 	string LoadFileList;
 };
 
+typedef xtal::SmartPtr<CGameBootSetting> GameBootSettingPtr;
+
 class CGame
 {
 	//固定フレームレート調整用
@@ -111,6 +113,7 @@ namespace KVARCO
 	
 	extern	void Boot(string IniFile);
 	extern	CGameBootSetting InitFromIniFile(string path);
+	extern	GameBootSettingPtr GetGameSetting();
 }
 
 extern	shared_ptr<CGame>	Game;

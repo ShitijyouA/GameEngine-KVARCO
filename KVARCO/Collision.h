@@ -4,15 +4,15 @@
 class CColPolygon;
 typedef xtal::SmartPtr<CColPolygon> CColPolygonPtr;
 
-typedef vector<dPOINT> POLYGON;
+typedef vector<dPoint> POLYGON;
 class CColPolygon
 {
 protected:
 //	friend class CColPolygon;
 	POLYGON Polygon;		//各頂点
-	lRECT	AABB;			//AABB
+	lRect	AABB;			//AABB
 
-	bool ColWithPoint(dPOINT point);
+	bool ColWithPoint(dPoint Point);
 	bool ColWithPoint(float x,float y);
 
 	static CColPolygonPtr VoidPolygon;
@@ -25,7 +25,7 @@ public:
 	virtual void SetPolygon(float radius,float offset_deg);	//正poly_num角形をセット。sizeは半径
 	virtual void SetPolygon2(xtal::ArrayPtr polygon);
 
-	CColPolygonPtr Movep(dPOINT cpoint,float deg);			//回転、移動
+	CColPolygonPtr Movep(dPoint cPoint,float deg);			//回転、移動
 	CColPolygonPtr Move(float cx,float cy,float deg);
 
 	bool Check(CColPolygonPtr col);
