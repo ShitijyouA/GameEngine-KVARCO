@@ -195,6 +195,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Font.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Game.cpp"
 				>
 			</File>

@@ -28,10 +28,16 @@ const DWORD		LOG_MAX_LENGTH	=256;
 #include "Input.h"
 #include "Collision.h"
 
+//#define USE_SIZE_STRCT		//tSizeを使うときdefine。define推奨
+
 struct GR_INFO
 {
 	int		GrHandle;
+#ifdef USE_SIZE_STRCT
+	lSize	Size;
+#else
 	lRect	Size;
+#endif
 };
 
 namespace KVARCO
@@ -53,24 +59,24 @@ namespace KVARCO
 	extern void SetDrawArea_default();
 
 	//画像関係関数
-	//GrNameもしくはNewNameが"NULL"(文字列)だと、グローバルテーブルに登録されない
+		//GrNameもしくはNewNameが""(空文字)だと、グローバルテーブルに登録されない
 	extern int	LoadGraph(xtal::String GrName,xtal::String RelaPath);	//ロード
 
-	//グラフィックネームからの変換
+		//グラフィックネームからの変換
 	extern int		GetGrHandle(xtal::String GrName);	//グラフィックネームからグラフィックハンドルへの変換
 	extern lRectPtr	GetGrSize(xtal::String GrName);
 	extern GR_INFO	GetGrInfo(xtal::String GrName);
 	extern GR_INFO*	GetGrInfo_p(xtal::String GrName);	//グラフィックテーブルにあるインスタンスのポインタ
 
 		//グラフィックネーム指定型
-	extern int	LoadCutGraph_H(xtal::String NewName,int GrHandle,long x,long y,long w,long h);		//ロード済みの画像から一部を切り出し、新しい画像として利用出来るようにする。切り出し元が削除されると利用できなくなる
-	extern void	DeleteGraph_H(int GrHandle);	//画像削除
+	extern int	LoadCutGraph_H(xtal::String NewName,int GrHandle,long x,long y,long w,long h);				//ロード済みの画像から一部を切り出し、新しい画像として利用出来るようにする。切り出し元が削除されると利用できなくなる
+	extern void	DeleteGraph_H(int GrHandle);		//画像削除
 
 		//グラフィックハンドル指定型
 	extern int	LoadCutGraph_N(xtal::String NewName,xtal::String GrName,long x,long y,long w,long h);		//ロード済みの画像から一部を切り出し、新しい画像として利用出来るようにする。切り出し元が削除されると利用できなくなる
 	extern void	DeleteGraph_N(xtal::String GrName);	//画像削除
 
-	//画像ブレンド設定(軽量化)
+		//画像ブレンド設定(軽量)
 	extern inline void SetDrawBlendModeLight(BYTE mode,BYTE param);
 
 	//描画関数
@@ -118,7 +124,7 @@ namespace KVARCO
 
 	//便利関数
 	extern xtal::StringPtr SplitOption(xtal::String Src,xtal::String Opt);	//[]内の指定オプションを取り出す。"-OPTION ARG"の形
-	extern xtal::StringPtr SplitWords(xtal::String Src);	//[]の後の文字列を取り出す。前後の空白は削除される
+	extern xtal::StringPtr SplitWords(xtal::String Src);					//[]の後の文字列を取り出す。前後の空白は削除される
 
 	//乱数(mt19937使用)
 	extern CRealRandom RealRandom;

@@ -80,10 +80,14 @@ int	LoadGraph(xtal::String GrName,xtal::String RelaPath)
 	{
 		//サイズ獲得
 		int r,b;
-		GetGraphSize(grinfo.GrHandle,&r,&b);
+		GetGraphSize(grinfo.GrHandle,&w,&h);
+#ifdef USE_SIZE_STRCT
+		grinfo.Size.width	=w;
+		grinfo.Size.height	=h;
+#else
 		grinfo.Size.left	=0;	grinfo.Size.top		=0;
-		grinfo.Size.right	=r;	grinfo.Size.bottom	=b;
-
+		grinfo.Size.right	=w;	grinfo.Size.bottom	=h;
+#endif
 		KVARCO::ImageNameList.insert(make_pair(GrName.c_str(),grinfo));
 	}
 
@@ -130,10 +134,15 @@ int	LoadCutGraph_H(xtal::String NewName,int GrHandle,long x,long y,long w,long h
 	grnew.GrHandle=DxLib::DerivationGraph(x,y,w,h,GrHandle);
 	
 	string name=NewName.c_str();
-	if(name!="NULL")
+	if(name!="")
 	{
+#ifdef USE_SIZE_STRCT
+		grnew.Size.width	=w;
+		grnew.Size.height	=h;
+#else
 		grnew.Size.left	=0;	grnew.Size.top		=0;
 		grnew.Size.right=w;	grnew.Size.bottom	=h;
+#endif
 
 		KVARCO::ImageNameList.insert(make_pair(name,grnew));
 	}
