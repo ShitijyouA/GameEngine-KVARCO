@@ -3,7 +3,7 @@
 class CLayer;
 class CLayerManager;
 
-typedef xtal::SmartPtr<CLayer>	LayerPtr;
+typedef xtal::SmartPtr<CLayer>	LayerPtrX;
 typedef CLayerManager*	LayerMngrPtr;
 #include "ActorList.h"
 
@@ -38,8 +38,8 @@ public:
 	dPoint TransPointLocal(float x,float y);
 	dPoint TransPointGlobal(float x,float y);
 
-	void AddActor(ActorPtr actor);
-	void EraseActor(ActorPtr actor);
+	void AddActor(ActorPtrX actor);
+	void EraseActor(ActorPtrX actor);
 
 	void ReleaseAllActor();
 };
@@ -77,17 +77,17 @@ public:
 
 	void		SetArea		(int layer_handle,dRect area);
 	void		SetZ		(int layer_handle,int z);
-	dRectPtr	GetArea		(int layer_handle);
+	dRectPtrX	GetArea		(int layer_handle);
 	int			GetZ		(int layer_handle);
 	xtal::StringPtr GetName(int layer_handle);
 
-	dPointPtr	TransPointLocal_p(int layer_handle,dPoint Point);
-	dPointPtr	TransPointGlobal_p(int layer_handle,dPoint Point);
-	dPointPtr	TransPointLocal(int layer_handle,float x,float y);
-	dPointPtr	TransPointGlobal(int layer_handle,float x,float y);
+	dPointPtrX	TransPointLocal_p(int layer_handle,dPoint Point);
+	dPointPtrX	TransPointGlobal_p(int layer_handle,dPoint Point);
+	dPointPtrX	TransPointLocal(int layer_handle,float x,float y);
+	dPointPtrX	TransPointGlobal(int layer_handle,float x,float y);
 
-	void	AddActor	(int layer_handle,ActorPtr actor);
-	void	EraseActor	(int layer_handle,ActorPtr actor);
+	void	AddActor	(int layer_handle,ActorPtrX actor);
+	void	EraseActor	(int layer_handle,ActorPtrX actor);
 
 	//Layer	//Use LayerPool
 	int		NewLayer(xtal::StringPtr layer_name,int z,dRect area);

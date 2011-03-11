@@ -18,10 +18,10 @@ CBezier::CBezier(xtal::ArrayPtr points,float speed,DWORD max_)
 			mPs.push_back(mP);
 		}
 
-		dPointPtr ptr=xtal::xnew<dPoint>();
+		dPointPtrX ptr=xtal::xnew<dPoint>();
 		for(WORD ii=0; ii<Dimension; ii++)
 		{
-			dPointPtr sp=xtal::ptr_cast<dPoint>(points->at(ii));
+			dPointPtrX sp=xtal::ptr_cast<dPoint>(points->at(ii));
 			if(xtal::is_null(sp)) continue;
 			ptr->x+=sp->x*mPs[ii];
 			ptr->y+=sp->y*mPs[ii];
@@ -32,10 +32,10 @@ CBezier::CBezier(xtal::ArrayPtr points,float speed,DWORD max_)
 	}
 }
 
-dPointPtr CBezier::GetPoint(DWORD pos)
+dPointPtrX CBezier::GetPoint(DWORD pos)
 {	return Points[pos];		}
 
-dPointPtr CBezier::GetNextPoint()
+dPointPtrX CBezier::GetNextPoint()
 {	return GetPoint(Pos++);	}
 
 void CBezier::bind(xtal::ClassPtr it)

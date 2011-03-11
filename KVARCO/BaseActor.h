@@ -64,4 +64,4 @@ public:
 	}
 };
 
-typedef xtal::SmartPtr<CBaseActor> BaseActorPtr;
+typedef xtal::SmartPtr<CBaseActor> BaseActorPtrX;

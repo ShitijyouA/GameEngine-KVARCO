@@ -17,8 +17,8 @@ public:
 };
 typedef tRect<long>		lRect;
 typedef tRect<float>	dRect;
-typedef xtal::SmartPtr<lRect>	lRectPtr;
-typedef xtal::SmartPtr<dRect>	dRectPtr;
+typedef xtal::SmartPtr<lRect>	lRectPtrX;
+typedef xtal::SmartPtr<dRect>	dRectPtrX;
 
 //座標を保存するための構造体
 template<typename NUM=long>
@@ -33,8 +33,8 @@ public:
 };
 typedef tPoint<long>	lPoint;
 typedef tPoint<float>	dPoint;
-typedef xtal::SmartPtr<lPoint>	lPointPtr;
-typedef xtal::SmartPtr<dPoint>	dPointPtr;
+typedef xtal::SmartPtr<lPoint>	lPointPtrX;
+typedef xtal::SmartPtr<dPoint>	dPointPtrX;
 
 //三角関数の値を保存するための構造体
 class TriFunc
@@ -63,5 +63,5 @@ public:
 
 typedef tSize<long>		lSize;
 typedef tSize<float>	dSize;
-typedef xtal::SmartPtr<lSize>	lSizePtr;
-typedef xtal::SmartPtr<dSize>	dSizePtr;
+typedef xtal::SmartPtr<lSize>	lSizePtrX;
+typedef xtal::SmartPtr<dSize>	dSizePtrX;

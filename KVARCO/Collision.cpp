@@ -2,7 +2,7 @@
 #include "Collision.h"
 #include "ActorManager.h"
 
-CColPolygonPtr CColPolygon::VoidPolygon=xtal::null;
+ColPolygonPtrX CColPolygon::VoidPolygon=xtal::null;
 
 CColPolygon::CColPolygon(DWORD poly_num)
 {
@@ -34,7 +34,7 @@ void CColPolygon::SetAABB()
 	}
 }
 
-bool CColPolygon::CheckAABB(CColPolygonPtr col)
+bool CColPolygon::CheckAABB(ColPolygonPtrX col)
 {
 	return
 	(	AABB.top	>col->AABB.bottom	&&
@@ -106,7 +106,7 @@ bool CColPolygon::ColWithPoint(dPoint Point)
 	return ColWithPoint(Point.x,Point.y);
 }
 
-bool CColPolygon::Check(CColPolygonPtr col)
+bool CColPolygon::Check(ColPolygonPtrX col)
 {
 	if(Polygon.size()<=2)	return false;
 	if(!CheckAABB(col))		return false;
@@ -120,12 +120,12 @@ bool CColPolygon::Check(CColPolygonPtr col)
 	return false;
 }
 
-CColPolygonPtr CColPolygon::Move(float cx,float cy,float deg)
+ColPolygonPtrX CColPolygon::Move(float cx,float cy,float deg)
 {
 	if(Polygon.size() <= 2) return xtal::null;
 
 	DWORD size=Polygon.size()-1;
-	CColPolygonPtr out=xtal::xnew<CColPolygon>(size);
+	ColPolygonPtrX out=xtal::xnew<CColPolygon>(size);
 
 	//先に計算しておく
 	if(deg==0.0)
@@ -155,7 +155,7 @@ CColPolygonPtr CColPolygon::Move(float cx,float cy,float deg)
 	return out;
 }
 
-CColPolygonPtr CColPolygon::Movep(dPoint cPoint,float deg)
+ColPolygonPtrX CColPolygon::Movep(dPoint cPoint,float deg)
 {
 	return Move(cPoint.x,cPoint.y,deg);
 }
@@ -209,7 +209,7 @@ void CColPolygon::DrawCollision(xtal::String layer_name,DWORD color)
 {
 	if(Polygon.size() <= 2) return;
 
-	dRectPtr area=CLayerManager::GetInst()->GetArea(CLayerManager::GetInst()->GetHandle(layer_name.c_str()));
+	dRectPtrX area=CLayerManager::GetInst()->GetArea(CLayerManager::GetInst()->GetHandle(layer_name.c_str()));
 	for(DWORD i=0; i<Polygon.size()-1; i++)
 	{
 		KVARCO::DrawLine(

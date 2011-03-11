@@ -8,10 +8,14 @@ CAudioManager::CAudioManager()
 	CurrentBGM	=xtal::null;
 }
 
-void CAudioManager::LoadAudio(CAudioItemPtr item,string name)
+void CAudioManager::LoadAudio(AudioItemPtrX item,string name)
 {
-	item->Load();
-	AudioItemMap.insert(make_pair(name,item));
+	AudioMap_i i=FindItem(name);
+	if(i==AudioItemMap.end())
+	{
+		item->Load();
+		AudioItemMap.insert(make_pair(name,item));
+	}
 }
 
 AudioMap_i CAudioManager::FindItem(string& name)
@@ -71,7 +75,7 @@ void CAudioManager::ReleaseAllAudioItem()
 {
 	CurrentBGM=xtal::null;
 
-	typedef pair<const string,CAudioItemPtr> AudioItemMapItem;
+	typedef pair<const string,AudioItemPtrX> AudioItemMapItem;
 	BOOST_FOREACH(AudioItemMapItem& i,AudioItemMap)
 	{
 		i.second->Stop();
@@ -82,19 +86,15 @@ void CAudioManager::ReleaseAllAudioItem()
 
 void CAudioManager::bind(xtal::ClassPtr it)
 {
-#define BIND_XTAL_CLASSFUN_RENAME_IT_AUDIO_MNGR(_fun,_name)\
-	it->def(Xid(_name),xtal::method(&CAudioManager::_fun))
+	USE_XDEFZ(CAudioManager);
 
-	BIND_XTAL_CLASSFUN_RENAME_IT_AUDIO_MNGR(LoadAudioX,LoadAudio);
-	BIND_XTAL_CLASSFUN_RENAME_IT_AUDIO_MNGR(UnLoadAudioX,UnLoadAudio);
-	BIND_XTAL_CLASSFUN_RENAME_IT_AUDIO_MNGR(PlayAudioX,PlayAudio);
-	BIND_XTAL_CLASSFUN_RENAME_IT_AUDIO_MNGR(StopAudioX,StopAudio);
-	BIND_XTAL_CLASSFUN_RENAME_IT_AUDIO_MNGR(PauseBGMX,PauseBGM);
-
-	BIND_XTAL_CLASSFUN_RENAME_IT_AUDIO_MNGR(SetBGM_Volume,SetBGM_Volume);
-	BIND_XTAL_CLASSFUN_RENAME_IT_AUDIO_MNGR(GetBGM_Volume,GetBGM_Volume);
-	BIND_XTAL_CLASSFUN_RENAME_IT_AUDIO_MNGR(SetSE_Volume,SetSE_Volume);
-	BIND_XTAL_CLASSFUN_RENAME_IT_AUDIO_MNGR(GetSE_Volume,GetSE_Volume);
-
-#undef BIND_XTAL_CLASSFUN_RENAME_IT_AUDIO_MNGR
+	Xdef_methodx(LoadAudio);
+	Xdef_methodx(UnLoadAudio);
+	Xdef_methodx(PlayAudio);
+	Xdef_methodx(StopAudio);
+	Xdef_methodx(PauseBGM);
+	Xdef_method(SetBGM_Volume);
+	Xdef_method(GetBGM_Volume);
+	Xdef_method(SetSE_Volume);
+	Xdef_method(GetSE_Volume);
 }

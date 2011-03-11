@@ -6,7 +6,7 @@ void CActorManager::AddActor(xtal::AnyPtr actor,bool debug)
 	if(!xtal::can_cast<CBaseActor>(actor)) return;
 
 	AllActors.push_back(actor);
-	BaseActorPtr bactor=xtal::unchecked_ptr_cast<CBaseActor>(actor);
+	BaseActorPtrX bactor=xtal::unchecked_ptr_cast<CBaseActor>(actor);
 	CLayerManager::GetInst()->AddActor(CLayerManager::GetInst()->GetHandle(bactor->LayerName),actor);
 }
 
@@ -18,7 +18,7 @@ void CActorManager::RunAll(bool debug,bool gc)
 	while(i!=list.end())
 	{
 		//キャスト
-		BaseActorPtr	it=xtal::unchecked_ptr_cast<CBaseActor>(*i);	//AddActorで確認済み
+		BaseActorPtrX	it=xtal::unchecked_ptr_cast<CBaseActor>(*i);	//AddActorで確認済み
 
 		if(!xtal::is_null(it->Run)) XtalHelper::call(it->Run);
 
@@ -67,7 +67,7 @@ xtal::ArrayPtr CActorManager::GetAllActor()
 	ActorList_tag_Seq& list=AllActors.get<tag_Seq>();
 	BOOST_FOREACH(const xtal::AnyPtr& i,list)
 	{
-		BaseActorPtr	it=xtal::unchecked_ptr_cast<CBaseActor>(i);
+		BaseActorPtrX	it=xtal::unchecked_ptr_cast<CBaseActor>(i);
 		if(it->Run->is_alive() && !it->IsDead()) ar->push_back(i);
 	}
 
@@ -85,7 +85,7 @@ xtal::AnyPtr CActorManager::GetItem(xtal::StringPtr name)
 	ActorMap::iterator i=ActorsMap.find(name->c_str());
 	if(i==ActorsMap.end()) return xtal::null;
 
-	BaseActorPtr	it=xtal::unchecked_ptr_cast<CBaseActor>((*i).second);
+	BaseActorPtrX	it=xtal::unchecked_ptr_cast<CBaseActor>((*i).second);
 	if(it->IsDead() || is_null(it->Run) || !it->Run->is_alive())
 	{
 		ActorsMap.erase(i);	//FIX ME
@@ -99,7 +99,7 @@ void CActorManager::DeleteItem(xtal::StringPtr name)
 {
 	ActorMap::iterator i=ActorsMap.find(name->c_str());
 	if(i==ActorsMap.end()) return;
-	BaseActorPtr	it=xtal::unchecked_ptr_cast<CBaseActor>((*i).second);
+	BaseActorPtrX	it=xtal::unchecked_ptr_cast<CBaseActor>((*i).second);
 	ActorsMap.erase(i);
 }
 
@@ -108,7 +108,7 @@ void CActorManager::CleanUpItemBox()
 	ActorMap::iterator i=ActorsMap.begin();
 	while(i!=ActorsMap.end())
 	{
-		BaseActorPtr	it=xtal::unchecked_ptr_cast<CBaseActor>((*i).second);	//AddActorで確認済み
+		BaseActorPtrX	it=xtal::unchecked_ptr_cast<CBaseActor>((*i).second);	//AddActorで確認済み
 		if(xtal::is_null(it->Run) || !it->Run->is_alive() || it->IsDead())
 		{
 			i=ActorsMap.erase(i);
@@ -137,7 +137,7 @@ void CActorManager::ReleaseAllActor()
 		while(i!=list.end())
 		{
 			//キャスト
-			BaseActorPtr	it=xtal::unchecked_ptr_cast<CBaseActor>(*i);	//AddActorで確認済み
+			BaseActorPtrX	it=xtal::unchecked_ptr_cast<CBaseActor>(*i);	//AddActorで確認済み
 
 			//削除
 			i=list.erase(i);
@@ -154,7 +154,7 @@ void CActorManager::ReleaseAllActor()
 		{
 			i=ActorsMap.erase(i);
 
-			BaseActorPtr	it=xtal::unchecked_ptr_cast<CBaseActor>((*i).second);	//AddActorで確認済み
+			BaseActorPtrX	it=xtal::unchecked_ptr_cast<CBaseActor>((*i).second);	//AddActorで確認済み
 			it->Run=xtal::null;
 		}
 	}

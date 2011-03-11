@@ -10,6 +10,7 @@
 #include "SceneManager.h"
 #include "AudioManager.h"
 #include "Bezier.h"
+#include "Font.h"
 
 //通常のクラスバインド
 //コンストラクタが引数を取らず、bind関数が定義されているクラスで使える
@@ -162,6 +163,17 @@ XTAL_BIND(TriFunc)
 	Xdef_var(cos);
 }
 
+//CFont
+XTAL_PREBIND(NAME_IN_X(CFont))
+{
+	it->def_ctor4<NAME_IN_X(CFont),xtal::StringPtr,xtal::StringPtr,lPointPtrX,lSizePtrX>();
+}
+
+XTAL_BIND(NAME_IN_X(CFont))
+{
+	NAME_IN_X(CFont)::bind(it);
+}
+
 //CBGM_Item
 XTAL_PREBIND(CBGM_Item)
 {
@@ -194,6 +206,7 @@ void CGame::bind()
 	XTAL_BIND_CLASS(CBaseScene);
 	XTAL_BIND_CLASS(CBGM_Item);
 	XTAL_BIND_CLASS(CSE_Item);
+	XTAL_BIND_CLASS(NAME_IN_X(CFont));
 
 	//namespace Actor
 	xtal::ClassPtr Actors=xtal::xnew<xtal::Class>();

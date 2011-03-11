@@ -17,6 +17,7 @@
 #endif
 
 // TODO: プログラムに必要な追加ヘッダーをここで参照してください。
+#include "ForXtalBind.h"
 #include "OpenAL_Ogg_Default.h"
 #include "LibraryHeader.h"
 #include "GeoStruct.h"

@@ -32,12 +32,16 @@ class COpenAL_Ogg_Stream
 	void PlayBack();
 	bool Update();
 
+	path		Path;
 	bool		DoRepeat;
 	DWORD		LoopPoint;
+	bool		Loaded;
 
 public:
 	COpenAL_Ogg_Stream(string path,DWORD loop_point,bool repeat);
 	~COpenAL_Ogg_Stream();
+
+	void Load();
 
 	//再生
 	bool StreamingPlay()			//再生終了でtrueを返す

@@ -1,10 +1,11 @@
 ﻿#pragma once
 #include "KVARCO.h"
+#include "Utillity.h"
 #include "AudioItem.h"
 
-typedef xtal::SmartPtr<CAudioItem> CAudioItemPtr;
+typedef xtal::SmartPtr<CAudioItem> AudioItemPtrX;
 typedef xtal::SmartPtr<CBGM_Item> CBGM_ItemPtr;
-typedef unordered_map<string,CAudioItemPtr> AudioMap;
+typedef unordered_map<string,AudioItemPtrX> AudioMap;
 typedef AudioMap::iterator AudioMap_i;
 
 class CAudioManager;
@@ -24,10 +25,10 @@ class CAudioManager
 	CBGM_ItemPtr CurrentBGM;
 
 public:
-	void LoadAudio(CAudioItemPtr item,string name);
+	void LoadAudio(AudioItemPtrX item,string name);
 	void LoadAudioX(xtal::AnyPtr item,xtal::StringPtr name)
 		{
-			CAudioItemPtr tmp=xtal::ptr_cast<CAudioItem>(item);
+			AudioItemPtrX tmp=xtal::ptr_cast<CAudioItem>(item);
 			LoadAudio(tmp,name->c_str());
 		}
 
@@ -38,19 +39,19 @@ public:
 		}
 
 	void PlayAudio(string name);
-	void PlayAudioX(xtal::StringPtr name)
+	void NAME_IN_X(PlayAudio)(xtal::StringPtr name)
 		{
 			PlayAudio(name->c_str());
 		}
 
 	void StopAudio(string name);
-	void StopAudioX(xtal::StringPtr name)
+	void NAME_IN_X(StopAudio)(xtal::StringPtr name)
 		{
 			StopAudio(name->c_str());
 		}
 
 	void PauseBGM(string name);
-	void PauseBGMX(xtal::StringPtr name)
+	void NAME_IN_X(PauseBGM)(xtal::StringPtr name)
 		{
 			PauseBGM(name->c_str());
 		}
@@ -69,10 +70,7 @@ public:
 	//Singleton Pattern
 	//コンストラクタが自前なので非マクロ
 private:
-	friend xtal::SmartPtr<CAudioManager> xtal::xnew();
-	friend class xtal::SmartPtr<CAudioManager>;
-	friend struct xtal::XNew<CAudioManager>;
-	friend struct xtal::XXNew<CAudioManager,3>;
+	FRIENDS_FOR_XTAL(CAudioManager)
 
 	CAudioManager();
 

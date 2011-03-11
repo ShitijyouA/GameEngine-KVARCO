@@ -29,8 +29,19 @@ void OpenAL_Ogg::Check(string plus)
 
 //COpenAL_Ogg_Stream
 COpenAL_Ogg_Stream::COpenAL_Ogg_Stream(string path,DWORD loop_point,bool repeat)
+	:Loaded(false)
 {
 	if(!OpenAL_Ogg::OpenALInited) OpenAL_Ogg::Init();
+
+	Path		=path;
+	DoRepeat	=repeat;
+	LoopPoint	=loop_point;
+}
+
+void COpenAL_Ogg_Stream::Load()
+{
+	if(Loaded) return;
+	Loaded=true;
 
 	//メンバ変数の初期化
 	for(int i=0; i<BUFFER_NUM; i++)	Buffers[i]=0;
@@ -39,7 +50,7 @@ COpenAL_Ogg_Stream::COpenAL_Ogg_Stream(string path,DWORD loop_point,bool repeat)
 	Frequency	=0;
 
 	//Oggファイルを開く
-	int open_res=ov_fopen(path.c_str(),&OggFile);
+	int open_res=ov_fopen(Path.string().c_str(),&OggFile);
 	if(open_res!=0)	throw string("Couldn't Open OggFile(at ov_open())");
 	
 	//ファイルの設定を取得
@@ -52,9 +63,6 @@ COpenAL_Ogg_Stream::COpenAL_Ogg_Stream(string path,DWORD loop_point,bool repeat)
 	OpenAL_Ogg::Check("on alGenBuffers()");
 	alGenSources(1, &SourceID);
 	OpenAL_Ogg::Check("on alGenSources()");
-
-	DoRepeat	=repeat;
-	LoopPoint	=loop_point;
 
 	//再生の初期設定
 	alSource3f(SourceID, AL_POSITION,		0.0, 0.0, 0.0);

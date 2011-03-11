@@ -39,6 +39,7 @@ public:
 	void Play(BYTE volume);
 	void Stop();
 	void Pause();
+	void Load();
 
 	~CBGM_Item()
 	{

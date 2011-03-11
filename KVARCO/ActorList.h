@@ -9,7 +9,7 @@
 using namespace boost;
 using namespace boost::multi_index;
 
-typedef xtal::AnyPtr		ActorPtr;
+typedef xtal::AnyPtr		ActorPtrX;
 struct tag_ID	{};
 struct tag_Z	{};
 struct tag_Type	{};

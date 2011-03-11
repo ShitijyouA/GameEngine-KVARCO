@@ -79,7 +79,7 @@ int	LoadGraph(xtal::String GrName,xtal::String RelaPath)
 	if(name!="")
 	{
 		//サイズ獲得
-		int r,b;
+		int w,h;
 		GetGraphSize(grinfo.GrHandle,&w,&h);
 #ifdef USE_SIZE_STRCT
 		grinfo.Size.width	=w;
@@ -120,11 +120,11 @@ int GetGrHandle(xtal::String GrName)
 	return -1;
 }
 
-lRectPtr GetGrSize(xtal::String GrName)
+lRectPtrX GetGrSize(xtal::String GrName)
 {
 	GR_INFO* gr=GetGrInfo_p(GrName);
 	if(gr!=NULL) return xtal::xnew<lRect>(gr->Size);
-	return lRectPtr();
+	return lRectPtrX();
 }
 
 //グラフィックハンドル指定型

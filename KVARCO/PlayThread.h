@@ -24,6 +24,11 @@ public:
 			DoStop=false;
 		}
 
+	void Load()
+	{
+		COpenAL_Ogg_Stream::Load();
+	}
+
 	void Run()
 		{
 			while(!DoStop && !StreamingPlay())

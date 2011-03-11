@@ -1,8 +1,8 @@
 ﻿#pragma once
 #include "KVARCO.h"
 #include "LoadItem.h"
-typedef xtal::SmartPtr<LoadItem::CBaseLoadItem>	CLoadBasePtr;
-typedef vector<CLoadBasePtr>					CLoadBase_v;
+typedef xtal::SmartPtr<LoadItem::CBaseLoadItem>	LoadBasePtrX;
+typedef vector<LoadBasePtrX>					CLoadBase_v;
 
 //xtal::AnyPtr(CLoadItem入りxtal::array)からvector<CLoadItem_std>へ
 extern CLoadBase_v& AnyPtrToVector_CloadItem(xtal::AnyPtr load_list);

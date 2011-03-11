@@ -18,4 +18,4 @@ public:
 	}
 };
 
-typedef xtal::SmartPtr<CBaseScene> BaseScenePtr;
+typedef xtal::SmartPtr<CBaseScene> BaseScenePtrX;

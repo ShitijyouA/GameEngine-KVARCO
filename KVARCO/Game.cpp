@@ -17,7 +17,7 @@ namespace KVARCO
 	void Boot(string IniFile)
 	{
 		OutputLog("*********************************************************");
-		OutputLog("    -KVARCO ver1.00- %s","2011-02-11");
+		OutputLog("    -KVARCO ver1.00- %s","2011-03-09");
 		OutputLog("動作ログ");
 		OutputLog("*********************************************************\n");
 

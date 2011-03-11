@@ -64,7 +64,7 @@ namespace KVARCO
 
 		//グラフィックネームからの変換
 	extern int		GetGrHandle(xtal::String GrName);	//グラフィックネームからグラフィックハンドルへの変換
-	extern lRectPtr	GetGrSize(xtal::String GrName);
+	extern lRectPtrX	GetGrSize(xtal::String GrName);
 	extern GR_INFO	GetGrInfo(xtal::String GrName);
 	extern GR_INFO*	GetGrInfo_p(xtal::String GrName);	//グラフィックテーブルにあるインスタンスのポインタ
 

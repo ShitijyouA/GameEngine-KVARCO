@@ -12,7 +12,7 @@ CLoadingThread::CLoadingThread(xtal::AnyPtr load_list)
 
 void CLoadingThread::DataLoad()
 {
-	BOOST_FOREACH(CLoadBasePtr& i,LoadFileList)
+	BOOST_FOREACH(LoadBasePtrX& i,LoadFileList)
 	{
 		i->Load();
 	}
@@ -54,7 +54,7 @@ void CLoadingThread::AnyPtrToVector_CloadItem(xtal::AnyPtr load_list)
 	for(DWORD i=0; i<xlist->size(); i++)
 	{
 		//死んでも生ポを消さないSmartPtrに入れる
-		xtal::SmartPtr<LoadItem::CBaseLoadItem> tmp=
+		LoadBasePtrX tmp=
 			xtal::unchecked_ptr_cast<LoadItem::CBaseLoadItem>(xlist->at(i));
 		LoadFileList.push_back(tmp);
 	}

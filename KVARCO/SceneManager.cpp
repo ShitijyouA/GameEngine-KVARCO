@@ -48,7 +48,7 @@ void CSceneManager::CleanPrevScene_()
 	RunningScenePos=0;
 	for(DWORD i=1; i<MAX_SCENE_NUM; i++)
 	{
-		BaseScenePtr it=xtal::ptr_cast<CBaseScene>(Scenes[RunningScenePos]);
+		BaseScenePtrX it=xtal::ptr_cast<CBaseScene>(Scenes[RunningScenePos]);
 		if(!xtal::is_null(it))
 		{
 			it->Run->send(Xid(halt)); xtal::vmachine()->catch_except();
@@ -73,7 +73,7 @@ void CSceneManager::Run()
 		Scenes[RunningScenePos]!=xtal::null &&
 		Scenes[RunningScenePos]!=xtal::undefined)
 	{
-		BaseScenePtr it=xtal::ptr_cast<CBaseScene>(Scenes[RunningScenePos]);
+		BaseScenePtrX it=xtal::ptr_cast<CBaseScene>(Scenes[RunningScenePos]);
 		XtalHelper::call(it->Run);
 	}
 }
@@ -99,7 +99,7 @@ void CSceneManager::ReleaseAllScene()
 {
 	for(DWORD i=0; i<MAX_SCENE_NUM; i++)
 	{
-		BaseScenePtr it=xtal::ptr_cast<CBaseScene>(Scenes[i]);
+		BaseScenePtrX it=xtal::ptr_cast<CBaseScene>(Scenes[i]);
 		if(!xtal::is_null(it) && !xtal::is_null(it->Run))
 		{
 			it->Run->send(Xid(halt)); xtal::vmachine()->catch_except();

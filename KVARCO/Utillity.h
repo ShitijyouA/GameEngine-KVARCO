@@ -32,10 +32,6 @@
 	GETTER(_Type,_Name)
 #endif
 
-//Xtalバインド用マクロ
-#define USE_XDEFZ(class_)	typedef class_ Self
-//あとはXtal標準のXdef_fun,Xdef_method_Xdef_varを使用
-
 //singleton pattern
 //Xtalにバインドしないclass
 #define SINGLETON_PATTERN(_class,_class_ptr)\
@@ -45,35 +41,4 @@ public:\
 	static _class_ptr GetInst();\
 	void Release()	{ }
 
-//Xtalにバインドするclass
-//Release()は各自で用意する
-//friendは使用するXtalによって違うので注意
-//コンパイルエラーが起きた場合はこのfriend宣言を全て削除し、
-//コンパイルエラーを参考に書きなおす
-#define SINGLETON_PATTERNX(_class,_class_ptr)\
-private:\
-	friend xtal::SmartPtr<_class> xtal::xnew();\
-	friend class xtal::SmartPtr<_class>;\
-	friend struct xtal::XNew<_class>;\
-	friend struct xtal::XXNew<_class,3>;\
-	_class() { ;}\
-public:\
-	static _class_ptr GetInst();
-
-//XtalとC++をできるだけ分離するためのバインド用マクロ
-
-#define NAME_IN_X(name_)	name_##XTAL
-#define FOR_XTAL_NAMESPACE	ForXtal
-#define BEGIN_FOR_XTAL		namespace FOR_XTAL_NAMESPACE
-
-#ifndef Xdef_funx
-#define Xdef_funx(name_)	xtal::lib()->def(Xid(name_),xtal::fun(&NAME_IN_X(name_)))
-#endif
-
-#ifndef Xdef_methodx
-#define Xdef_methodx(name_) it->def(Xid(name_),xtal::method(&Self::NAME_IN_X(name_)))
-#endif
-
-#ifndef Xdef_varx
-#define Xdef_varx(name_)	it->def_var(Xid(name_),&Self::NAME_IN_X(name_))
-#endif
+#include "ForXtalBind.h"

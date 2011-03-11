@@ -6,6 +6,11 @@ CBGM_Item::CBGM_Item(xtal::StringPtr path,DWORD loop_point,bool do_repeat)
 {
 }
 
+void CBGM_Item::Load()
+{
+	Player.Load();
+}
+
 void CBGM_Item::Play()
 {
 	PlayThread=thread(bind(&CPlayThread::Run,&Player));
