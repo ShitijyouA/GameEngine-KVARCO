@@ -57,8 +57,13 @@ public:
 			ThreadState.notify_all();
 		}
 
+	void SetDoStop(bool do_stop)
+		{
+			DoStop=do_stop;
+		}
+
 	void Stop()
 		{
-			DoStop=true;
+			SetDoStop(true);
 		}
 };

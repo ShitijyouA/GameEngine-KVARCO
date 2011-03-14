@@ -40,15 +40,15 @@ void CAudioManager::PlayAudio(string name)
 	//dynamic_castで種類判別
 	CBGM_ItemPtr tmp=xtal::ptr_cast<CBGM_Item>(i->second);
 
-	if(!xtal::is_null(tmp))		i->second->Play(BGM_Volume);
-	else						i->second->Play(SE_Volume);
-
 	//BGMは同時に一曲のみ
-	if(tmp)
+	if(!xtal::is_null(tmp) && CurrentBGM!=tmp)
 	{
-		if(!xtal::is_null(CurrentBGM)) CurrentBGM->Stop();
+		if(!xtal::is_null(CurrentBGM))	CurrentBGM->Stop();
 		CurrentBGM=tmp;
 	}
+	
+	if(!xtal::is_null(tmp))		i->second->Play(BGM_Volume);
+	else						i->second->Play(SE_Volume);
 }
 
 void CAudioManager::StopAudio(string name)

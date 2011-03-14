@@ -80,6 +80,7 @@ public:
 		{
 			alSourcef(SourceID,AL_GAIN,0.0f);
 			alSourceStop(SourceID);
+			ov_pcm_seek(&OggFile,0);
 		}
 
 	virtual void Pause()

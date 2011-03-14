@@ -13,6 +13,7 @@ void CBGM_Item::Load()
 
 void CBGM_Item::Play()
 {
+	Player.SetDoStop(false);
 	PlayThread=thread(bind(&CPlayThread::Run,&Player));
 }
 
