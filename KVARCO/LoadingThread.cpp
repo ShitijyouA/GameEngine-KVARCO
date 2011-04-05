@@ -36,7 +36,7 @@ CLoadingThread::~CLoadingThread()
 bool CLoadingThread::IsEnded()
 {
 	if(!ThisThread) return true;
-	if(ThisThread->timed_join(boost::posix_time::milliseconds(0)))
+	if(ThisThread->timed_join(posix_time::milliseconds(0)))
 	{
 		ThisThread->interrupt();
 		ThisThread.reset();
@@ -53,7 +53,6 @@ void CLoadingThread::AnyPtrToVector_CloadItem(xtal::AnyPtr load_list)
 
 	for(DWORD i=0; i<xlist->size(); i++)
 	{
-		//死んでも生ポを消さないSmartPtrに入れる
 		LoadBasePtrX tmp=
 			xtal::unchecked_ptr_cast<LoadItem::CBaseLoadItem>(xlist->at(i));
 		LoadFileList.push_back(tmp);

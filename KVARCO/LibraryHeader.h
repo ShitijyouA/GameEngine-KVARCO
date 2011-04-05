@@ -1,24 +1,22 @@
 ﻿//STLヘッダ
-#include <list>
+#pragma once
+
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
 #include <climits>
-#include <cfloat>
-#include <map>
+#include <ctime>
+
 #include <utility>
-#include <set>
-#include <iostream>
 #include <fstream>
-#include <memory>
 #include <string>
+#include <list>
 #include <vector>
+#include <queue>
 #include <algorithm>
 #include <functional>
 #include <sstream>
 #include <complex>
-#include <stack>
-#include <queue>
 
 using namespace std;
 
@@ -34,8 +32,8 @@ using namespace std;
 	#pragma comment(lib,"DxLib.lib")
 #endif
 
-//std::
-#include <ctime>
+#undef max
+#undef min
 
 //boost::
 #include <boost/multi_index_container.hpp>
@@ -46,18 +44,23 @@ using namespace std;
 using namespace boost;
 using namespace boost::multi_index;
 
-#include <boost/unordered_map.hpp>
-#include <boost/foreach.hpp>
-#include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/bind.hpp>
-
 #define BOOST_DATE_TIME_NO_LIB
 #include <boost/thread.hpp>
+#include <boost/bind.hpp>
 
 #define BOOST_FILESYSTEM_VERSION 3
 #include <boost/filesystem.hpp>
 using namespace boost::filesystem;
+
+#include <boost/unordered_map.hpp>
+#include <boost/foreach.hpp>
+#include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
+
+//boost.random
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/variate_generator.hpp>
+#include <boost/random/uniform_01.hpp>
 
 //xtal::
 #define DONOT_USE_STRING_LT

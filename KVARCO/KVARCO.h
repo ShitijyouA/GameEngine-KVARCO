@@ -43,7 +43,7 @@ struct GR_INFO
 namespace KVARCO
 {
 	extern void Boot(string LoadFileList);		//ゲームの起動
-	extern string ExePath;							//この実行ファイルがあるフォルダの絶対パス
+	extern string ExePath;						//この実行ファイルがあるフォルダの絶対パス
 	extern string GetFilePath(string s);
 	extern string GetExePath();
 
@@ -63,10 +63,14 @@ namespace KVARCO
 	extern int	LoadGraph(xtal::String GrName,xtal::String RelaPath);	//ロード
 
 		//グラフィックネームからの変換
-	extern int		GetGrHandle(xtal::String GrName);	//グラフィックネームからグラフィックハンドルへの変換
+	extern int			GetGrHandle(xtal::String GrName);	//グラフィックネームからグラフィックハンドルへの変換
+#ifdef USE_SIZE_STRCT
+	extern lSizePtrX	GetGrSize(xtal::String GrName);
+#else
 	extern lRectPtrX	GetGrSize(xtal::String GrName);
-	extern GR_INFO	GetGrInfo(xtal::String GrName);
-	extern GR_INFO*	GetGrInfo_p(xtal::String GrName);	//グラフィックテーブルにあるインスタンスのポインタ
+#endif
+	extern GR_INFO		GetGrInfo(xtal::String GrName);
+	extern GR_INFO*		GetGrInfo_p(xtal::String GrName);	//グラフィックテーブルにあるインスタンスのポインタ
 
 		//グラフィックネーム指定型
 	extern int	LoadCutGraph_H(xtal::String NewName,int GrHandle,long x,long y,long w,long h);				//ロード済みの画像から一部を切り出し、新しい画像として利用出来るようにする。切り出し元が削除されると利用できなくなる

@@ -14,63 +14,63 @@ CLoadingThread*					KVARCO::LoadingThread;
 //スクリプトロードなどのみ。画像ロードなどは行わない
 namespace KVARCO
 {
-	void Boot(string IniFile)
-	{
-		OutputLog("*********************************************************");
-		OutputLog("    -KVARCO ver1.00- %s","2011-03-09");
-		OutputLog("動作ログ");
-		OutputLog("*********************************************************\n");
+void Boot(string IniFile)
+{
+	OutputLog("*********************************************************");
+	OutputLog("    -KVARCO ver1.00- %s","2011-03-09");
+	OutputLog("動作ログ");
+	OutputLog("*********************************************************\n");
 
-		OutputLog("----------------[Boot]----------------\n");
+	OutputLog("----------------[Boot]----------------\n");
 
-		//メモリリークを検出
-		_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+	//メモリリークを検出
+	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 
-		XtalHelper::Init();
-		OutputLog("Xtalを初期化");
+	XtalHelper::Init();
+	OutputLog("Xtalを初期化");
 
-		CGameBootSetting params=InitFromIniFile(KVARCO::ExePath+IniFile);
-		params.FullScreen=!params.FullScreen;
-		OutputLog("起動パラメータを設定");
+	CGameBootSetting params=InitFromIniFile(KVARCO::ExePath+IniFile);
+	params.FullScreen=!params.FullScreen;
+	OutputLog("起動パラメータを設定");
 
-		CGame::bind();
-		OutputLog("各種バインド完了");
+	CGame::bind();
+	OutputLog("各種バインド完了");
 
-		xtal::ArrayPtr list=CScriptManager::GetInst()->LoadOneFile(params.LoadFileList.c_str()).to_a();
-		CScriptManager::GetInst()->LoadFiles(list);
-		OutputLog("スクリプトをロード");
+	xtal::ArrayPtr list=CScriptManager::GetInst()->LoadOneFile(params.LoadFileList.c_str()).to_a();
+	CScriptManager::GetInst()->LoadFiles(list);
+	OutputLog("スクリプトをロード");
 
-		xtal::AnyPtr framework=xtal::lib()->member(Xid(GameFramework));
-		Game=shared_ptr<CGame>(new CGame(params,framework));
-		Game->Init();
-		OutputLog("\nKVARCO初期化完了");
-		
-		//ゲーム開始
-		OutputLog("\n----------------[Game]----------------\n");
-	}
+	xtal::AnyPtr framework=xtal::lib()->member(Xid(GameFramework));
+	Game=shared_ptr<CGame>(new CGame(params,framework));
+	Game->Init();
+	OutputLog("\nKVARCO初期化完了");
+	
+	//ゲーム開始
+	OutputLog("\n----------------[Game]----------------\n");
+}
 
-	// ファイル名からパスを取り出して返す
-	string GetFilePath(string s)
-	{
-		int pos=s.rfind("\\");
-		if (pos==(int)string::npos) return "";
-		return s.substr(0, pos+1);
-	}
+// ファイル名からパスを取り出して返す
+string GetFilePath(string s)
+{
+	int pos=s.rfind("\\");
+	if (pos==(int)string::npos) return "";
+	return s.substr(0, pos+1);
+}
 
-	// 実行ファイルのパスを返す（末尾に\が付く）
-	string GetExePath()
-	{
-		char buf[MAX_PATH+1];
-		GetModuleFileName(NULL, buf, MAX_PATH);
-		return GetFilePath(buf);
-	}
+// 実行ファイルのパスを返す（末尾に\が付く）
+string GetExePath()
+{
+	char buf[MAX_PATH+1];
+	GetModuleFileName(NULL, buf, MAX_PATH);
+	return GetFilePath(buf);
+}
 
-	string ExePath=GetExePath();
+string ExePath=GetExePath();
 
-	GameBootSettingPtr GetGameSetting()
-	{
-		return &Game->Setting;
-	}
+GameBootSettingPtr GetGameSetting()
+{
+	return &Game->Setting;
+}
 }
 
 //毎フレームの経過時間をFRAME_COUNT回計測し、その平均を出す。出力はFPSの形

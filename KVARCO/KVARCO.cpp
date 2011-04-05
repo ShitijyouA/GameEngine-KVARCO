@@ -120,12 +120,21 @@ int GetGrHandle(xtal::String GrName)
 	return -1;
 }
 
+#ifdef USE_SIZE_STRCT
+lSizePtrX GetGrSize(xtal::String GrName)
+{
+	GR_INFO* gr=GetGrInfo_p(GrName);
+	if(gr!=NULL) return xtal::xnew<lSize>(gr->Size);
+	return lSizePtrX();
+}
+#else
 lRectPtrX GetGrSize(xtal::String GrName)
 {
 	GR_INFO* gr=GetGrInfo_p(GrName);
 	if(gr!=NULL) return xtal::xnew<lRect>(gr->Size);
 	return lRectPtrX();
 }
+#endif
 
 //グラフィックハンドル指定型
 int	LoadCutGraph_H(xtal::String NewName,int GrHandle,long x,long y,long w,long h)
@@ -239,7 +248,6 @@ xtal::StringPtr SplitOption(xtal::String src_x,xtal::String opt_x)
 	}
 
 	return xtal::StringPtr(arg.c_str());
-
 }
 
 DWORD GetColorHandle(int r,int g,int b)
@@ -328,14 +336,17 @@ void OutputLog(const char* format_str,...)
 		fopen_s(&LogFile,(KVARCO::ExePath+LOG_FILE_NAME).c_str(),"w");
 
 	char buf[LOG_MAX_LENGTH];
+
 	va_list VariablesList;
 	va_start(VariablesList,format_str);
-
-		vsprintf_s(buf,sizeof(buf),format_str,VariablesList);
-		fprintf(LogFile,buf);
+	
+	vsprintf_s(buf,sizeof(buf),format_str,VariablesList);
 
 	va_end(VariablesList);
+
+	fprintf(LogFile,buf);
 	fprintf(LogFile,"\n");
+	fflush(LogFile);
 }
 
 void DebugOut(xtal::StringPtr str)
@@ -474,4 +485,4 @@ void GE_KeyCode_bind(xtal::ClassPtr it)
 	#undef int_t
 }
 
-}//KVARCO::
+} //namespace KVARCO

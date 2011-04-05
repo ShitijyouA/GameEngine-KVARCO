@@ -14,14 +14,14 @@
 
 //通常のクラスバインド
 //コンストラクタが引数を取らず、bind関数が定義されているクラスで使える
-#define XDEF_CTOR0_USE_BIND_METHOD(class_name_)\
-	XTAL_PREBIND(class_name_)\
-	{\
-		it->def_ctor0<class_name_>();\
-	}\
-	XTAL_BIND(class_name_)\
-	{\
-		class_name_::bind(it);\
+#define XDEF_CTOR0_USE_BIND_METHOD(class_name_)		\
+	XTAL_PREBIND(class_name_)						\
+	{												\
+		it->def_ctor0<class_name_>();				\
+	}												\
+	XTAL_BIND(class_name_)							\
+	{												\
+		class_name_::bind(it);						\
 	}
 
 XDEF_CTOR0_USE_BIND_METHOD(CBaseActor)

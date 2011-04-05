@@ -203,6 +203,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GeoStruct.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\InitFromIniFile.cpp"
 				>
 			</File>

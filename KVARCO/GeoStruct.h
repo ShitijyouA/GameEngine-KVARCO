@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-//矩形を保存するための構造体
+//矩形を表す構造体
 template<typename NUM=long>
 class tRect
 {
@@ -20,11 +20,10 @@ typedef tRect<float>	dRect;
 typedef xtal::SmartPtr<lRect>	lRectPtrX;
 typedef xtal::SmartPtr<dRect>	dRectPtrX;
 
-//座標を保存するための構造体
+//座標を表す構造体
 template<typename NUM=long>
-class tPoint
+struct tPoint
 {
-public:
 	NUM	x;
 	NUM	y;
 	tPoint(NUM x_=0,NUM y_=0)
@@ -37,9 +36,8 @@ typedef xtal::SmartPtr<lPoint>	lPointPtrX;
 typedef xtal::SmartPtr<dPoint>	dPointPtrX;
 
 //三角関数の値を保存するための構造体
-class TriFunc
+struct TriFunc
 {
-public:
 	float sin;
 	float cos;
 
@@ -48,11 +46,10 @@ public:
 	{}
 };
 
-//サイズ(縦横)を示す構造体
+//サイズ(縦横)を表す構造体
 template<typename NUM=long>
-class tSize
+struct tSize
 {
-public:
 	NUM width;
 	NUM height;
 
@@ -65,3 +62,105 @@ typedef tSize<long>		lSize;
 typedef tSize<float>	dSize;
 typedef xtal::SmartPtr<lSize>	lSizePtrX;
 typedef xtal::SmartPtr<dSize>	dSizePtrX;
+
+//デフォルトでラディアンを使うかの設定
+//ライブラリ関数にラディアンを使っているならdefine推奨
+#define USE_RADIAN_AS_DEFAULT
+
+//Degreeを表す構造体
+template<typename NUM=float>
+class tDegree
+{
+	typedef NUM Type;
+
+	static const Type DegreeToRadian;
+	static const Type RadianToDegree;
+
+	Type Degree;
+public:
+
+	tDegree()
+		:Degree(0.0)
+	{}
+
+	Type SetRadian(const Type rad)
+		{
+			Degree=rad*RadianToDegree;
+		}
+
+	Type SetDegree(const Type deg)
+		{
+			Degree=deg;
+		}
+
+	Type GetAsDegree() const
+		{
+			return Degree;
+		}
+
+	Type GetAsRadian() const
+		{
+			return Degree*DegreeToRadian;
+		}
+
+	Type GetAngle()
+		{
+		#ifdef USE_RADIAN_AS_DEFAULT
+			return GetAsRadian();
+		#else
+			return GetAsDegree();
+		#endif
+		}
+};
+
+typedef tDegree<float>			Degree;
+typedef xtal::SmartPtr<Degree>	DegreePtrX;
+
+//Radianを表す構造体
+template<typename NUM=float>
+class tRadian
+{
+	typedef NUM Type;
+
+	static const Type DegreeToRadian;
+	static const Type RadianToDegree;
+
+	Type Radian;
+public:
+
+	tRadian()
+		:Radian(0.0)
+	{}
+
+	Type SetRadian(const Type rad)
+		{
+			Radian=rad;
+		}
+
+	Type SetDegree(const Type deg)
+		{
+			Radian=deg*DegreeToRadian;
+		}
+
+	Type GetAsDegree() const
+		{
+			return Radian*RadianToDegree;
+		}
+
+	Type GetAsRadian() const
+		{
+			return Radian;
+		}
+
+	Type GetAngle()
+		{
+		#ifdef USE_RADIAN_AS_DEFAULT
+			return GetAsRadian();
+		#else
+			return GetAsDegree();
+		#endif
+		}
+};
+
+typedef tRadian<float>			Radian;
+typedef xtal::SmartPtr<Radian>	RadianPtrX;

@@ -1,6 +1,4 @@
 ﻿#pragma once
-#include <boost/random.hpp>
-using namespace boost;
 
 class CRealRandom
 {
@@ -14,18 +12,29 @@ class CRealRandom
 
 public:
 	CRealRandom(DWORD seed)
-		:RandomGenerator(seed)	,Dice(RandomGenerator,Uniform)
+		:
+		RandomGenerator(seed)			,
+		Dice(RandomGenerator,Uniform)	,
+		Seed_BackUp(0)
 	{}
 
 	CRealRandom()
-		:RandomGenerator()		,Dice(RandomGenerator,Uniform)
+		:
+		RandomGenerator(0)				,
+		Dice(RandomGenerator,Uniform)	,
+		Seed_BackUp(0)
 	{}
 
 	void Seed(DWORD seed)
-		{	RandomGenerator.seed(seed);	}
+		{
+			RandomGenerator.seed(seed);
+			Seed_BackUp=seed;
+		}
 
 	DWORD GetSeed()
-		{	return Seed_BackUp;			}
+		{
+			return Seed_BackUp;
+		}
 
 	float Random(float min_,float max_)
 	{
