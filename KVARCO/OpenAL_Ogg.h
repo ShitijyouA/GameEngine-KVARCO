@@ -17,9 +17,9 @@ namespace OpenAL_Ogg
 	extern bool OpenALInited;
 }
 
-class COpenAL_Ogg_Stream
+class OpenAL_Ogg_Stream
 {
-	friend class CPlayThread;
+	friend class PlayThread;
 
 	OggVorbis_File	OggFile;
 
@@ -32,14 +32,14 @@ class COpenAL_Ogg_Stream
 	void PlayBack();
 	bool Update();
 
-	path		Path;
+	fsys::path	Path;
 	bool		DoRepeat;
 	DWORD		LoopPoint;
 	bool		Loaded;
 
 public:
-	COpenAL_Ogg_Stream(string path,DWORD loop_point,bool repeat);
-	~COpenAL_Ogg_Stream();
+	OpenAL_Ogg_Stream(fsys::path& abs_path,DWORD loop_point,bool repeat);
+	~OpenAL_Ogg_Stream();
 
 	void Load();
 

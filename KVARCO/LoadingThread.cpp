@@ -2,12 +2,12 @@
 #include "LoadingThread.h"
 //#include <process.h>
 
-shared_ptr<thread> CLoadingThread::ThisThread;
+CLoadingThread::thread_ptr CLoadingThread::ThisThread;
 
 CLoadingThread::CLoadingThread(xtal::AnyPtr load_list)
 {
 	AnyPtrToVector_CloadItem(load_list);
-	ThisThread=thread_ptr( new thread(bind(&CLoadingThread::DataLoad,&(*this))) );
+	ThisThread=thread_ptr( new boost::thread(&CLoadingThread::DataLoad,&(*this)) );
 }
 
 void CLoadingThread::DataLoad()
@@ -54,7 +54,7 @@ void CLoadingThread::AnyPtrToVector_CloadItem(xtal::AnyPtr load_list)
 	for(DWORD i=0; i<xlist->size(); i++)
 	{
 		LoadBasePtrX tmp=
-			xtal::unchecked_ptr_cast<LoadItem::CBaseLoadItem>(xlist->at(i));
+			xtal::unchecked_ptr_cast<LoadItem::BaseLoadItem>(xlist->at(i));
 		LoadFileList.push_back(tmp);
 	}
 }

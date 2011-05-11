@@ -1,47 +1,47 @@
 ﻿#include "pch.h"
 #include "KVARCO.h"
-using namespace KVARCO;
+using namespace kvarco;
 
 ///////////////////////////////////////////
 /////////グラフィックハンドル指定型//////////
 ///////////////////////////////////////////
-void KVARCO::DrawGraph_H(int GrHandle,long x,long y,bool Trans,bool call_alpha)
+void kvarco::DrawGraph_H(int GrHandle,long x,long y,bool Trans,bool call_alpha)
 {
 	if(!call_alpha) SetDrawBlendModeLight(DX_BLENDMODE_NOBLEND,255);
 	DxLib::DrawGraph(x,y,GrHandle,(int )Trans);
 }
 
-void KVARCO::DrawRotaGraph_H(int GrHandle,float Angle,long cx,long cy,bool Trans,bool call_alpha)
+void kvarco::DrawRotaGraph_H(int GrHandle,float Angle,long cx,long cy,bool Trans,bool call_alpha)
 {
 	if(!call_alpha) SetDrawBlendModeLight(DX_BLENDMODE_NOBLEND,255);
 	DxLib::DrawRotaGraph(cx,cy,1.0,Angle,GrHandle,(int )Trans,1);
 }
 
-void KVARCO::DrawRotaGraph2_H(int GrHandle,float Angle,long x,long y,long cx,long cy,bool Trans,bool call_alpha)
+void kvarco::DrawRotaGraph2_H(int GrHandle,float Angle,long x,long y,long cx,long cy,bool Trans,bool call_alpha)
 {
 	if(!call_alpha) SetDrawBlendModeLight(DX_BLENDMODE_NOBLEND,255);
 	DxLib::DrawRotaGraph2(x,y,cx,cy,1.0,Angle,GrHandle,(int )Trans);
 }
 
-void KVARCO::DrawGraphAlpha_H(int GrHandle,long x,long y,int Alpha,bool Trans)
+void kvarco::DrawGraphAlpha_H(int GrHandle,long x,long y,int Alpha,bool Trans)
 {
 	SetDrawBlendModeLight(DX_BLENDMODE_ALPHA,(Alpha%256));
-	KVARCO::DrawGraph_H(GrHandle,x,y,Trans,true);
+	kvarco::DrawGraph_H(GrHandle,x,y,Trans,true);
 }
 
-void KVARCO::DrawRotaGraphAlpha_H(int GrHandle,float Angle,long cx,long cy,int Alpha,bool Trans)
+void kvarco::DrawRotaGraphAlpha_H(int GrHandle,float Angle,long cx,long cy,int Alpha,bool Trans)
 {
 	SetDrawBlendModeLight(DX_BLENDMODE_ALPHA,(Alpha%256));
-	KVARCO::DrawRotaGraph_H(GrHandle,Angle,cx,cy,(int )Trans,true);
+	kvarco::DrawRotaGraph_H(GrHandle,Angle,cx,cy,(int )Trans,true);
 }
 
-void KVARCO::DrawRotaGraphAlpha2_H(int GrHandle,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans)
+void kvarco::DrawRotaGraphAlpha2_H(int GrHandle,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans)
 {
 	SetDrawBlendModeLight(DX_BLENDMODE_ALPHA,(Alpha%256));
-	KVARCO::DrawRotaGraph2_H(GrHandle,Angle,x,y,cx,cy,(int )Trans,true);
+	kvarco::DrawRotaGraph2_H(GrHandle,Angle,x,y,cx,cy,(int )Trans,true);
 }
 
-void KVARCO::DrawZoom_H(int GrHandle,float ZoomRateX,float ZoomRateY,long cx,long cy,bool Trans,bool call_alpha)
+void kvarco::DrawZoom_H(int GrHandle,float ZoomRateX,float ZoomRateY,long cx,long cy,bool Trans,bool call_alpha)
 {
 	int w,h;
 	DxLib::GetGraphSize(GrHandle,&w,&h);
@@ -51,20 +51,20 @@ void KVARCO::DrawZoom_H(int GrHandle,float ZoomRateX,float ZoomRateY,long cx,lon
 	DxLib::DrawExtendGraph(cx-Halfx,cy-Halfy,cx+Halfx,cy+Halfy,GrHandle,(int )Trans);
 }
 
-void KVARCO::DrawZoomAlpha_H(int GrHandle,float ZoomRateX,float ZoomRateY,long x,long y,int Alpha,bool Trans)
+void kvarco::DrawZoomAlpha_H(int GrHandle,float ZoomRateX,float ZoomRateY,long x,long y,int Alpha,bool Trans)
 {
 	SetDrawBlendModeLight(DX_BLENDMODE_ALPHA,(Alpha%256));
-	KVARCO::DrawZoom_H(GrHandle,ZoomRateX,ZoomRateY,x,y,(int )Trans,true);
+	kvarco::DrawZoom_H(GrHandle,ZoomRateX,ZoomRateY,x,y,(int )Trans,true);
 }
 
-void KVARCO::DrawRotaZoom_H(int GrHandle,float ZoomRateX,float ZoomRateY,float Angle,long cx,long cy,bool Trans,bool call_alpha)
+void kvarco::DrawRotaZoom_H(int GrHandle,float ZoomRateX,float ZoomRateY,float Angle,long cx,long cy,bool Trans,bool call_alpha)
 {
 	int w,h;
 	DxLib::GetGraphSize(GrHandle,&w,&h);
 	float Halfx=(w/2)	*ZoomRateX;
 	float Halfy=(h/2)	*ZoomRateY;
 
-	dPoint tmp[4];
+	fPoint tmp[4];
 
 	tmp[0].x=cx-Halfx;	tmp[0].y=cy-Halfy;
 	tmp[1].x=cx+Halfx;	tmp[1].y=cy-Halfy;
@@ -75,7 +75,7 @@ void KVARCO::DrawRotaZoom_H(int GrHandle,float ZoomRateX,float ZoomRateY,float A
 	float _sin_=-sin_;
 	float cos_=cos(Angle);
 
-	dPoint res[4];
+	fPoint res[4];
 	//加法定理
 	for(int i=0; i<4; i++)
 	{
@@ -92,13 +92,13 @@ void KVARCO::DrawRotaZoom_H(int GrHandle,float ZoomRateX,float ZoomRateY,float A
 		GrHandle,(int )Trans);
 }
 
-//void KVARCO::DrawRotaZoom2_H(int GrHandle,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,bool Trans);
-void KVARCO::DrawRotaZoomAlpha_H(int GrHandle,float ZoomRateX,float ZoomRateY,float Angle,long cx,long cy,int Alpha,bool Trans)
+//void kvarco::DrawRotaZoom2_H(int GrHandle,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,bool Trans);
+void kvarco::DrawRotaZoomAlpha_H(int GrHandle,float ZoomRateX,float ZoomRateY,float Angle,long cx,long cy,int Alpha,bool Trans)
 {
 	SetDrawBlendModeLight(DX_BLENDMODE_ALPHA,(Alpha%256));
-	KVARCO::DrawRotaZoom_H(GrHandle,ZoomRateX,ZoomRateY,Angle,cx,cy,Trans,true);
+	kvarco::DrawRotaZoom_H(GrHandle,ZoomRateX,ZoomRateY,Angle,cx,cy,Trans,true);
 }
-//void KVARCO::DrawRotaZoomAlpha2_H(int GrHandle,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans);
+//void kvarco::DrawRotaZoomAlpha2_H(int GrHandle,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans);
 
 
 ///////////////////////////////////////////
@@ -106,45 +106,45 @@ void KVARCO::DrawRotaZoomAlpha_H(int GrHandle,float ZoomRateX,float ZoomRateY,fl
 ///////////////////////////////////////////
 #define USE_GR_HANDLE(grhandle,name) int grhandle=GetGrHandle(name);if(grhandle!=-1)
 
-void KVARCO::DrawGraph_N(xtal::String GrName,long x,long y,bool Trans)
+void kvarco::DrawGraph_N(xtal::String GrName,long x,long y,bool Trans)
 {
-	USE_GR_HANDLE(GrHandle,GrName) KVARCO::DrawGraph_H(GrHandle,x,y,Trans);
+	USE_GR_HANDLE(GrHandle,GrName) kvarco::DrawGraph_H(GrHandle,x,y,Trans);
 }
-void KVARCO::DrawRotaGraph_N(xtal::String GrName,float Angle,long cx,long cy,bool Trans)
+void kvarco::DrawRotaGraph_N(xtal::String GrName,float Angle,long cx,long cy,bool Trans)
 {
-	USE_GR_HANDLE(GrHandle,GrName) KVARCO::DrawRotaGraph_H(GrHandle,Angle,cx,cy,Trans);
+	USE_GR_HANDLE(GrHandle,GrName) kvarco::DrawRotaGraph_H(GrHandle,Angle,cx,cy,Trans);
 }
-void KVARCO::DrawRotaGraph2_N(xtal::String GrName,float Angle,long x,long y,long cx,long cy,bool Trans)
+void kvarco::DrawRotaGraph2_N(xtal::String GrName,float Angle,long x,long y,long cx,long cy,bool Trans)
 {
 	USE_GR_HANDLE(GrHandle,GrName) DrawRotaGraph2_H(GrHandle,Angle,x,y,cx,cy,Trans);
 }
-void KVARCO::DrawGraphAlpha_N(xtal::String GrName,long x,long y,int Alpha,bool Trans)
+void kvarco::DrawGraphAlpha_N(xtal::String GrName,long x,long y,int Alpha,bool Trans)
 {
 	USE_GR_HANDLE(GrHandle,GrName) DrawGraphAlpha_H(GrHandle,x,y,Alpha,Trans);
 }
-void KVARCO::DrawRotaGraphAlpha_N(xtal::String GrName,float Angle,long cx,long cy,int Alpha,bool Trans)
+void kvarco::DrawRotaGraphAlpha_N(xtal::String GrName,float Angle,long cx,long cy,int Alpha,bool Trans)
 {
 	USE_GR_HANDLE(GrHandle,GrName) DrawRotaGraphAlpha_H(GrHandle,Angle,cx,cy,Alpha,Trans);
 }
-void KVARCO::DrawRotaGraphAlpha2_N(xtal::String GrName,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans)
+void kvarco::DrawRotaGraphAlpha2_N(xtal::String GrName,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans)
 {
 	USE_GR_HANDLE(GrHandle,GrName) DrawRotaGraphAlpha2_H(GrHandle,Angle,x,y,cx,cy,Alpha,Trans);
 }
-void KVARCO::DrawZoom_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,long x,long y,bool Trans)
+void kvarco::DrawZoom_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,long x,long y,bool Trans)
 {
 	USE_GR_HANDLE(GrHandle,GrName) DrawZoom_H(GrHandle,ZoomRateX,ZoomRateY,x,y,Trans);
 }
-void KVARCO::DrawZoomAlpha_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,long x,long y,int Alpha,bool Trans)
+void kvarco::DrawZoomAlpha_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,long x,long y,int Alpha,bool Trans)
 {
 	USE_GR_HANDLE(GrHandle,GrName) DrawZoomAlpha_H(GrHandle,ZoomRateX,ZoomRateY,x,y,Alpha,Trans);
 }
-void KVARCO::DrawRotaZoom_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long cx,long cy,bool Trans)
+void kvarco::DrawRotaZoom_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long cx,long cy,bool Trans)
 {
 	USE_GR_HANDLE(GrHandle,GrName) DrawRotaZoom_H(GrHandle,ZoomRateX,ZoomRateY,ZoomRateY,cx,cy,Trans);
 }
-//void KVARCO::DrawRotaZoom2_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,bool Trans);
-void KVARCO::DrawRotaZoomAlpha_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long cx,long cy,int Alpha,bool Trans)
+//void kvarco::DrawRotaZoom2_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,bool Trans);
+void kvarco::DrawRotaZoomAlpha_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long cx,long cy,int Alpha,bool Trans)
 {
 	USE_GR_HANDLE(GrHandle,GrName) DrawRotaZoomAlpha_H(GrHandle,ZoomRateX,ZoomRateY,Angle,cx,cy,Alpha,Trans);
 }
-//void KVARCO::DrawRotaZoomAlpha2_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans);
+//void kvarco::DrawRotaZoomAlpha2_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans);

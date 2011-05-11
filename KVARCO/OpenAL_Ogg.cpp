@@ -27,18 +27,18 @@ void OpenAL_Ogg::Check(string plus)
 #endif
 }
 
-//COpenAL_Ogg_Stream
-COpenAL_Ogg_Stream::COpenAL_Ogg_Stream(string path,DWORD loop_point,bool repeat)
+//OpenAL_Ogg_Stream
+OpenAL_Ogg_Stream::OpenAL_Ogg_Stream(fsys::path& abs_path,DWORD loop_point,bool repeat)
 	:Loaded(false)
 {
 	if(!OpenAL_Ogg::OpenALInited) OpenAL_Ogg::Init();
 
-	Path		=path;
+	Path		=abs_path;
 	DoRepeat	=repeat;
 	LoopPoint	=loop_point;
 }
 
-void COpenAL_Ogg_Stream::Load()
+void OpenAL_Ogg_Stream::Load()
 {
 	if(Loaded) return;
 	Loaded=true;
@@ -79,7 +79,7 @@ void COpenAL_Ogg_Stream::Load()
 //手を伸ばせば届くんだ
 //いい加減に始めようぜ。OpenAL!
 
-bool COpenAL_Ogg_Stream::Stream(ALuint buffers)
+bool OpenAL_Ogg_Stream::Stream(ALuint buffers)
 {
 	char data[BUFFER_SIZE];
 	int  size	=0;
@@ -107,7 +107,7 @@ bool COpenAL_Ogg_Stream::Stream(ALuint buffers)
 	return false;
 }
 
-bool COpenAL_Ogg_Stream::Update()
+bool OpenAL_Ogg_Stream::Update()
 {
 	int processed	=0;
 	bool res		=false;
@@ -131,7 +131,7 @@ bool COpenAL_Ogg_Stream::Update()
 }
 
 //終了するならtrue
-void COpenAL_Ogg_Stream::PlayBack()
+void OpenAL_Ogg_Stream::PlayBack()
 {
 	if(PlayingNow()) return;
 	    
@@ -143,7 +143,7 @@ void COpenAL_Ogg_Stream::PlayBack()
 	alSourcePlay(SourceID);
 }
 
-COpenAL_Ogg_Stream::~COpenAL_Ogg_Stream()
+OpenAL_Ogg_Stream::~OpenAL_Ogg_Stream()
 {
 	alSourceStop(SourceID);
 

@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "Font.h"
-const string CFont::StdSetString=" !\"#$%&\'()*+,-./012\n3456789:;<=>?@ABCDE\nFGHIJKLMNOPQRSTUVWX\nYZ[\\]^_`abcdefghijk\nlmnopqrstuvwxyz{|}~";
-const lPoint CFont::StdOffset(0,0);
+const string Font::StdSetString=" !\"#$%&\'()*+,-./012\n3456789:;<=>?@ABCDE\nFGHIJKLMNOPQRSTUVWX\nYZ[\\]^_`abcdefghijk\nlmnopqrstuvwxyz{|}~";
+const lPoint Font::StdOffset(0,0);
 
-void CFont::LoadFontGraph(const GR_INFO* set_gr_info,const string& set_string,const lPoint& offset,lSize_o size)
+void Font::LoadFontGraph(const GrInfo* set_gr_info,const string& set_string,const lPoint& offset,lSize_o size)
 {
 	DWORD line_num		=GetLineNum(set_string);
 	DWORD max_char_num	=GetMaxCharNumInLine(set_string);
@@ -33,7 +33,7 @@ void CFont::LoadFontGraph(const GR_INFO* set_gr_info,const string& set_string,co
 		if(i!='\n')
 		{
 			Chars[set_string[i]]=
-				KVARCO::LoadCutGraph_H("",set_gr_info->GrHandle,cut_offset.x,cut_offset.y,FontSize.width,FontSize.height);
+				kvarco::LoadCutGraph_H("",set_gr_info->GrHandle,cut_offset.x,cut_offset.y,FontSize.width,FontSize.height);
 
 			cut_offset.x+=FontSize.width;
 		}
@@ -42,7 +42,7 @@ void CFont::LoadFontGraph(const GR_INFO* set_gr_info,const string& set_string,co
 	}
 }
 
-DWORD CFont::GetLineNum(const string& string_)
+DWORD Font::GetLineNum(const string& string_)
 {
 	DWORD res=0;
 	BOOST_FOREACH(const char& i,string_)
@@ -52,7 +52,7 @@ DWORD CFont::GetLineNum(const string& string_)
 	return res;
 }
 
-DWORD CFont::GetMaxCharNumInLine(const string& string_)
+DWORD Font::GetMaxCharNumInLine(const string& string_)
 {
 	DWORD current_line_char_num	=0;
 	DWORD max_char_num			=0;
@@ -68,7 +68,7 @@ DWORD CFont::GetMaxCharNumInLine(const string& string_)
 	return max_char_num;
 }
 
-CharArray CFont::ToStringInFont(const string& string_)
+CharArray Font::ToStringInFont(const string& string_)
 {
 	CharArray res(string_.size());
 	res.clear();	//’Ç‰Á‚ðappend()‚É“ˆê‚·‚é‚½‚ß
@@ -82,7 +82,7 @@ CharArray CFont::ToStringInFont(const string& string_)
 	return res;
 }
 
-void CFont::DrawInFont(long x,long y,const string& string_)
+void Font::DrawInFont(long x,long y,const string& string_)
 {
 	lPoint draw_point(x,y);
 	CharArray in_font=ToStringInFont(string_);
@@ -90,7 +90,7 @@ void CFont::DrawInFont(long x,long y,const string& string_)
 	{
 		if(i!=-1)
 		{
-			KVARCO::DrawGraph_H(i,draw_point.x,draw_point.y);
+			kvarco::DrawGraph_H(i,draw_point.x,draw_point.y);
 			draw_point.x+=FontSize.width;
 		}
 		else
@@ -98,49 +98,49 @@ void CFont::DrawInFont(long x,long y,const string& string_)
 	}
 }
 
-CFont::CFont()
+Font::Font()
 {
 	BOOST_FOREACH(int& i,Chars) { i=-1; }
 }
 
-CFont::CFont(string& set_gr_name)
+Font::Font(string& set_gr_name)
 {
-	CFont();
-	LoadFontGraph(KVARCO::GetGrInfo_p(set_gr_name.c_str()),StdSetString,StdOffset,lSize_o());
+	Font();
+	LoadFontGraph(kvarco::GetGrInfo_p(set_gr_name.c_str()),StdSetString,StdOffset,lSize_o());
 }
 
-CFont::CFont(string& set_gr_name,string& set_string)
+Font::Font(string& set_gr_name,string& set_string)
 {
-	CFont();
-	LoadFontGraph(KVARCO::GetGrInfo_p(set_gr_name.c_str()),set_string,StdOffset,lSize_o());
+	Font();
+	LoadFontGraph(kvarco::GetGrInfo_p(set_gr_name.c_str()),set_string,StdOffset,lSize_o());
 }
 
-CFont::CFont(string& set_gr_name,string& set_string,lSize& size)
+Font::Font(string& set_gr_name,string& set_string,lSize& size)
 {
-	CFont();
-	LoadFontGraph(KVARCO::GetGrInfo_p(set_gr_name.c_str()),set_string,StdOffset,lSize_o(size));
+	Font();
+	LoadFontGraph(kvarco::GetGrInfo_p(set_gr_name.c_str()),set_string,StdOffset,lSize_o(size));
 }
 
-CFont::CFont(string& set_gr_name,string& set_string,lPoint& offset)
+Font::Font(string& set_gr_name,string& set_string,lPoint& offset)
 {
-	CFont();
-	LoadFontGraph(KVARCO::GetGrInfo_p(set_gr_name.c_str()),set_string,offset,lSize_o());
+	Font();
+	LoadFontGraph(kvarco::GetGrInfo_p(set_gr_name.c_str()),set_string,offset,lSize_o());
 }
 
-CFont::CFont(string& set_gr_name,string& set_string,lPoint& offset,lSize& size)
+Font::Font(string& set_gr_name,string& set_string,lPoint& offset,lSize& size)
 {
-	CFont();
-	LoadFontGraph(KVARCO::GetGrInfo_p(set_gr_name.c_str()),set_string,offset,lSize_o(size));
+	Font();
+	LoadFontGraph(kvarco::GetGrInfo_p(set_gr_name.c_str()),set_string,offset,lSize_o(size));
 }
 
-//NAME_IN_X(CFont)
-NAME_IN_X(CFont)::NAME_IN_X(CFont)(xtal::StringPtr set_gr_name,xtal::StringPtr set_string,lPointPtrX offset,lSizePtrX size)
+//NAME_IN_X(Font)
+NAME_IN_X(Font)::NAME_IN_X(Font)(xtal::StringPtr set_gr_name,xtal::StringPtr set_string,lPointPtrX offset,lSizePtrX size)
 {
 	string tmp_str_set_string=set_gr_name->c_str();
-	LoadFontGraph(KVARCO::GetGrInfo_p(set_gr_name->c_str()),tmp_str_set_string,*offset,lSize_o(*size));
+	LoadFontGraph(kvarco::GetGrInfo_p(set_gr_name->c_str()),tmp_str_set_string,*offset,lSize_o(*size));
 }
 
-xtal::ArrayPtr NAME_IN_X(CFont)::NAME_IN_X(ToStringInFont)(xtal::StringPtr string_)
+xtal::ArrayPtr NAME_IN_X(Font)::NAME_IN_X(ToStringInFont)(xtal::StringPtr string_)
 {
 	string tmp_str		=string_->c_str();
 	CharArray tmp_array	=ToStringInFont(tmp_str);
@@ -154,15 +154,15 @@ xtal::ArrayPtr NAME_IN_X(CFont)::NAME_IN_X(ToStringInFont)(xtal::StringPtr strin
 	return res;
 }
 
-void NAME_IN_X(CFont)::NAME_IN_X(DrawInFont)(long x,long y,xtal::StringPtr string_)
+void NAME_IN_X(Font)::NAME_IN_X(DrawInFont)(long x,long y,xtal::StringPtr string_)
 {
 	string tmp_str=string_->c_str();
 	DrawInFont(x,y,tmp_str);
 }
 
-void NAME_IN_X(CFont)::bind(const xtal::ClassPtr it)
+void NAME_IN_X(Font)::bind(const xtal::ClassPtr it)
 {
-	USE_XDEFZ(NAME_IN_X(CFont));
+	USE_XDEFZ(NAME_IN_X(Font));
 	
 	Xdef_method(NAME_IN_X(ToStringInFont));
 	Xdef_method(NAME_IN_X(DrawInFont));

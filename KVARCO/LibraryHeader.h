@@ -10,13 +10,12 @@
 #include <utility>
 #include <fstream>
 #include <string>
-#include <list>
+//#include <list>
 #include <vector>
 #include <queue>
 #include <algorithm>
-#include <functional>
-#include <sstream>
-#include <complex>
+//#include <sstream>
+//#include <complex>
 
 using namespace std;
 
@@ -41,16 +40,16 @@ using namespace std;
 #include <boost/multi_index/hashed_index.hpp>
 #include <boost/multi_index/sequenced_index.hpp>
 #include <boost/multi_index/key_extractors.hpp>
-using namespace boost;
 using namespace boost::multi_index;
 
 #define BOOST_DATE_TIME_NO_LIB
 #include <boost/thread.hpp>
-#include <boost/bind.hpp>
+#include <boost/thread/condition.hpp>
+namespace posix_time=boost::posix_time;
 
 #define BOOST_FILESYSTEM_VERSION 3
 #include <boost/filesystem.hpp>
-using namespace boost::filesystem;
+namespace fsys=boost::filesystem;
 
 #include <boost/unordered_map.hpp>
 #include <boost/foreach.hpp>

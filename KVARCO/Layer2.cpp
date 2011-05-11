@@ -1,28 +1,28 @@
 ﻿#include "pch.h"
 #include "Layer2.h"
 
-CLayer::CLayer()
+Layer::Layer()
 {
 	char buf[256];
-	sprintf_s(buf,"Layer%d",KVARCO::MakeHandle());
+	sprintf_s(buf,"Layer%d",kvarco::MakeHandle());
 	Init(buf);
 }
 
-CLayer::CLayer(xtal::String name)
+Layer::Layer(xtal::String name)
 {
 	Init(name);
 }
 
-void CLayer::Init(xtal::String name)
+void Layer::Init(xtal::String name)
 {
 	Z		=0;
 	Name	=name;
-	Handle	=KVARCO::MakeHandle();
+	Handle	=kvarco::MakeHandle();
 }
 
-void CLayer::DrawThis()
+void Layer::DrawThis()
 {
-	KVARCO::SetDrawArea(Area);
+	kvarco::SetDrawArea(Area);
 
 	//Z値が小さいものから描画
 	ActorList_tag_Z& list=Actors.get<tag_Z>();
@@ -31,68 +31,68 @@ void CLayer::DrawThis()
 		XtalHelper::send(i,Xid(Draw));
 	}
 
-	KVARCO::SetDrawArea_default();
+	kvarco::SetDrawArea_default();
 }
 
-dPoint CLayer::TransPointLocal_p(dPoint Point)
+fPoint Layer::TransPointLocal_p(fPoint Point)
 {
-	dPoint res;
+	fPoint res;
 	res.x=Point.x-Area.left;
 	res.y=Point.y-Area.top;
 	return res;
 }
 
-dPoint CLayer::TransPointGlobal_p(dPoint Point)
+fPoint Layer::TransPointGlobal_p(fPoint Point)
 {
-	dPoint res;
+	fPoint res;
 	res.x=Point.x+Area.left;
 	res.y=Point.y+Area.top;
 	return res;
 }
-dPoint CLayer::TransPointLocal(float x,float y)
+fPoint Layer::TransPointLocal(float x,float y)
 {
-	dPoint tmp;
+	fPoint tmp;
 	tmp.x=x;
 	tmp.y=y;
 	return TransPointLocal_p(tmp);
 }
-dPoint	CLayer::TransPointGlobal(float x,float y)
+fPoint	Layer::TransPointGlobal(float x,float y)
 {
-	dPoint tmp;
+	fPoint tmp;
 	tmp.x=x;
 	tmp.y=y;
 	return TransPointGlobal_p(tmp);
 }
 
-void CLayer::AddActor(ActorPtrX actor)
+void Layer::AddActor(ActorPtrX actor)
 {
 	//BaseActorを継承してなかったら弾く
-	if(!xtal::can_cast<CBaseActor>(actor))	return;
+	if(!xtal::can_cast<BaseActor>(actor))	return;
 	Actors.push_back(actor);
 }
 
-void CLayer::EraseActor(ActorPtrX actor)
+void Layer::EraseActor(ActorPtrX actor)
 {
-	DWORD id=KVARCO::GetID_BaseActor(actor);
+	DWORD id=kvarco::GetID_BaseActor(actor);
 	ActorList_tag_ID& list=Actors.get<tag_ID>();
 	ActorList_tag_ID::iterator i=list.find(id);
 	if(i==list.end()) return;
 	list.erase(i);
 }
 
-void CLayer::ReleaseAllActor()
+void Layer::ReleaseAllActor()
 {
 	ActorList::iterator i=Actors.begin();
 	while(i!=Actors.end())
 	{
-		BaseActorPtrX	it=xtal::unchecked_ptr_cast<CBaseActor>(*i);
+		BaseActorPtrX	it=xtal::unchecked_ptr_cast<BaseActor>(*i);
 		it->Run=xtal::null;
 		i=Actors.erase(i);
 	}
 }
 
-//CLayerManager
-CLayer* CLayerManager::GetPtr(xtal::StringPtr layer_name)
+//LayerManager
+Layer* LayerManager::GetPtr(xtal::StringPtr layer_name)
 {
 	if(xtal::is_undefined(layer_name) || xtal::is_null(layer_name))	return NULL;
 
@@ -102,7 +102,7 @@ CLayer* CLayerManager::GetPtr(xtal::StringPtr layer_name)
 	return (*i);
 }
 
-CLayer* CLayerManager::GetPtr(int layer_handle)
+Layer* LayerManager::GetPtr(int layer_handle)
 {
 	LayerMap_tag_Handle& layer_handle_list=Layers.get<tag_Handle>();
 	LayerMap_tag_Handle::iterator i=layer_handle_list.find(layer_handle);
@@ -110,16 +110,16 @@ CLayer* CLayerManager::GetPtr(int layer_handle)
 	return (*i);
 }
 
-int	CLayerManager::GetHandle(xtal::StringPtr layer_name)
+int	LayerManager::GetHandle(xtal::StringPtr layer_name)
 {
 	if(xtal::is_undefined(layer_name) || xtal::is_null(layer_name))	return 0;
 
-	CLayer* layer=GetPtr(layer_name);
+	Layer* layer=GetPtr(layer_name);
 	if(layer!=NULL) return layer->GetHandle();
 	return 0;
 }
 
-void CLayerManager::DrawAll()
+void LayerManager::DrawAll()
 {
 	LayerMap_tag_Z& layer_z_list=Layers.get<tag_Z>();
 
@@ -135,93 +135,93 @@ void CLayerManager::DrawAll()
 	}
 }
 
-void CLayerManager::DrawLayer(int layer_handle)
+void LayerManager::DrawLayer(int layer_handle)
 {
 	GetPtr(layer_handle)->DrawThis();
 }
 
-//ここからはCLayerのメンバ関数のアダプター
+//ここからはLayerのメンバ関数のアダプター
 
-template<typename T1,typename void(CLayer::*Func)(const T1)>
+template<typename T1,typename void(Layer::*Func)(const T1)>
 inline void SetByLayerHandle(int layer_handle,const T1& val)
 {
-	CLayer* ptr=CLayerManager::GetInst()->GetPtr(layer_handle);
+	Layer* ptr=LayerManager::GetInst()->GetPtr(layer_handle);
 	if(ptr!=NULL) (ptr->*Func)(val);
 }
 
-template<typename T1,typename T1(CLayer::*Func)() const>
+template<typename T1,typename T1(Layer::*Func)() const>
 inline T1 GetByLayerHandle_const(int layer_handle)
 {
-	CLayer* ptr=CLayerManager::GetInst()->GetPtr(layer_handle);
+	Layer* ptr=LayerManager::GetInst()->GetPtr(layer_handle);
 	if(ptr!=NULL) return (ptr->*Func)();
 	return T1();
 }
 
-template<typename T1,typename T1(CLayer::*Func)()>
+template<typename T1,typename T1(Layer::*Func)()>
 inline T1 GetByLayerHandle(int layer_handle)
 {
-	CLayer* ptr=CLayerManager::GetInst()->GetPtr(layer_handle);
+	Layer* ptr=LayerManager::GetInst()->GetPtr(layer_handle);
 	if(ptr!=NULL) return (ptr->*Func)();
 	return T1();
 }
 
-template<typename T1,typename P2,typename T1(CLayer::*Func)(P2)>
+template<typename T1,typename P2,typename T1(Layer::*Func)(P2)>
 inline T1 ByLayerHandle1(int layer_handle,P2& val0)
 {
-	CLayer* ptr=CLayerManager::GetInst()->GetPtr(layer_handle);
+	Layer* ptr=LayerManager::GetInst()->GetPtr(layer_handle);
 	if(ptr!=NULL) return (ptr->*Func)(val0);
 	return T1();
 }
 
 //そのインスタンス
-void	CLayerManager::SetArea(int layer_handle,dRect area)
-{	SetByLayerHandle<dRect,&CLayer::SetArea>(layer_handle,area);	}
-void	CLayerManager::SetZ(int layer_handle,int z)
-{	SetByLayerHandle<int,&CLayer::SetZ>		(layer_handle,z);		}
+void	LayerManager::SetArea(int layer_handle,fRect area)
+{	SetByLayerHandle<fRect,&Layer::SetArea>(layer_handle,area);	}
+void	LayerManager::SetZ(int layer_handle,int z)
+{	SetByLayerHandle<int,&Layer::SetZ>		(layer_handle,z);		}
 
-dRectPtrX	CLayerManager::GetArea(int layer_handle)
-{	return xtal::xnew<dRect>(GetByLayerHandle_const<dRect,&CLayer::GetArea>(layer_handle));		}
-int		CLayerManager::GetZ(int layer_handle)
-{	return GetByLayerHandle_const<int,&CLayer::GetZ>(layer_handle);				}
-xtal::StringPtr CLayerManager::GetName(int layer_handle)
-{	return xtal::xnew<xtal::String>(GetByLayerHandle_const<xtal::String,&CLayer::GetName>(layer_handle));	}
+fRectPtrX	LayerManager::GetArea(int layer_handle)
+{	return xtal::xnew<fRect>(GetByLayerHandle_const<fRect,&Layer::GetArea>(layer_handle));		}
+int		LayerManager::GetZ(int layer_handle)
+{	return GetByLayerHandle_const<int,&Layer::GetZ>(layer_handle);				}
+xtal::StringPtr LayerManager::GetName(int layer_handle)
+{	return xtal::xnew<xtal::String>(GetByLayerHandle_const<xtal::String,&Layer::GetName>(layer_handle));	}
 
-dPointPtrX	CLayerManager::TransPointLocal_p(int layer_handle,dPoint Point)
-{	return xtal::xnew<dPoint>(ByLayerHandle1<dPoint,dPoint,&CLayer::TransPointLocal_p>(layer_handle,Point));	}
-dPointPtrX	CLayerManager::TransPointGlobal_p(int layer_handle,dPoint Point)
-{	return xtal::xnew<dPoint>(ByLayerHandle1<dPoint,dPoint,&CLayer::TransPointGlobal_p>(layer_handle,Point));	}
-dPointPtrX	CLayerManager::TransPointLocal(int layer_handle,float x,float y)
+fPointPtrX	LayerManager::TransPointLocal_p(int layer_handle,fPoint Point)
+{	return xtal::xnew<fPoint>(ByLayerHandle1<fPoint,fPoint,&Layer::TransPointLocal_p>(layer_handle,Point));	}
+fPointPtrX	LayerManager::TransPointGlobal_p(int layer_handle,fPoint Point)
+{	return xtal::xnew<fPoint>(ByLayerHandle1<fPoint,fPoint,&Layer::TransPointGlobal_p>(layer_handle,Point));	}
+fPointPtrX	LayerManager::TransPointLocal(int layer_handle,float x,float y)
 {
-	CLayer* ptr=CLayerManager::GetInst()->GetPtr(layer_handle);
-	if(ptr!=NULL) return xtal::xnew<dPoint>(ptr->TransPointLocal(x,y));
-	return dPointPtrX();
+	Layer* ptr=LayerManager::GetInst()->GetPtr(layer_handle);
+	if(ptr!=NULL) return xtal::xnew<fPoint>(ptr->TransPointLocal(x,y));
+	return fPointPtrX();
 }
 
-dPointPtrX	CLayerManager::TransPointGlobal(int layer_handle,float x,float y)
+fPointPtrX	LayerManager::TransPointGlobal(int layer_handle,float x,float y)
 {
-	CLayer* ptr=CLayerManager::GetInst()->GetPtr(layer_handle);
-	if(ptr!=NULL) return xtal::xnew<dPoint>(ptr->TransPointGlobal(x,y));
-	return dPointPtrX();
+	Layer* ptr=LayerManager::GetInst()->GetPtr(layer_handle);
+	if(ptr!=NULL) return xtal::xnew<fPoint>(ptr->TransPointGlobal(x,y));
+	return fPointPtrX();
 }
 
-void	CLayerManager::AddActor(int layer_handle,ActorPtrX actor)
-{	 SetByLayerHandle<ActorPtrX,&CLayer::AddActor>(layer_handle,actor);		}
-void	CLayerManager::EraseActor(int layer_handle,ActorPtrX actor)
-{	 SetByLayerHandle<ActorPtrX,&CLayer::EraseActor>(layer_handle,actor);	}
+void	LayerManager::AddActor(int layer_handle,ActorPtrX actor)
+{	 SetByLayerHandle<ActorPtrX,&Layer::AddActor>(layer_handle,actor);		}
+void	LayerManager::EraseActor(int layer_handle,ActorPtrX actor)
+{	 SetByLayerHandle<ActorPtrX,&Layer::EraseActor>(layer_handle,actor);	}
 
 //Layerの操作
-int CLayerManager::NewLayer(xtal::StringPtr layer_name,int z,dRect area)
+int LayerManager::NewLayer(xtal::StringPtr layer_name,int z,fRect area)
 {
 	if(xtal::is_undefined(layer_name) || xtal::is_null(layer_name))	return 0;
 
-	CLayer* layer;
+	Layer* layer;
 	if(!Layers.empty())
 	{
 		layer=GetPtr(layer_name);
 		if(layer!=NULL) return layer->GetHandle();
 	}
 
-	if(LayerPool.empty()) layer=new CLayer(layer_name->c_str());
+	if(LayerPool.empty()) layer=new Layer(layer_name->c_str());
 	else
 	{
 		layer=LayerPool.front();
@@ -236,7 +236,7 @@ int CLayerManager::NewLayer(xtal::StringPtr layer_name,int z,dRect area)
 	return layer->GetHandle();
 }
 
-void CLayerManager::DeleteLayer(xtal::String layer_name)
+void LayerManager::DeleteLayer(xtal::String layer_name)
 {
 	LayerMap_tag_Name& layer_name_list=Layers.get<tag_Name>();
 	LayerMap::iterator i=layer_name_list.find(string(layer_name.c_str()));
@@ -245,7 +245,7 @@ void CLayerManager::DeleteLayer(xtal::String layer_name)
 	Layers.erase(i);
 }
 
-void CLayerManager::ReleaseAllLayer()
+void LayerManager::ReleaseAllLayer()
 {
 	LayerMap::iterator i=Layers.begin();
 	while(i!=Layers.end())
@@ -257,17 +257,17 @@ void CLayerManager::ReleaseAllLayer()
 	for(DWORD ii=0; ii<LayerPool.size(); ii++)	LayerPool.pop();
 }
 
-//LayerMngrPtr CLayerManager::Inst=NULL;
-LayerMngrPtr CLayerManager::GetInst()
+//LayerMngrPtr LayerManager::Inst=NULL;
+LayerMngrPtr LayerManager::GetInst()
 {
-	//if(Inst==NULL)	CLayerManager::Inst=new CLayerManager;
-	static CLayerManager Inst;
+	//if(Inst==NULL)	LayerManager::Inst=new LayerManager;
+	static LayerManager Inst;
 	return &Inst;
 }
 
-void CLayerManager::bind(const xtal::ClassPtr it)
+void LayerManager::bind(const xtal::ClassPtr it)
 {
-	USE_XDEFZ(CLayerManager);
+	USE_XDEFZ(LayerManager);
 
 	Xdef_method(DrawAll);
 	Xdef_method(DrawLayer);

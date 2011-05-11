@@ -1,14 +1,14 @@
 ﻿#include "pch.h"
 #include "AudioManager.h"
 
-CAudioManager::CAudioManager()
+AudioManager::AudioManager()
 {
 	BGM_Volume	=100;
 	SE_Volume	=100;
 	CurrentBGM	=xtal::null;
 }
 
-void CAudioManager::LoadAudio(AudioItemPtrX item,string name)
+void AudioManager::LoadAudio(AudioItemPtrX item,string name)
 {
 	AudioMap_i i=FindItem(name);
 	if(i==AudioItemMap.end())
@@ -18,13 +18,13 @@ void CAudioManager::LoadAudio(AudioItemPtrX item,string name)
 	}
 }
 
-AudioMap_i CAudioManager::FindItem(string& name)
+AudioMap_i AudioManager::FindItem(string& name)
 {
 	AudioMap_i i=AudioItemMap.find(name);
 	return i;
 }
 
-void CAudioManager::UnLoadAudio(string name)
+void AudioManager::UnLoadAudio(string name)
 {
 	AudioMap_i i=FindItem(name);
 	i->second->Stop();
@@ -33,12 +33,12 @@ void CAudioManager::UnLoadAudio(string name)
 	AudioItemMap.erase(i);
 }
 
-void CAudioManager::PlayAudio(string name)
+void AudioManager::PlayAudio(string name)
 {
 	AudioMap_i i=FindItem(name);
 
 	//dynamic_castで種類判別
-	CBGM_ItemPtr tmp=xtal::ptr_cast<CBGM_Item>(i->second);
+	BGM_ItemPtr tmp=xtal::ptr_cast<BGM_Item>(i->second);
 
 	//BGMは同時に一曲のみ
 	if(!xtal::is_null(tmp) && CurrentBGM!=tmp)
@@ -51,13 +51,13 @@ void CAudioManager::PlayAudio(string name)
 	else						i->second->Play(SE_Volume);
 }
 
-void CAudioManager::StopAudio(string name)
+void AudioManager::StopAudio(string name)
 {
 	AudioMap_i i=FindItem(name);
 	i->second->Stop();
 }
 
-void CAudioManager::SetBGM_Volume(const BYTE x)
+void AudioManager::SetBGM_Volume(const BYTE x)
 {
 	BGM_Volume=x;
 	if(!xtal::is_null(CurrentBGM)) CurrentBGM->SetVolume(x);
@@ -65,13 +65,13 @@ void CAudioManager::SetBGM_Volume(const BYTE x)
 
 //BGMかどうかは分からないので一時停止になるかは不定
 //SEでもエラーにはならない
-void CAudioManager::PauseBGM(string name)
+void AudioManager::PauseBGM(string name)
 {
 	AudioMap_i i=FindItem(name);
 	if(i!=AudioItemMap.end()) i->second->Pause();
 }
 
-void CAudioManager::ReleaseAllAudioItem()
+void AudioManager::ReleaseAllAudioItem()
 {
 	CurrentBGM=xtal::null;
 
@@ -84,9 +84,9 @@ void CAudioManager::ReleaseAllAudioItem()
 	AudioItemMap.clear();
 }
 
-void CAudioManager::bind(xtal::ClassPtr it)
+void AudioManager::bind(xtal::ClassPtr it)
 {
-	USE_XDEFZ(CAudioManager);
+	USE_XDEFZ(AudioManager);
 
 	Xdef_methodx(LoadAudio);
 	Xdef_methodx(UnLoadAudio);

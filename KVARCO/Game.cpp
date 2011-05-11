@@ -6,49 +6,13 @@
 #include "SceneManager.h"
 #include "AudioManager.h"
 #include "Game.h"
-shared_ptr<CGame>	Game;
 
-unordered_map<string,GR_INFO>	KVARCO::ImageNameList;
-CLoadingThread*					KVARCO::LoadingThread;
+boost::unordered_map<string,GrInfo>	kvarco::ImageNameList;
+CLoadingThread*						kvarco::LoadingThread;
 
 //スクリプトロードなどのみ。画像ロードなどは行わない
-namespace KVARCO
+namespace kvarco
 {
-void Boot(string IniFile)
-{
-	OutputLog("*********************************************************");
-	OutputLog("    -KVARCO ver1.00- %s","2011-03-09");
-	OutputLog("動作ログ");
-	OutputLog("*********************************************************\n");
-
-	OutputLog("----------------[Boot]----------------\n");
-
-	//メモリリークを検出
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-
-	XtalHelper::Init();
-	OutputLog("Xtalを初期化");
-
-	CGameBootSetting params=InitFromIniFile(KVARCO::ExePath+IniFile);
-	params.FullScreen=!params.FullScreen;
-	OutputLog("起動パラメータを設定");
-
-	CGame::bind();
-	OutputLog("各種バインド完了");
-
-	xtal::ArrayPtr list=CScriptManager::GetInst()->LoadOneFile(params.LoadFileList.c_str()).to_a();
-	CScriptManager::GetInst()->LoadFiles(list);
-	OutputLog("スクリプトをロード");
-
-	xtal::AnyPtr framework=xtal::lib()->member(Xid(GameFramework));
-	Game=shared_ptr<CGame>(new CGame(params,framework));
-	Game->Init();
-	OutputLog("\nKVARCO初期化完了");
-	
-	//ゲーム開始
-	OutputLog("\n----------------[Game]----------------\n");
-}
-
 // ファイル名からパスを取り出して返す
 string GetFilePath(string s)
 {
@@ -65,16 +29,54 @@ string GetExePath()
 	return GetFilePath(buf);
 }
 
-string ExePath=GetExePath();
+fsys::path ExePath=fsys::path(GetExePath().c_str());
 
 GameBootSettingPtr GetGameSetting()
 {
-	return &Game->Setting;
+	return &(Game::GetInst()->Setting);
 }
 }
 
+Game* Game::Inst=NULL;
+void Game::Boot(const fsys::path& ini_file)
+{
+	using kvarco::OutputLog;
+
+	OutputLog("*********************************************************");
+	OutputLog("    -KVARCO ver1.08- %s","2011-05-12");
+	OutputLog("動作ログ");
+	OutputLog("*********************************************************\n");
+
+	OutputLog("----------------[Boot]----------------\n");
+
+	//メモリリークを検出
+	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+
+	XtalHelper::Init();
+	OutputLog("Xtalを初期化");
+
+	GameBootSetting params=kvarco::InitFromIniFile(fsys::absolute(ini_file,kvarco::ExePath));
+	params.FullScreen=!params.FullScreen;
+	OutputLog("起動パラメータを設定");
+
+	Game::bind();
+	OutputLog("各種バインド完了");
+
+	xtal::ArrayPtr list=ScriptManager::GetInst()->LoadOneFile(params.LoadFileList.c_str()).to_a();
+	ScriptManager::GetInst()->LoadFiles(list);
+	OutputLog("スクリプトをロード");
+
+	xtal::AnyPtr framework=xtal::lib()->member(Xid(GameFramework));
+	Inst=new Game(params,framework);
+	Game::GetInst()->Init();
+	OutputLog("\nKVARCO初期化完了");
+	
+	//ゲーム開始
+	OutputLog("\n----------------[Game]----------------\n");
+}
+
 //毎フレームの経過時間をFRAME_COUNT回計測し、その平均を出す。出力はFPSの形
-void CGame::SetRealFPS()
+void Game::SetRealFPS()
 {
 	for(int i=FRAME_COUNT-1; i>=1; i--)
 	{
@@ -87,7 +89,7 @@ void CGame::SetRealFPS()
 	ZeroMemory(&FrameTimes,sizeof(FrameTimes));
 }
 
-void CGame::ResetTime()
+void Game::ResetTime()
 {	
 	LARGE_INTEGER freq, count;
 	if (QueryPerformanceFrequency(&freq) && QueryPerformanceCounter(&count))
@@ -101,8 +103,8 @@ void CGame::ResetTime()
 }
 
 
-DWORD CGame::NowProcessPriority=NORMAL_PRIORITY_CLASS;
-void CGame::UpProcessPriority(DWORD priority)
+DWORD Game::NowProcessPriority=NORMAL_PRIORITY_CLASS;
+void Game::UpProcessPriority(DWORD priority)
 {
 	if(NowProcessPriority<=priority)
 	{
@@ -111,7 +113,7 @@ void CGame::UpProcessPriority(DWORD priority)
 	}
 }
 
-CGame::CGame(CGameBootSetting gs,xtal::AnyPtr Framework)
+Game::Game(GameBootSetting gs,xtal::AnyPtr Framework)
 {
 	GameFramework=Framework;
 	Setting=gs;
@@ -166,25 +168,25 @@ CGame::CGame(CGameBootSetting gs,xtal::AnyPtr Framework)
 	//出来ればこのタイミングでShowWindow()
 }
 
-void CGame::Init()
+void Game::Init()
 {
 	XtalHelper::send(GameFramework,Xid(Init));
 }
 
-void CGame::Run()
+void Game::Run()
 {
-	CInput::GetInst()->Update();
+	Input::GetInst()->Update();
 
 	xtal::AnyPtr end=XtalHelper::send(GameFramework,Xid(Run));
-	if((bool )end) Game->SetConfirmExit(true);
+	if((bool )end) Game::GetInst()->SetConfirmExit(true);
 }
 
-void CGame::Draw()
+void Game::Draw()
 {
 	XtalHelper::send(GameFramework,Xid(Draw));
 }
 
-void CGame::Main()
+void Game::Main()
 {
 
 	ResetTime();
@@ -235,7 +237,7 @@ void CGame::Main()
 
 }
 
-void CGame::DrawScene()
+void Game::DrawScene()
 {
 	ClearDrawScreen();
 	SetDrawScreen(DX_SCREEN_BACK);
@@ -245,35 +247,36 @@ void CGame::DrawScene()
 	ScreenFlip();
 }
 
-void CGame::UnInit()
+void Game::UnInit()
 {
-	KVARCO::OutputLog("\n----------------[Release]----------------\n");
+	kvarco::OutputLog("\n----------------[Release]----------------\n");
 	GameFramework=xtal::null;
-	KVARCO::OutputLog("GameFrameworkを開放");
+	kvarco::OutputLog("GameFrameworkを開放");
 
 	//ローディングスレッド実行中に終了した場合はkill
-	if(!KVARCO::IsLoadingEnd())
+	if(!kvarco::IsLoadingEnd())
 	{
 		CLoadingThread::Release();
-		SAFE_DELETE(KVARCO::LoadingThread);
+		SAFE_DELETE(kvarco::LoadingThread);
 	}
 
-	KVARCO::OutputLog("--各種シングルトンクラスの開放");
-	CInput::GetInst()		->Release();	KVARCO::OutputLog("CInputクラスを開放");
-	CActorManager::GetInst()->Release();	KVARCO::OutputLog("CActorManagerクラスを開放");
-	CLayerManager::GetInst()->Release();	KVARCO::OutputLog("CLayerManagerクラスを開放");
-	CSceneManager::GetInst()->Release();	KVARCO::OutputLog("CSceneManagerクラスを開放");
-	CAudioManager::GetInst()->Release();	KVARCO::OutputLog("CAudioManagerクラスを開放");
-	CColPolygon::Destroy();					KVARCO::OutputLog("CColPolygon::VoidPolygonを開放");
-	KVARCO::OutputLog("----------------");
+	kvarco::OutputLog("--各種シングルトンクラスの開放");
+	Input::GetInst()		 ->Release();	kvarco::OutputLog("Inputクラスを開放");
+	ActorManager::	GetInst()->Release();	kvarco::OutputLog("ActorManagerクラスを開放");
+	LayerManager::	GetInst()->Release();	kvarco::OutputLog("LayerManagerクラスを開放");
+	SceneManager::	GetInst()->Release();	kvarco::OutputLog("SceneManagerクラスを開放");
+	AudioManager::	GetInst()->Release();	kvarco::OutputLog("AudioManagerクラスを開放");
+	ScriptManager::	GetInst()->Release();	kvarco::OutputLog("ScriptManagerクラスを開放");
+	ColPolygon::			   Release();	kvarco::OutputLog("ColPolygon::VoidPolygonを開放");
+	kvarco::OutputLog("----------------");
 
-	xtal::uninitialize();	KVARCO::OutputLog("Xtalを開放");
-	DxLib::DxLib_End();		KVARCO::OutputLog("DirectXを開放");
+	xtal::uninitialize();	kvarco::OutputLog("Xtalを開放");
+	DxLib::DxLib_End();		kvarco::OutputLog("DirectXを開放");
 
-	OpenAL_Ogg::UnInit();	KVARCO::OutputLog("OpenALを開放");
+	OpenAL_Ogg::UnInit();	kvarco::OutputLog("OpenALを開放");
 
-	KVARCO::OutputLog("----------------");
-	KVARCO::OutputLog("KVARCOを開放");
-	KVARCO::OutputLog("\n----------------[End]----------------");
-	fclose(KVARCO::LogFile);
+	kvarco::OutputLog("----------------");
+	kvarco::OutputLog("KVARCOを開放");
+	kvarco::OutputLog("\n----------------[End]----------------");
+	fclose(kvarco::LogFile);
 }

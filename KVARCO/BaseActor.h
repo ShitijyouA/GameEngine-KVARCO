@@ -1,14 +1,14 @@
 ﻿#pragma once
 #include "KVARCO.h"
 
-class CBaseActor
+class BaseActor
 {
 	bool Dead;
 	xtal::AnyPtr Parent;
 
 public:
 
-	dPoint	Point;
+	fPoint	Point;
 	int		Z;
 
 	DWORD ID;
@@ -17,8 +17,8 @@ public:
 
 	xtal::FiberPtr Run;
 
-	CBaseActor()
-		:ID(KVARCO::MakeHandle()),Dead(false)
+	BaseActor()
+		:ID(kvarco::MakeHandle()),Dead(false)
 	{
 		Z=			0;
 		ActorType=	0;
@@ -39,16 +39,16 @@ public:
 	void Die()		{ Dead=true;		}
 	bool IsDead()	{ return Dead;		}
 
-	~CBaseActor()
+	~BaseActor()
 	{
 		Parent	=xtal::null;
 		Run		=xtal::null;
-		//KVARCO::DebugOut("ActorDead\n");
+		//kvarco::DebugOut("ActorDead\n");
 	}
 
 	static void bind(xtal::ClassPtr it)
 	{
-		USE_XDEFZ(CBaseActor);
+		USE_XDEFZ(BaseActor);
 
 		Xdef_var(Point);
 		Xdef_var(Z);
@@ -64,4 +64,4 @@ public:
 	}
 };
 
-typedef xtal::SmartPtr<CBaseActor> BaseActorPtrX;
+typedef xtal::SmartPtr<BaseActor> BaseActorPtrX;

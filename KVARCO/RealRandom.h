@@ -1,24 +1,24 @@
 ﻿#pragma once
 
-class CRealRandom
+class RealRandom
 {
-	mt19937			RandomGenerator;
-	uniform_01<>	Uniform;
+	boost::mt19937		RandomGenerator;
+	boost::uniform_01<>	Uniform;
 
-	typedef variate_generator<mt19937&,uniform_01<> > mt_01_gen;
+	typedef boost::variate_generator<boost::mt19937&,boost::uniform_01<> > mt_01_gen;
 	mt_01_gen		Dice;
 
 	DWORD Seed_BackUp;
 
 public:
-	CRealRandom(DWORD seed)
+	RealRandom(DWORD seed)
 		:
 		RandomGenerator(seed)			,
 		Dice(RandomGenerator,Uniform)	,
 		Seed_BackUp(0)
 	{}
 
-	CRealRandom()
+	RealRandom()
 		:
 		RandomGenerator(0)				,
 		Dice(RandomGenerator,Uniform)	,

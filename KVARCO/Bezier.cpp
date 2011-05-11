@@ -1,12 +1,12 @@
 ﻿#include "pch.h"
 #include "Bezier.h"
 
-CBezier::CBezier(xtal::ArrayPtr points,float speed,DWORD max_)
+Bezier::Bezier(xtal::ArrayPtr points,float speed,DWORD max_)
 {
 	const DWORD	DIVIDE=static_cast<DWORD>(ceil(max_/speed));
 	const WORD	Dimension=3;
 
-	vector<float> mPs;
+	std::vector<float> mPs;
 	const float InvU=1.0f/(DIVIDE-1);
 	for(DWORD i=0; i<DIVIDE; i++)
 	{
@@ -18,10 +18,10 @@ CBezier::CBezier(xtal::ArrayPtr points,float speed,DWORD max_)
 			mPs.push_back(mP);
 		}
 
-		dPointPtrX ptr=xtal::xnew<dPoint>();
+		fPointPtrX ptr=xtal::xnew<fPoint>();
 		for(WORD ii=0; ii<Dimension; ii++)
 		{
-			dPointPtrX sp=xtal::ptr_cast<dPoint>(points->at(ii));
+			fPointPtrX sp=xtal::ptr_cast<fPoint>(points->at(ii));
 			if(xtal::is_null(sp)) continue;
 			ptr->x+=sp->x*mPs[ii];
 			ptr->y+=sp->y*mPs[ii];
@@ -32,15 +32,15 @@ CBezier::CBezier(xtal::ArrayPtr points,float speed,DWORD max_)
 	}
 }
 
-dPointPtrX CBezier::GetPoint(DWORD pos)
+fPointPtrX Bezier::GetPoint(DWORD pos)
 {	return Points[pos];		}
 
-dPointPtrX CBezier::GetNextPoint()
+fPointPtrX Bezier::GetNextPoint()
 {	return GetPoint(Pos++);	}
 
-void CBezier::bind(xtal::ClassPtr it)
+void Bezier::bind(xtal::ClassPtr it)
 {
-	USE_XDEFZ(CBezier);
+	USE_XDEFZ(Bezier);
 	Xdef_method(GetPoint);
 	Xdef_method(GetNextPoint);
 }

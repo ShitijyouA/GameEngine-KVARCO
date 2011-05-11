@@ -1,19 +1,20 @@
-﻿#pragma once
+#pragma once
 #include "OpenAL_Ogg.h"
+using boost::timed_mutex;
 
-class CPlayThread : public COpenAL_Ogg_Stream
+class PlayThread : public OpenAL_Ogg_Stream
 {
 	volatile BYTE Volume;
 	volatile BYTE PrevVolume;
 
 	volatile bool DoStop;
 
-	timed_mutex ThreadSync;
-	condition_variable_any ThreadState;
+	boost::timed_mutex	ThreadSync;
+	boost::condition	ThreadState;
 
 public:
-	CPlayThread(string path,DWORD loop_point,bool repeat)
-			:COpenAL_Ogg_Stream(path,loop_point,repeat)
+	PlayThread(fsys::path& path,DWORD loop_point,bool repeat)
+			:OpenAL_Ogg_Stream(path,loop_point,repeat)
 		{
 			Volume=0;	PrevVolume=0;
 			DoStop=false;
@@ -21,7 +22,7 @@ public:
 
 	void Load()
 		{
-			COpenAL_Ogg_Stream::Load();
+			OpenAL_Ogg_Stream::Load();
 		}
 
 	void Run()
@@ -34,7 +35,7 @@ public:
 
 				if(PrevVolume!=Volume)
 				{
-					COpenAL_Ogg_Stream::ChangeVolume(Volume);
+					OpenAL_Ogg_Stream::ChangeVolume(Volume);
 					PrevVolume=Volume;
 				}
 
@@ -42,7 +43,7 @@ public:
 				ThreadState.notify_all();
 			}
 
-			COpenAL_Ogg_Stream::Stop();
+			OpenAL_Ogg_Stream::Stop();
 		}
 
 	void ChangeVolume(BYTE volume)

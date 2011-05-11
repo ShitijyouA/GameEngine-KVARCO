@@ -1,53 +1,53 @@
 ﻿#include "pch.h"
 #include "AudioItem.h"
 
-CBGM_Item::CBGM_Item(xtal::StringPtr path,DWORD loop_point,bool do_repeat)
-	:Player(KVARCO::ExePath+string(path->c_str()),loop_point,do_repeat)
+BGM_Item::BGM_Item(xtal::StringPtr path,DWORD loop_point,bool do_repeat)
+:Player(fsys::absolute(path->c_str(),kvarco::ExePath),loop_point,do_repeat)
 {
 }
 
-void CBGM_Item::Load()
+void BGM_Item::Load()
 {
 	Player.Load();
 }
 
-void CBGM_Item::Play()
+void BGM_Item::Play()
 {
 	Player.SetDoStop(false);
-	PlayThread=thread(bind(&CPlayThread::Run,&Player));
+	player_thread_=boost::thread(&PlayThread::Run,&Player);
 }
 
-void CBGM_Item::Play(BYTE volume)
+void BGM_Item::Play(BYTE volume)
 {
 	Play();
 	SetVolume(volume);
 }
 
-void CBGM_Item::Stop()
+void BGM_Item::Stop()
 {
 	Player.Stop();
-	PlayThread.join();
-	PlayThread.interrupt();
+	player_thread_.join();
+	player_thread_.interrupt();
 }
 
-void CBGM_Item::Pause()
+void BGM_Item::Pause()
 {
 	Player.Pause();
 }
 
-void CBGM_Item::SetVolume(BYTE vol)
+void BGM_Item::SetVolume(BYTE vol)
 {
 	Player.ChangeVolume(vol);
 }
 
-CSE_Item::CSE_Item(xtal::StringPtr path)
-	:Source(KVARCO::ExePath+string(path->c_str()))
+SE_Item::SE_Item(xtal::StringPtr path)
+:Source(fsys::absolute(path->c_str(),kvarco::ExePath))
 {
 	Player=NULL;
 	Loaded=false;
 }
 
-void CSE_Item::Load()
+void SE_Item::Load()
 {
 	if(Loaded) return;
 
@@ -56,28 +56,28 @@ void CSE_Item::Load()
 	Volume	=100;
 }
 
-void CSE_Item::SetVolume(BYTE vol)
+void SE_Item::SetVolume(BYTE vol)
 {
 	Volume=vol;
 }
 
-void CSE_Item::Play()
+void SE_Item::Play()
 {
 	if(!Loaded) return;
 
 	Player=new CSimplePlay_Thread(&Source,Volume);
-	PlayThread=thread(bind(&CSimplePlay_Thread::Run,Player));
+	player_thread_=boost::thread(&CSimplePlay_Thread::Run,Player);
 }
 
-void CSE_Item::Play(BYTE volume)
+void SE_Item::Play(BYTE volume)
 {
 	SetVolume(volume);
 	Play();
 }
 
-void CSE_Item::Stop()
+void SE_Item::Stop()
 {
 	Player->Stop();
-	PlayThread.join();
-	PlayThread.interrupt();
+	player_thread_.join();
+	player_thread_.interrupt();
 }

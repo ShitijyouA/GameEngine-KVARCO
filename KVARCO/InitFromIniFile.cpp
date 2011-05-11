@@ -1,39 +1,39 @@
-Ôªø#include "pch.h"
+#include "pch.h"
 #include "Game.h"
-#include <boost/lexical_cast.hpp>
 
-CGameBootSetting KVARCO::InitFromIniFile(string path)
+#include "InitFromIniFile.h"
+
+GameBootSetting kvarco::InitFromIniFile(const fsys::path& path)
 {
-	CGameBootSetting res;
-	char tmp[50];
+	GameBootSetting res;
+	kvarco::detail::SimpleIniPropertyWrapper_impl<GameBootSetting> wrapper(path,res);
 
-	try
-	{
-		memset(tmp,0,sizeof(tmp)); GetPrivateProfileString("WindowSetting","Title"			,"Game"	,tmp,sizeof(tmp),path.c_str());
-		res.Title			=tmp;
-		memset(tmp,0,sizeof(tmp)); GetPrivateProfileString("WindowSetting","UseIcon"		,"1"	,tmp,sizeof(tmp),path.c_str());
-		res.UseIcon			=lexical_cast<int>(tmp);
-		memset(tmp,0,sizeof(tmp)); GetPrivateProfileString("WindowSetting","FullScreen"		,"1"	,tmp,sizeof(tmp),path.c_str());
-		res.FullScreen		=lexical_cast<int>(tmp)!=0;
-		memset(tmp,0,sizeof(tmp)); GetPrivateProfileString("WindowSetting","WndWidth"		,"640"	,tmp,sizeof(tmp),path.c_str());
-		res.WndWidth		=lexical_cast<int>(tmp);
-		memset(tmp,0,sizeof(tmp)); GetPrivateProfileString("WindowSetting","WndHeight"		,"480"	,tmp,sizeof(tmp),path.c_str());
-		res.WndHeight		=lexical_cast<int>(tmp);
+#define SET_MEMBER(member_name,data_name)\
+	wrapper.SetMember(&GameBootSetting::member_name,#data_name)
 
-		memset(tmp,0,sizeof(tmp)); GetPrivateProfileString("SystemSetting","RockFPS"		,"0"	,tmp,sizeof(tmp),path.c_str());
-		res.RockFPS			=lexical_cast<int>(tmp)!=0;
-		memset(tmp,0,sizeof(tmp)); GetPrivateProfileString("SystemSetting","AlwaysRun"		,"1"	,tmp,sizeof(tmp),path.c_str());
-		res.AlwaysRun		=lexical_cast<int>(tmp)!=0;
-		memset(tmp,0,sizeof(tmp)); GetPrivateProfileString("SystemSetting","UpPG_Priority"	,"0"	,tmp,sizeof(tmp),path.c_str());
-		res.UpPG_Priority	=lexical_cast<int>(tmp)!=0;
+#define SET_MEMBER_XTYPE(member_name,data_name,value_type)\
+	wrapper.SetMemberXtype<value_type>(&GameBootSetting::member_name,#data_name)
 
-		memset(tmp,0,sizeof(tmp)); GetPrivateProfileString("ScriptSetting","LoadFileList"	,"LoadFileList.xtal"	,tmp,sizeof(tmp),path.c_str());
-		res.LoadFileList	=tmp;
-	}
-	catch(bad_lexical_cast e)
-	{
-		exit(-'b');
-	}
+	boost::optional<std::string> temp;
+
+	//TitleÇÕoperator>>ÇéùÇΩÇ»Ç¢ÇÃÇ≈ì¡ï 
+	temp=wrapper.GetPropertyTree().get_optional<std::string>("WindowSetting.Title");
+	if(temp.is_initialized()) res.Title=temp->c_str();
+
+	//
+	SET_MEMBER		(UseIcon,		WindowSetting.UseIcon		);
+	SET_MEMBER		(FullScreen,	WindowSetting.FullScreen	);
+	SET_MEMBER		(WndWidth,		WindowSetting.WndWidth		);
+	SET_MEMBER		(WndHeight,		WindowSetting.WndHeight		);
+
+	SET_MEMBER		(RockFPS,		SystemSetting.RockFPS		);
+	SET_MEMBER		(AlwaysRun,		SystemSetting.AlwaysRun		);
+	SET_MEMBER		(UpPG_Priority,	SystemSetting.UpPG_Priority	);
+
+	SET_MEMBER		(LoadFileList,	ScriptSetting.LoadFileList	);
 
 	return res;
+
+#undef SET_MEMBER
+#undef SET_MEMBER_XTYPE
 }

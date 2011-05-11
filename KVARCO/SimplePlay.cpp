@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "SimplePlay.h"
 
-CSource::CSource(string path)
+CSource::CSource(const fsys::path& path)
 {
 	if(!OpenAL_Ogg::OpenALInited) OpenAL_Ogg::Init();
 
@@ -10,7 +10,7 @@ CSource::CSource(string path)
 	Frequency	=0;
 
 	//Oggファイルを開く
-	int open_res=ov_fopen(path.c_str(),&OggFile);
+	int open_res=ov_fopen(path.string().c_str(),&OggFile);
 	if(open_res!=0)	throw string("Couldn't Open OggFile(at ov_open())");
 	
 	//ファイルの設定を取得

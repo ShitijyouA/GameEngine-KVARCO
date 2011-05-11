@@ -18,25 +18,25 @@ const int BORDER = 20;
 #define INPUT_SPEACE	9
 #define INPUT_SHIFT		10
 
-class CInput;
-class CInputState;
+class Input;
+class InputState;
 
-typedef CInput* InputPtr;
-typedef CInputState* InputStatePtr;
+typedef Input* InputPtr;
+typedef InputState* InputStatePtr;
 
-class CInputState {
+class InputState {
 public:
 	DWORD Left,Up,Right,Down,Buttons[MAX_BUTTON_NUM];
 	int AnalogX,AnalogY;
 
-	CInputState();
+	InputState();
 };
 
-class CInput
+class Input
 {
 
 private:
-	CInputState States[MAX_PLYER_NUM];
+	InputState States[MAX_PLYER_NUM];
 
 public:
 	void ClearState();
@@ -47,5 +47,5 @@ public:
 		return &States[player];
 	}
 
-	SINGLETON_PATTERN(CInput,InputPtr)
+	SINGLETON_PATTERN(Input,InputPtr)
 };

@@ -5,7 +5,7 @@
 #include "XtalHelper.h"
 #include "LoadingThread.h"
 
-namespace KVARCO
+namespace kvarco
 {
 
 DWORD MakeHandle()
@@ -16,9 +16,9 @@ DWORD MakeHandle()
 }
 
 //入力関係
-DWORD KVARCO::GetKeyState(DWORD Key,int PlayerNo_)
+DWORD kvarco::GetKeyState(DWORD Key,int PlayerNo_)
 {
-	const InputStatePtr state=CInput::GetInst()->GetState(PlayerNo_);
+	const InputStatePtr state=Input::GetInst()->GetState(PlayerNo_);
 	if(Key<=KEY_DOWN)
 	{
 		switch(Key)
@@ -45,7 +45,7 @@ void SetDrawArea(lRect Area)
 	DxLib::SetDrawArea(Area.left,Area.top,Area.right,Area.bottom);
 }
 
-void SetDrawArea(dRect Area)
+void SetDrawArea(fRect Area)
 {
 	DxLib::SetDrawArea(
 		static_cast<int>(Area.left),
@@ -60,20 +60,20 @@ void SetDrawArea_default()
 	lRect area;
 	area.left	=0;
 	area.top	=0;
-	area.right	=Game->Setting.WndWidth;
-	area.bottom	=Game->Setting.WndHeight;
+	area.right	=Game::GetInst()->Setting.WndWidth;
+	area.bottom	=Game::GetInst()->Setting.WndHeight;
 
-	KVARCO::SetDrawArea(area);
+	kvarco::SetDrawArea(area);
 }
 
 //グラフィック関係
 int	LoadGraph(xtal::String GrName,xtal::String RelaPath)
 {
 	string name=GrName.c_str();
-	string path=KVARCO::ExePath+RelaPath.c_str();
+	fsys::path path=fsys::absolute(RelaPath.c_str(),kvarco::ExePath);
 
-	GR_INFO grinfo;
-	grinfo.GrHandle=Warning::Retry_LoadGraph(path.c_str());
+	GrInfo grinfo;
+	grinfo.GrHandle=Warning::Retry_LoadGraph(path.string());
 
 	//""(NULL)の時はGrHadleを返すだけ
 	if(name!="")
@@ -88,34 +88,34 @@ int	LoadGraph(xtal::String GrName,xtal::String RelaPath)
 		grinfo.Size.left	=0;	grinfo.Size.top		=0;
 		grinfo.Size.right	=w;	grinfo.Size.bottom	=h;
 #endif
-		KVARCO::ImageNameList.insert(make_pair(GrName.c_str(),grinfo));
+		kvarco::ImageNameList.insert(make_pair(GrName.c_str(),grinfo));
 	}
 
 	return grinfo.GrHandle;
 }
 
-GR_INFO* GetGrInfo_p(xtal::String GrName)
+GrInfo* GetGrInfo_p(xtal::String GrName)
 {
 	string name=GrName.c_str();
 
-	unordered_map<string,GR_INFO>::iterator i=KVARCO::ImageNameList.find(name);
-	if(i!=KVARCO::ImageNameList.end())
+	boost::unordered_map<string,GrInfo>::iterator i=kvarco::ImageNameList.find(name);
+	if(i!=kvarco::ImageNameList.end())
 		return &((*i).second);
 	return NULL;
 }
 
-GR_INFO	GetGrInfo(xtal::String GrName)
+GrInfo	GetGrInfo(xtal::String GrName)
 {
-	GR_INFO* gr=GetGrInfo_p(GrName);
+	GrInfo* gr=GetGrInfo_p(GrName);
 	if(gr!=NULL) return (*gr);
 
-	GR_INFO gr_null;	gr_null.GrHandle=NULL;
+	GrInfo gr_null;	gr_null.GrHandle=NULL;
 	return gr_null;
 }
 
 int GetGrHandle(xtal::String GrName)
 {
-	GR_INFO* gr=GetGrInfo_p(GrName);
+	GrInfo* gr=GetGrInfo_p(GrName);
 	if(gr!=NULL) return gr->GrHandle;
 	return -1;
 }
@@ -123,14 +123,14 @@ int GetGrHandle(xtal::String GrName)
 #ifdef USE_SIZE_STRCT
 lSizePtrX GetGrSize(xtal::String GrName)
 {
-	GR_INFO* gr=GetGrInfo_p(GrName);
+	GrInfo* gr=GetGrInfo_p(GrName);
 	if(gr!=NULL) return xtal::xnew<lSize>(gr->Size);
 	return lSizePtrX();
 }
 #else
 lRectPtrX GetGrSize(xtal::String GrName)
 {
-	GR_INFO* gr=GetGrInfo_p(GrName);
+	GrInfo* gr=GetGrInfo_p(GrName);
 	if(gr!=NULL) return xtal::xnew<lRect>(gr->Size);
 	return lRectPtrX();
 }
@@ -139,7 +139,7 @@ lRectPtrX GetGrSize(xtal::String GrName)
 //グラフィックハンドル指定型
 int	LoadCutGraph_H(xtal::String NewName,int GrHandle,long x,long y,long w,long h)
 {
-	GR_INFO grnew;
+	GrInfo grnew;
 	grnew.GrHandle=DxLib::DerivationGraph(x,y,w,h,GrHandle);
 	
 	string name=NewName.c_str();
@@ -153,7 +153,7 @@ int	LoadCutGraph_H(xtal::String NewName,int GrHandle,long x,long y,long w,long h
 		grnew.Size.right=w;	grnew.Size.bottom	=h;
 #endif
 
-		KVARCO::ImageNameList.insert(make_pair(name,grnew));
+		kvarco::ImageNameList.insert(make_pair(name,grnew));
 	}
 
 	return grnew.GrHandle;
@@ -177,7 +177,7 @@ int	LoadCutGraph_N(xtal::String NewName,xtal::String GrName,long x,long y,long w
 void DeleteGraph_N(xtal::String GrName)
 {
 	int GrHandle=GetGrHandle(GrName);
-	if(GrHandle!=-1) KVARCO::DeleteGraph_H(GrHandle);
+	if(GrHandle!=-1) kvarco::DeleteGraph_H(GrHandle);
 }
 
 void SetDrawBlendModeLight(BYTE mode,BYTE param)
@@ -198,7 +198,7 @@ void DrawLine(long x1,long y1,long x2,long y2, int color,bool thickness)
 	DxLib::DrawLine(x1,y1,x2,y2,color,(int )thickness);
 }
 
-void DrawdRect(dRect Rect, bool fill,int color)
+void DrawfRect(fRect Rect, bool fill,int color)
 {
 	DxLib::DrawBox(
 		static_cast<int>(Rect.top),
@@ -287,44 +287,44 @@ xtal::StringPtr SplitWords(xtal::String src_x)
 void StartGraphLoading(xtal::AnyPtr LoadList)
 {
 	OutputLog("テクスチャ読み込み用のスレッドを起動");
-	KVARCO::LoadingThread=new CLoadingThread(LoadList);
+	kvarco::LoadingThread=new CLoadingThread(LoadList);
 }
 
 bool IsLoadingEnd()
 {
-	if(KVARCO::LoadingThread==NULL)			return true;
+	if(kvarco::LoadingThread==NULL)			return true;
 	else
-	if(!KVARCO::LoadingThread->IsEnded())	return false;
+	if(!kvarco::LoadingThread->IsEnded())	return false;
 
 	OutputLog("スレッド終了。開放します");
-	SAFE_DELETE(KVARCO::LoadingThread);
+	SAFE_DELETE(kvarco::LoadingThread);
 	return true;
 }
 
 //Random
-CRealRandom RealRandom;
+RealRandom RandomGenerator;
 
 void RandSeed()
 {
-	RealRandom.Seed(static_cast<DWORD>(time(NULL)));
+	RandomGenerator.Seed(static_cast<DWORD>(time(NULL)));
 }
 
 float Rand(float min_,float max_)
 {
-	return RealRandom.Random(min_,max_);
+	return RandomGenerator.Random(min_,max_);
 }
 
 int RandInt(int min_,int max_)
 {
 	return static_cast<int>(
-		RealRandom.Random(static_cast<float>(min_),static_cast<float>(max_))
+		RandomGenerator.Random(static_cast<float>(min_),static_cast<float>(max_))
 	);
 }
 
 //Info
 float GetNowFPS()
 {
-	return Game->GetRealFPS();
+	return Game::GetInst()->GetRealFPS();
 }
 
 //Debug
@@ -333,7 +333,7 @@ FILE* LogFile;
 void OutputLog(const char* format_str,...)
 {
 	if(LogFile==NULL)
-		fopen_s(&LogFile,(KVARCO::ExePath+LOG_FILE_NAME).c_str(),"w");
+		fopen_s(&LogFile,fsys::absolute(LOG_FILE_NAME,kvarco::ExePath).string().c_str(),"w");
 
 	char buf[LOG_MAX_LENGTH];
 
@@ -357,14 +357,14 @@ void DebugOut(xtal::StringPtr str)
 
 void Exit()
 {
-	Game->SetConfirmExit(true);
+	Game::GetInst()->SetConfirmExit(true);
 }
 
 //Bind to Xtal
 void bind()
 {
 	//クラスでなくネームスペースでもXdefマクロを使うためのゴリ押し
-	#define Self	KVARCO
+	#define Self	kvarco
 	#define it		xtal::lib()
 
 	Xdef_fun(MakeHandle);
@@ -412,7 +412,7 @@ void bind()
 
 	//図形描画
 	Xdef_fun(DrawLine);
-	Xdef_fun(DrawdRect);
+	Xdef_fun(DrawfRect);
 
 	//Info
 	Xdef_fun(GetNowFPS);
@@ -485,4 +485,4 @@ void GE_KeyCode_bind(xtal::ClassPtr it)
 	#undef int_t
 }
 
-} //namespace KVARCO
+} //namespace kvarco

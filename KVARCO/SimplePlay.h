@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "OpenAL_Ogg.h"
 #include <vector>
 
@@ -12,7 +12,7 @@ class CSource
 	vector<char>	Buffer;
 
 public:
-	CSource(string path);
+	CSource(const fsys::path& path);
 	void Load();
 	~CSource()
 		{
@@ -36,14 +36,10 @@ public:
 	virtual bool IsStopped();
 };
 
-#include <boost/thread.hpp>
-#include <boost/thread/condition.hpp>
-using namespace boost;
-
 class CSimplePlay_Thread : public CSimplePlay
 {
-	mutex ThreadSync;
-	condition ThreadState;
+	boost::mutex ThreadSync;
+	boost::condition ThreadState;
 
 	volatile bool DoStop;
 	volatile bool Stopped;
@@ -71,7 +67,7 @@ public:
 			Play();
 			while(!IsStopped())
 			{
-				mutex::scoped_lock look(ThreadSync);
+				boost::mutex::scoped_lock look(ThreadSync);
 
 				if(DoStop) CSimplePlay::Stop();
 				Stopped=CSimplePlay::IsStopped();

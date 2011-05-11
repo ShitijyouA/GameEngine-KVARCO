@@ -3,9 +3,8 @@
 
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR lpCmdLine, int nCmdShow )
 {
-	KVARCO::Boot("setting.ini");
-
-	Game->Main();
+	Game::Boot("setting.ini");
+	Game::GetInst()->Main();
 
 	return 0 ;		// ソフトの終了
 }

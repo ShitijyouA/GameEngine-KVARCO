@@ -1,10 +1,10 @@
 ﻿#pragma once
 #include "Utillity.h"
 
-class CBaseScene
+class BaseScene
 {
 public:
-	CBaseScene()
+	BaseScene()
 	{
 		Run	=xtal::null;
 	}
@@ -13,9 +13,9 @@ public:
 
 	static void bind(xtal::ClassPtr it)
 	{
-		USE_XDEFZ(CBaseScene);
+		USE_XDEFZ(BaseScene);
 		Xdef_var(Run);
 	}
 };
 
-typedef xtal::SmartPtr<CBaseScene> BaseScenePtrX;
+typedef xtal::SmartPtr<BaseScene> BaseScenePtrX;

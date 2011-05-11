@@ -2,7 +2,7 @@
 
 //Xtalバインド用マクロ
 #define USE_XDEFZ(class_)	typedef class_ Self
-//あとはXtal標準のXdef_fun,Xdef_method_Xdef_varを使用
+//あとはXtal標準のXdef_fun,Xdef_method,Xdef_varを使用
 
 //Xtalにバインドするclass
 //Release()は各自で用意する

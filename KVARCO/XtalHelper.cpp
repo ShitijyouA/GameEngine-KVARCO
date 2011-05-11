@@ -35,7 +35,7 @@ bool defaultHandler(const xtal::StringPtr& errorMessage){
 			return false;
 			break;
 		case IDRETRY:	// 再試行
-			CScriptManager::GetInst()->ReLoad();
+			ScriptManager::GetInst()->ReLoad();
 			return true;
 		case IDIGNORE:	// 無視
 			return false;

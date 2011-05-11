@@ -3,15 +3,15 @@
 #include "Utillity.h"
 #include "AudioItem.h"
 
-typedef xtal::SmartPtr<CAudioItem> AudioItemPtrX;
-typedef xtal::SmartPtr<CBGM_Item> CBGM_ItemPtr;
-typedef unordered_map<string,AudioItemPtrX> AudioMap;
+typedef xtal::SmartPtr<AudioItem> AudioItemPtrX;
+typedef xtal::SmartPtr<BGM_Item> BGM_ItemPtr;
+typedef boost::unordered_map<string,AudioItemPtrX> AudioMap;
 typedef AudioMap::iterator AudioMap_i;
 
-class CAudioManager;
-typedef CAudioManager* AudioMngrPtr;
+class AudioManager;
+typedef AudioManager* AudioMngrPtr;
 
-class CAudioManager
+class AudioManager
 {
 	AudioMap AudioItemMap;
 
@@ -22,13 +22,13 @@ class CAudioManager
 	void ReleaseAllAudioItem();
 
 	//同時に再生できるBGMアイテムは一つのみ
-	CBGM_ItemPtr CurrentBGM;
+	BGM_ItemPtr CurrentBGM;
 
 public:
 	void LoadAudio(AudioItemPtrX item,string name);
 	void LoadAudioX(xtal::AnyPtr item,xtal::StringPtr name)
 		{
-			AudioItemPtrX tmp=xtal::ptr_cast<CAudioItem>(item);
+			AudioItemPtrX tmp=xtal::ptr_cast<AudioItem>(item);
 			LoadAudio(tmp,name->c_str());
 		}
 
@@ -70,18 +70,18 @@ public:
 	//Singleton Pattern
 	//コンストラクタが自前なので非マクロ
 private:
-	FRIENDS_FOR_XTAL(CAudioManager)
+	FRIENDS_FOR_XTAL(AudioManager)
 
-	CAudioManager();
+	AudioManager();
 
 public:
 	static AudioMngrPtr GetInst()
 		{
-			static CAudioManager Inst;
+			static AudioManager Inst;
 			return &Inst;
 		}
 
-	~CAudioManager()
+	~AudioManager()
 		{
 			Release();
 		}

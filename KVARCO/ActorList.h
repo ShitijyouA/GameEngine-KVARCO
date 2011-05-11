@@ -1,27 +1,27 @@
 ﻿#pragma once
-#include "ScManager.h"
+#include "ScriptManager.h"
 #include "BaseActor.h"
 
 typedef xtal::AnyPtr		ActorPtrX;
 struct tag_ID	{};
 struct tag_Z	{};
 struct tag_Type	{};
-namespace KVARCO
+namespace kvarco
 {
 	extern DWORD GetZ_BaseActor(xtal::AnyPtr actor);
 	extern DWORD GetID_BaseActor(xtal::AnyPtr actor);
 	extern DWORD GetType_BaseActor(xtal::AnyPtr actor);
 }
 
-typedef multi_index_container
+typedef boost::multi_index::multi_index_container
 	<
 		xtal::AnyPtr,
 		indexed_by
 		<
 			sequenced<			tag<tag_Seq> >,
-			ordered_non_unique<	tag<tag_Z>,			global_fun<xtal::AnyPtr,DWORD,KVARCO::GetZ_BaseActor>	>,
-			hashed_unique<		tag<tag_ID>,		global_fun<xtal::AnyPtr,DWORD,KVARCO::GetID_BaseActor>	>,	//Z(LayerManagerと連携)
-			ordered_non_unique<	tag<tag_Type>,		global_fun<xtal::AnyPtr,DWORD,KVARCO::GetType_BaseActor> >	//ActorType
+			ordered_non_unique<	tag<tag_Z>,			global_fun<xtal::AnyPtr,DWORD,kvarco::GetZ_BaseActor>	>,
+			hashed_unique<		tag<tag_ID>,		global_fun<xtal::AnyPtr,DWORD,kvarco::GetID_BaseActor>	>,	//Z(LayerManagerと連携)
+			ordered_non_unique<	tag<tag_Type>,		global_fun<xtal::AnyPtr,DWORD,kvarco::GetType_BaseActor> >	//ActorType
 		>
 	> ActorList;
 

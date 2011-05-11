@@ -18,8 +18,8 @@ const float M_SQRT1_2	=0.707106781186547;
 const float D2R			=0.017453292519943;
 const float R2D			=57.29577951308232;
 
-const string	LOG_FILE_NAME	="kvarco_log.txt";
-const DWORD		LOG_MAX_LENGTH	=256;
+const fsys::path	LOG_FILE_NAME	="kvarco_log.txt";
+const DWORD			LOG_MAX_LENGTH	=256;
 
 #include "GeoStruct.h"
 #include "Utillity.h"
@@ -30,7 +30,7 @@ const DWORD		LOG_MAX_LENGTH	=256;
 
 //#define USE_SIZE_STRCT		//tSizeを使うときdefine。define推奨
 
-struct GR_INFO
+struct GrInfo
 {
 	int		GrHandle;
 #ifdef USE_SIZE_STRCT
@@ -40,10 +40,10 @@ struct GR_INFO
 #endif
 };
 
-namespace KVARCO
+namespace kvarco
 {
-	extern void Boot(string LoadFileList);		//ゲームの起動
-	extern string ExePath;						//この実行ファイルがあるフォルダの絶対パス
+	extern void Boot(const fsys::path& LoadFileList);	//ゲームの起動
+	extern fsys::path ExePath;							//この実行ファイルがあるフォルダの絶対パス
 	extern string GetFilePath(string s);
 	extern string GetExePath();
 
@@ -55,7 +55,7 @@ namespace KVARCO
 
 	//描画範囲関係
 	extern void SetDrawArea(lRect Area);
-	extern void SetDrawArea(dRect Area);
+	extern void SetDrawArea(fRect Area);
 	extern void SetDrawArea_default();
 
 	//画像関係関数
@@ -69,8 +69,8 @@ namespace KVARCO
 #else
 	extern lRectPtrX	GetGrSize(xtal::String GrName);
 #endif
-	extern GR_INFO		GetGrInfo(xtal::String GrName);
-	extern GR_INFO*		GetGrInfo_p(xtal::String GrName);	//グラフィックテーブルにあるインスタンスのポインタ
+	extern GrInfo		GetGrInfo(xtal::String GrName);
+	extern GrInfo*		GetGrInfo_p(xtal::String GrName);	//グラフィックテーブルにあるインスタンスのポインタ
 
 		//グラフィックネーム指定型
 	extern int	LoadCutGraph_H(xtal::String NewName,int GrHandle,long x,long y,long w,long h);				//ロード済みの画像から一部を切り出し、新しい画像として利用出来るようにする。切り出し元が削除されると利用できなくなる
@@ -120,7 +120,7 @@ namespace KVARCO
 
 	//図形描画
 	extern void DrawLine(long x1,long y1,long x2,long y2, int color,bool thickness=false);
-	extern void DrawdRect(dRect Rect, bool fill,int color);
+	extern void DrawfRect(fRect Rect, bool fill,int color);
 
 	//ローディング
 	extern void StartGraphLoading(xtal::AnyPtr LoadPathList);
@@ -131,7 +131,7 @@ namespace KVARCO
 	extern xtal::StringPtr SplitWords(xtal::String Src);					//[]の後の文字列を取り出す。前後の空白は削除される
 
 	//乱数(mt19937使用)
-	extern CRealRandom RealRandom;
+	extern RealRandom RandomGenerator;
 	extern void RandSeed();
 	extern float Rand(float min_,float max_);
 	extern int RandInt(int min_,int max_);

@@ -4,12 +4,12 @@
 #include "ActorList.h"
 #include "GeoStruct.h"
 
-class CActorManager;
-//typedef xtal::SmartPtr<CActorManager> ActorMngrPtr;
-typedef CActorManager* ActorMngrPtr;
+class ActorManager;
+//typedef xtal::SmartPtr<ActorManager> ActorMngrPtr;
+typedef ActorManager* ActorMngrPtr;
 typedef boost::unordered_map<string,xtal::AnyPtr>	ActorMap;
 
-class CActorManager
+class ActorManager
 {
 	ActorList	AllActors;
 	ActorMap	ActorsMap;
@@ -28,7 +28,7 @@ public:
 
 	static void bind(xtal::ClassPtr it);
 
-	SINGLETON_PATTERNX(CActorManager,ActorMngrPtr)
+	SINGLETON_PATTERNX(ActorManager,ActorMngrPtr)
 	void ReleaseAllActor();
 	void Release()
 	{

@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "ScManager.h"
+#include "ScriptManager.h"
 #include "XtalHelper.h"
 #include "LoadingThread.h"
 
@@ -9,11 +9,11 @@
 //優先順位を上げるときの目安
 #define UpToHigh			20
 
-//CGameの設定構造体
-class CGameBootSetting
+//Gameの設定構造体
+class GameBootSetting
 {
 public:
-	CGameBootSetting()
+	GameBootSetting()
 		:Title("Game"),UseIcon(0),
 		FullScreen(true),
 		WndWidth(640),WndHeight(480),
@@ -37,9 +37,9 @@ public:
 	string LoadFileList;
 };
 
-typedef xtal::SmartPtr<CGameBootSetting> GameBootSettingPtr;
+typedef xtal::SmartPtr<GameBootSetting> GameBootSettingPtr;
 
-class CGame
+class Game
 {
 	//固定フレームレート調整用
 	LARGE_INTEGER LastHiCount;
@@ -64,11 +64,16 @@ class CGame
 
 	static DWORD NowProcessPriority;
 	static void UpProcessPriority(DWORD priority);
+	static Game* Inst;
 
 public:
 
+	//Boot
+	static void Boot(const fsys::path& ini_file);
+
 	//コンストラクタ
-	CGame(CGameBootSetting gs,xtal::AnyPtr FrameWork);
+	Game(GameBootSetting gs,xtal::AnyPtr FrameWork);
+
 	//初期化
 	void Init();
 
@@ -97,23 +102,27 @@ public:
 
 	void DrawScene();
 
-	CGameBootSetting Setting;
+	GameBootSetting Setting;
 	xtal::AnyPtr GameFramework;
 
 	static void bind();
+
+	//必ず先にBootを呼ぶこと
+	static Game* GetInst()
+	{
+		assert(Inst!=NULL);
+		return Inst;
+	}
 };
 
-namespace KVARCO
+namespace kvarco
 {
 	//イメージ名とイメージハンドルを登録するmap
-	extern unordered_map<string,GR_INFO>	ImageNameList;
+	extern boost::unordered_map<string,GrInfo>	ImageNameList;
 
 	//ローディングクラスのポインタ。実行してないとNULL
 	extern CLoadingThread*	LoadingThread;
-	
-	extern	void Boot(string IniFile);
-	extern	CGameBootSetting InitFromIniFile(string path);
+
+	extern	GameBootSetting InitFromIniFile(const fsys::path& path);
 	extern	GameBootSettingPtr GetGameSetting();
 }
-
-extern	shared_ptr<CGame>	Game;

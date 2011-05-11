@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "Input.h"
 
-void CInput::Update()
+void Input::Update()
 {	
 	int JoypadNum=DxLib::GetJoypadNum();
 	
@@ -69,15 +69,15 @@ void CInput::Update()
 	}
 }
 
-//InputPtr CInput::Inst=NULL;
-InputPtr CInput::GetInst()
+//InputPtr Input::Inst=NULL;
+InputPtr Input::GetInst()
 {
-	//if(Inst==NULL) Inst=new CInput;
-	static CInput Inst;
+	//if(Inst==NULL) Inst=new Input;
+	static Input Inst;
 	return &Inst;
 }
 
-CInputState::CInputState()
+InputState::InputState()
 {
 	Left=Up=Right=Down=false;
 	AnalogX=AnalogY=0;

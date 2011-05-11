@@ -24,15 +24,15 @@
 		class_name_::bind(it);						\
 	}
 
-XDEF_CTOR0_USE_BIND_METHOD(CBaseActor)
-XDEF_CTOR0_USE_BIND_METHOD(CBaseScene)
+XDEF_CTOR0_USE_BIND_METHOD(BaseActor)
+XDEF_CTOR0_USE_BIND_METHOD(BaseScene)
 
-XTAL_PREBIND(CColPolygon)
+XTAL_PREBIND(ColPolygon)
 {
-	it->def_ctor1<CColPolygon,DWORD>()->param(1,Xid(poly_num),4);
+	it->def_ctor1<ColPolygon,DWORD>()->param(1,Xid(poly_num),4);
 }
 
-XTAL_BIND(CColPolygon)
+XTAL_BIND(ColPolygon)
 {
 	Xdef_method(SetBox);
 	Xdef_method(SetPolygon);
@@ -44,33 +44,33 @@ XTAL_BIND(CColPolygon)
 	Xdef_method(DrawCollision);
 }
 
-XTAL_PREBIND(CBezier)
+XTAL_PREBIND(Bezier)
 {
-	it->def_ctor3<CBezier,xtal::ArrayPtr,float,DWORD>()
+	it->def_ctor3<Bezier,xtal::ArrayPtr,float,DWORD>()
 		->param(3,Xid(max_),1024);
 }
 
-XTAL_BIND(CBezier)
+XTAL_BIND(Bezier)
 {
-	CBezier::bind(it);
+	Bezier::bind(it);
 }
 
 //マネージャ系(Singleton)
-XDEF_CTOR0_USE_BIND_METHOD(CLayerManager)
-XDEF_CTOR0_USE_BIND_METHOD(CScriptManager)
-XDEF_CTOR0_USE_BIND_METHOD(CAudioManager)
-XDEF_CTOR0_USE_BIND_METHOD(CSceneManager)
-XDEF_CTOR0_USE_BIND_METHOD(CActorManager)
+XDEF_CTOR0_USE_BIND_METHOD(LayerManager)
+XDEF_CTOR0_USE_BIND_METHOD(ScriptManager)
+XDEF_CTOR0_USE_BIND_METHOD(AudioManager)
+XDEF_CTOR0_USE_BIND_METHOD(SceneManager)
+XDEF_CTOR0_USE_BIND_METHOD(ActorManager)
 
 //各種構造体のバインド
 
-//CGameBootSetting
-XTAL_PREBIND(CGameBootSetting)
+//GameBootSetting
+XTAL_PREBIND(GameBootSetting)
 {
-	it->def_ctor0<CGameBootSetting>();
+	it->def_ctor0<GameBootSetting>();
 }
 
-XTAL_BIND(CGameBootSetting)
+XTAL_BIND(GameBootSetting)
 {
 	Xdef_var(Title);
 	Xdef_var(UseIcon);
@@ -85,11 +85,11 @@ XTAL_BIND(CGameBootSetting)
 	Xdef_var(UpPG_Priority);
 }
 
-//LoadItem::CGraphLoadItem
-XTAL_PREBIND(LoadItem::CGraphLoadItem)
+//LoadItem::GraphLoadItem
+XTAL_PREBIND(LoadItem::GraphLoadItem)
 {
-	it->inherit(xtal::cpp_class<LoadItem::CBaseLoadItem>());
-	it->def_ctor2<LoadItem::CGraphLoadItem,xtal::StringPtr,xtal::StringPtr>();
+	it->inherit(xtal::cpp_class<LoadItem::BaseLoadItem>());
+	it->def_ctor2<LoadItem::GraphLoadItem,xtal::StringPtr,xtal::StringPtr>();
 }
 
 //lRect
@@ -121,15 +121,15 @@ XTAL_BIND(lPoint)
 	Xdef_var(y);
 }
 
-//dRect
-XTAL_PREBIND(dRect)
+//fRect
+XTAL_PREBIND(fRect)
 {
-	it->def_ctor4<dRect,float,float,float,float>()
+	it->def_ctor4<fRect,float,float,float,float>()
 		->param(1,Xid(left_),0.0)->param(2,Xid(top_),0.0)
 		->param(3,Xid(right_),0.0)->param(4,Xid(bottom),0.0);
 }
 
-XTAL_BIND(dRect)
+XTAL_BIND(fRect)
 {
 	Xdef_var(left);
 	Xdef_var(top);
@@ -137,14 +137,14 @@ XTAL_BIND(dRect)
 	Xdef_var(bottom);
 }
 
-//dPoint
-XTAL_PREBIND(dPoint)
+//fPoint
+XTAL_PREBIND(fPoint)
 {
-	it->def_ctor2<dPoint,float,float>()
+	it->def_ctor2<fPoint,float,float>()
 		->param(1,Xid(x_),0.0)->param(2,Xid(y_),0.0);
 }
 
-XTAL_BIND(dPoint)
+XTAL_BIND(fPoint)
 {
 	Xdef_var(x);
 	Xdef_var(y);
@@ -163,62 +163,62 @@ XTAL_BIND(TriFunc)
 	Xdef_var(cos);
 }
 
-//CFont
-XTAL_PREBIND(NAME_IN_X(CFont))
+//Font
+XTAL_PREBIND(NAME_IN_X(Font))
 {
-	it->def_ctor4<NAME_IN_X(CFont),xtal::StringPtr,xtal::StringPtr,lPointPtrX,lSizePtrX>();
+	it->def_ctor4<NAME_IN_X(Font),xtal::StringPtr,xtal::StringPtr,lPointPtrX,lSizePtrX>();
 }
 
-XTAL_BIND(NAME_IN_X(CFont))
+XTAL_BIND(NAME_IN_X(Font))
 {
-	NAME_IN_X(CFont)::bind(it);
+	NAME_IN_X(Font)::bind(it);
 }
 
-//CBGM_Item
-XTAL_PREBIND(CBGM_Item)
+//BGM_Item
+XTAL_PREBIND(BGM_Item)
 {
-	it->inherit(xtal::cpp_class<CAudioItem>());
-	it->def_ctor3<CBGM_Item,xtal::StringPtr,DWORD,bool>();
+	it->inherit(xtal::cpp_class<AudioItem>());
+	it->def_ctor3<BGM_Item,xtal::StringPtr,DWORD,bool>();
 }
 
-//CSE_Item
-XTAL_PREBIND(CSE_Item)
+//SE_Item
+XTAL_PREBIND(SE_Item)
 {
-	it->inherit(xtal::cpp_class<CAudioItem>());
-	it->def_ctor1<CSE_Item,xtal::StringPtr>();
+	it->inherit(xtal::cpp_class<AudioItem>());
+	it->def_ctor1<SE_Item,xtal::StringPtr>();
 }
 
 #define XTAL_BIND_CLASS(_class) xtal::lib()->def(Xid(_class),xtal::cpp_class<_class>())
-void CGame::bind()
+void Game::bind()
 {
-	KVARCO::bind();
+	kvarco::bind();
 
-	XTAL_BIND_CLASS(CGameBootSetting);
-	xtal::lib()->def(Xid(GraphLoadItem),xtal::cpp_class<LoadItem::CGraphLoadItem>());
+	XTAL_BIND_CLASS(GameBootSetting);
+	xtal::lib()->def(Xid(GraphLoadItem),xtal::cpp_class<LoadItem::GraphLoadItem>());
 	XTAL_BIND_CLASS(lRect);
 	XTAL_BIND_CLASS(lPoint);
 	XTAL_BIND_CLASS(lSize);
-	XTAL_BIND_CLASS(dRect);
-	XTAL_BIND_CLASS(dPoint);
+	XTAL_BIND_CLASS(fRect);
+	XTAL_BIND_CLASS(fPoint);
 	XTAL_BIND_CLASS(dSize);
 	XTAL_BIND_CLASS(TriFunc);
-	XTAL_BIND_CLASS(CColPolygon);
-	XTAL_BIND_CLASS(CBaseScene);
-	XTAL_BIND_CLASS(CBGM_Item);
-	XTAL_BIND_CLASS(CSE_Item);
-	XTAL_BIND_CLASS(NAME_IN_X(CFont));
+	XTAL_BIND_CLASS(ColPolygon);
+	XTAL_BIND_CLASS(BaseScene);
+	XTAL_BIND_CLASS(BGM_Item);
+	XTAL_BIND_CLASS(SE_Item);
+	XTAL_BIND_CLASS(NAME_IN_X(Font));
 
 	//namespace Actor
 	xtal::ClassPtr Actors=xtal::xnew<xtal::Class>();
 	Actors->set_singleton();
-	Actors->def(Xid(BaseActor),xtal::cpp_class<CBaseActor>());
+	Actors->def(Xid(BaseActor),xtal::cpp_class<BaseActor>());
 	xtal::global()->def(Xid(Actor),Actors);	//全部libに定義
 
 	//singleton KeyCode
 	//GE_KeyCodeのバインド
 	xtal::ClassPtr KeyCode=xtal::xnew<xtal::Class>();
 	KeyCode->set_singleton();
-	KVARCO::GE_KeyCode_bind(KeyCode);
+	kvarco::GE_KeyCode_bind(KeyCode);
 	xtal::lib()->def(Xid(KeyCode),KeyCode);
 
 	//Singletonのバインド
@@ -227,20 +227,20 @@ void CGame::bind()
 	xtal::lib()->def(Xid(_name),\
 	xtal::SmartPtr<_class>(_class::GetInst(),xtal::undeleter));
 
-	//CActorManager
-	XTAL_BIND_SINGLETON(CActorManager,ActorMngr)
+	//ActorManager
+	XTAL_BIND_SINGLETON(ActorManager,ActorMngr)
 
-	//CLayerManager
-	XTAL_BIND_SINGLETON(CLayerManager,LayerMngr)
+	//LayerManager
+	XTAL_BIND_SINGLETON(LayerManager,LayerMngr)
 
-	//CScriptManager
-	XTAL_BIND_SINGLETON(CScriptManager,ScriptMngr)
+	//ScriptManager
+	XTAL_BIND_SINGLETON(ScriptManager,ScriptMngr)
 
-	//CSceneManager
-	XTAL_BIND_SINGLETON(CSceneManager,SceneMngr)
+	//SceneManager
+	XTAL_BIND_SINGLETON(SceneManager,SceneMngr)
 
-	//CAudioManager
-	XTAL_BIND_SINGLETON(CAudioManager,AudioMngr)
+	//AudioManager
+	XTAL_BIND_SINGLETON(AudioManager,AudioMngr)
 
 #undef XTAL_BIND_SINGLETON
 }

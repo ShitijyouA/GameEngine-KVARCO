@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="C:\Librarys\DxLib;C:\Librarys\Xtal\src\xtal;C:\Librarys\boost;C:\Librarys\Ogg;C:\Librarys\OpenAL;C:\Librarys;"
+				AdditionalIncludeDirectories="C:\Librarys\DxLib_VC;C:\Librarys\Xtal\src\xtal;C:\Librarys\boost;C:\Librarys\Ogg;C:\Librarys\OpenAL;C:\Librarys"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -66,7 +66,7 @@
 				AdditionalOptions="/NODEFAULTLIB:MSVCRTD"
 				OutputFile="$(OutDir)\$(ProjectName)_d.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="C:\Librarys\DxLib;C:\Librarys\Xtal\lib;&quot;C:\Librarys\Ogg\vorbis\$(ConfigurationName)&quot;;&quot;C:\Librarys\Ogg\ogg\$(ConfigurationName)&quot;;C:\Librarys;C:\Librarys\OpenAL;C:\Librarys\boost\stage\lib"
+				AdditionalLibraryDirectories="C:\Librarys\DxLib_VC;C:\Librarys\Xtal\lib;&quot;C:\Librarys\Ogg\vorbis\$(ConfigurationName)&quot;;&quot;C:\Librarys\Ogg\ogg\$(ConfigurationName)&quot;;C:\Librarys;C:\Librarys\OpenAL;C:\Librarys\boost\stage\lib"
 				GenerateDebugInformation="true"
 				LinkTimeCodeGeneration="0"
 				TargetMachine="1"
@@ -274,7 +274,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\ScManager.cpp"
+					RelativePath=".\ScriptManager.cpp"
 					>
 				</File>
 			</Filter>
@@ -318,6 +318,10 @@
 			</File>
 			<File
 				RelativePath=".\GeoStruct.h"
+				>
+			</File>
+			<File
+				RelativePath=".\InitFromIniFile.h"
 				>
 			</File>
 			<File
@@ -372,7 +376,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\ScManager.h"
+					RelativePath=".\ScriptManager.h"
 					>
 				</File>
 			</Filter>

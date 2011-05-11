@@ -2,7 +2,7 @@
 
 namespace LoadItem
 {
-	class CBaseLoadItem
+	class BaseLoadItem
 	{
 	protected:
 		bool	Loaded;
@@ -13,7 +13,7 @@ namespace LoadItem
 	public:
 
 		//コンストラクタだけXtal依存
-		CBaseLoadItem(xtal::StringPtr name,xtal::StringPtr path)
+		BaseLoadItem(xtal::StringPtr name,xtal::StringPtr path)
 			:Loaded(false)
 		{
 			Name=name->c_str();
@@ -22,23 +22,23 @@ namespace LoadItem
 
 		virtual void Load()=0;
 
-		~CBaseLoadItem() {}
+		~BaseLoadItem() {}
 	};
 
 	//Graphローディング用
-	class CGraphLoadItem : public CBaseLoadItem
+	class GraphLoadItem : public BaseLoadItem
 	{
 	public:
-		CGraphLoadItem(xtal::StringPtr name,xtal::StringPtr path)
-			:CBaseLoadItem(name,path)
+		GraphLoadItem(xtal::StringPtr name,xtal::StringPtr path)
+			:BaseLoadItem(name,path)
 		{}
 
 		void Load()
 		{
 			if(!Loaded)
 			{
-				KVARCO::LoadGraph(Name.c_str(),Path.c_str());
-				KVARCO::OutputLog("%sをロード",Path.c_str());
+				kvarco::LoadGraph(Name.c_str(),Path.c_str());
+				kvarco::OutputLog("%sをロード",Path.c_str());
 				Loaded=true;
 			}
 		}

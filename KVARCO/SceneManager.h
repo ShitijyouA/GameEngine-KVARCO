@@ -2,11 +2,11 @@
 #include "KVARCO.h"
 #include "BaseScene.h"
 #include "XtalHelper.h"
-class CSceneManager;
-typedef CSceneManager* SceneMngrPtr;
+class SceneManager;
+typedef SceneManager* SceneMngrPtr;
 
 const DWORD MAX_SCENE_NUM =1024;
-class CSceneManager
+class SceneManager
 {
 	//vector<xtal::AnyPtr> Scenes;
 	xtal::AnyPtr Scenes[MAX_SCENE_NUM];
@@ -33,11 +33,11 @@ public:
 	//singleton pattern
 	//コンストラクタを書かなくてはならなかったのでマクロは使わずに
 private:
-	friend xtal::SmartPtr<CSceneManager> xtal::xnew();
-	friend class xtal::SmartPtr<CSceneManager>;
-	friend struct xtal::XNew<CSceneManager>;
-	friend struct xtal::XXNew<CSceneManager,3>;
-	CSceneManager();
+	friend xtal::SmartPtr<SceneManager> xtal::xnew();
+	friend class xtal::SmartPtr<SceneManager>;
+	friend struct xtal::XNew<SceneManager>;
+	friend struct xtal::XXNew<SceneManager,3>;
+	SceneManager();
 	//static SceneMngrPtr Inst;
 public:
 	static SceneMngrPtr GetInst();

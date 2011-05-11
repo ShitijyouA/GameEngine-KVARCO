@@ -1,13 +1,13 @@
 ﻿#include "pch.h"
 #include "SceneManager.h"
 
-CSceneManager::CSceneManager()
+SceneManager::SceneManager()
 {
 	RunningScenePos		=0;
 	ToDoCleanPrevScene	=false;
 }
 
-DWORD CSceneManager::SetNextScene(xtal::AnyPtr scene)
+DWORD SceneManager::SetNextScene(xtal::AnyPtr scene)
 {
 	if(RunningScenePos>=MAX_SCENE_NUM) return 0;
 
@@ -15,14 +15,14 @@ DWORD CSceneManager::SetNextScene(xtal::AnyPtr scene)
 	return RunningScenePos+1;
 }
 
-void CSceneManager::StartNextScene()
+void SceneManager::StartNextScene()
 {
 	if(RunningScenePos+1<MAX_SCENE_NUM) RunningScenePos++;
 
 	xtal::full_gc();
 }
 
-void CSceneManager::StartScene(int rela_pos)
+void SceneManager::StartScene(int rela_pos)
 {
 	if(RunningScenePos+rela_pos>0 && RunningScenePos+rela_pos<MAX_SCENE_NUM)
 		RunningScenePos+=rela_pos;
@@ -30,25 +30,25 @@ void CSceneManager::StartScene(int rela_pos)
 	xtal::full_gc();
 }
 
-xtal::AnyPtr CSceneManager::GetSceneRlt(int by)
+xtal::AnyPtr SceneManager::GetSceneRlt(int by)
 {
 	if(RunningScenePos+by>0 && RunningScenePos+by<MAX_SCENE_NUM)
 		return Scenes[RunningScenePos+by];
 	return xtal::null;
 }
 
-xtal::AnyPtr CSceneManager::GetSceneAbs(DWORD pos)
+xtal::AnyPtr SceneManager::GetSceneAbs(DWORD pos)
 {
 	return Scenes[pos];
 }
 
-void CSceneManager::CleanPrevScene_()
+void SceneManager::CleanPrevScene_()
 {
 	Scenes[0]=Scenes[RunningScenePos];	//ずらす
 	RunningScenePos=0;
 	for(DWORD i=1; i<MAX_SCENE_NUM; i++)
 	{
-		BaseScenePtrX it=xtal::ptr_cast<CBaseScene>(Scenes[RunningScenePos]);
+		BaseScenePtrX it=xtal::ptr_cast<BaseScene>(Scenes[RunningScenePos]);
 		if(!xtal::is_null(it))
 		{
 			it->Run->send(Xid(halt)); xtal::vmachine()->catch_except();
@@ -61,7 +61,7 @@ void CSceneManager::CleanPrevScene_()
 	xtal::full_gc();
 }
 
-void CSceneManager::Run()
+void SceneManager::Run()
 {
 	if(ToDoCleanPrevScene)
 	{
@@ -73,33 +73,33 @@ void CSceneManager::Run()
 		Scenes[RunningScenePos]!=xtal::null &&
 		Scenes[RunningScenePos]!=xtal::undefined)
 	{
-		BaseScenePtrX it=xtal::ptr_cast<CBaseScene>(Scenes[RunningScenePos]);
+		BaseScenePtrX it=xtal::ptr_cast<BaseScene>(Scenes[RunningScenePos]);
 		XtalHelper::call(it->Run);
 	}
 }
 
-void CSceneManager::Draw()
+void SceneManager::Draw()
 {
 	if(
 		Scenes[RunningScenePos]!=xtal::null &&
 		Scenes[RunningScenePos]!=xtal::undefined)
 	{
-		KVARCO::SetDrawArea_default();
+		kvarco::SetDrawArea_default();
 		Scenes[RunningScenePos]->send(Xid(Draw)); xtal::vmachine()->catch_except();
 	}
 }
 
-SceneMngrPtr CSceneManager::GetInst()
+SceneMngrPtr SceneManager::GetInst()
 {
-	static CSceneManager Inst;
+	static SceneManager Inst;
 	return &Inst;
 }
 
-void CSceneManager::ReleaseAllScene()
+void SceneManager::ReleaseAllScene()
 {
 	for(DWORD i=0; i<MAX_SCENE_NUM; i++)
 	{
-		BaseScenePtrX it=xtal::ptr_cast<CBaseScene>(Scenes[i]);
+		BaseScenePtrX it=xtal::ptr_cast<BaseScene>(Scenes[i]);
 		if(!xtal::is_null(it) && !xtal::is_null(it->Run))
 		{
 			it->Run->send(Xid(halt)); xtal::vmachine()->catch_except();
@@ -110,9 +110,9 @@ void CSceneManager::ReleaseAllScene()
 	}
 }
 
-void CSceneManager::bind(const xtal::ClassPtr it)
+void SceneManager::bind(const xtal::ClassPtr it)
 {
-	USE_XDEFZ(CSceneManager);
+	USE_XDEFZ(SceneManager);
 
 	Xdef_method(GetRunningScenePos);
 	Xdef_method(SetNextScene);
