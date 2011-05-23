@@ -2,74 +2,74 @@
 GameEngine KVARCO
 ===================
 
-KVARCO�Ƃ�
+KVARCOとは
 ----------
 
-KVARCO(�N���@���R)�͑g�ݍ��݃X�N���v�g����Xtal��g�ݍ��񂾃Q�[���G���W���ł��B
-����2D��p��Windows�����Q�[���G���W���ƂȂ��Ă��܂����A
-�����I��3D�Ή��A�N���X�v���b�g�t�H�[���Ή���ڎw���Ă����܂��B
+KVARCO(クヴァルコ)は組み込みスクリプト言語Xtalを組み込んだゲームエンジンです。
+現在2D専用のWindows向けゲームエンジンとなっていますが、
+将来的に3D対応、クロスプラットフォーム対応を目指していきます。
 
-�K�v�Ȃ���
+必要なもの
 ----------
 
-KVARCO�J���ɕK�v�ȃ��C�u�����͈ȉ��̒ʂ�:
-�EXtal
-�EDX���C�u����
-�EBoost
-�EOggVorbis
-�EOpenAL
+KVARCO開発に必要なライブラリは以下の通り:
+・Xtal
+・DXライブラリ
+・Boost
+・OggVorbis
+・OpenAL
 
-���ݎ����ς݂̊֐��Ȃǂ��܂Ƃ߂��h�L�������g���Ȃ����߁A�g�p�������֐��͎����Ō����Ă��������B�����܂���B
+現在実装済みの関数などをまとめたドキュメントがないため、使用したい関数は自分で見つけてください。すいません。
 
-�r���h����KVARCO�̋N���ɂ͎��̂��̂��K�v�ł�:
-	�E"setting.ini"	
-	�E���C����Xtal�X�N���v�g�t�@�C��
-	�E�ǂݍ��ނׂ��X�N���v�g�t�@�C����񋓂���Xtal�X�N���v�g�t�@�C��
-        (�ȉ��A�u�X�N���v�g�t�@�C�����X�g�v)
+ビルドしたKVARCOの起動には次のものが必要です:
+	・"setting.ini"	
+	・メインのXtalスクリプトファイル
+	・読み込むべきスクリプトファイルを列挙したXtalスクリプトファイル
+        (以下、「スクリプトファイルリスト」)
 
 
-setting.ini�ɂ���
+setting.iniについて
 ^^^^^^^^^^^^^^^^^^^
-"setting.ini"�ɂ�KVARCO�̊��ݒ�������Ă����܂��B
+"setting.ini"にはKVARCOの環境設定を書いておきます。
 
-**�T���v��**
+**サンプル**
 
 [WindowSetting]
-Title			=GameName	//�E�B���h�E�̃^�C�g���ɂȂ�܂�
-UseIcon			=1			//�g���A�C�R���̔ԍ��Bresouce.rc�ł̃A�C�R���摜�̔ԍ��ł�
-WndWidth		=640		//�E�B���h�E�̕�(px�P��)
-WndHeight		=480		//�E�B���h�E�̍���(px�P��)
+Title			=GameName	//ウィンドウのタイトルになります
+UseIcon			=1			//使うアイコンの番号。resouce.rcでのアイコン画像の番号です
+WndWidth		=640		//ウィンドウの幅(px単位)
+WndHeight		=480		//ウィンドウの高さ(px単位)
 
-//�t���X�N���[�����[�h	�ŋN������ꍇ��1
-//�E�B���h�E���[�h		�ŋN������ꍇ��0
-//��ݒ肵�Ă�������
+//フルスクリーンモード	で起動する場合は1
+//ウィンドウモード		で起動する場合は0
+//を設定してください
 FullScreen		=0
 
 [SystemSetting]
-AlwaysRun		=1			//�E�B���h�E����A�N�e�B�u�̎������s�������邩
+AlwaysRun		=1			//ウィンドウが非アクティブの時も実行し続けるか
 
-//�σt���[�����[�g�ŋN������ꍇ��1
-//�Œ�t���[�����[�g�ŋN������ꍇ��0
-//��ݒ肵�Ă�������
+//可変フレームレートで起動する場合は1
+//固定フレームレートで起動する場合は0
+//を設定してください
 RockFPS			=0
 
-//1��ݒ肷���30fps�ȉ��ɂȂ����Ƃ��A�v���O�����̎��s�D��x���グ�܂�
-//����������͈����̌_��ł��BPC�S�̂��s����ɂȂ�\��������܂�
-//��{�I�Ɏg�p���Ȃ��ł�������
+//1を設定すると30fps以下になったとき、プログラムの実行優先度を上げます
+//ただしこれは悪魔の契約です。PC全体が不安定になる可能性があります
+//基本的に使用しないでください
 UpPG_Priority	=0
 
-//�X�N���v�g�t�@�C�����X�g�̎��s�t�@�C��������t�H���_����̑��΃p�X
+//スクリプトファイルリストの実行ファイルがあるフォルダからの相対パス
 [ScriptSetting]
 LoadFileList	=Script\LoadFileList.xtal
 
-�X�N���v�g�t�@�C�����X�g�ɂ���
+スクリプトファイルリストについて
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-�X�N���v�g�t�@�C�����X�g�̓��e�͒P���ɁA
-�ǂݍ��ނׂ��X�N���v�g�t�@�C���̑��΃p�X��v�f�Ɏ��z���Ԃ������ł��B
-���C����Xtal�X�N���v�g�t�@�C���������œǂݍ��܂��܂��B
+スクリプトファイルリストの内容は単純に、
+読み込むべきスクリプトファイルの相対パスを要素に持つ配列を返すだけです。
+メインのXtalスクリプトファイルもここで読み込ませます。
 
-**�T���v��**
+**サンプル**
 return [
 	"Script\\main.xtal"					,
 	"Script\\stage.xtal"				,
@@ -77,17 +77,17 @@ return [
 	"Script\\boss.xtal"					,
 ];
 
-���C���X�N���v�g�t�@�C���ɂ���
+メインスクリプトファイルについて
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-���C����Xtal�X�N���v�g�t�@�C���ɂ́A
-�EInit()
-�ERun()
-�EDraw()
-�Ƃ����֐�(���\�b�h)�����������singleton�N���X��������Ă���K�v������܂��B
-�����̊֐����܂�singleton�N���X��lib::GameFramework�ɑ�����Ă��������B
+メインのXtalスクリプトファイルには、
+・Init()
+・Run()
+・Draw()
+という関数(メソッド)を持った一つのsingletonクラスが書かれている必要があります。
+これらの関数を含むsingletonクラスはlib::GameFrameworkに代入してください。
 
-**�T���v��**
+**サンプル**
 singleton Game
 {
 	Init()	{}
@@ -99,49 +99,49 @@ lib::GameFramework: Game;
 =====================
 CryptedZip Project
 =====================
-CryptedZip Project�́A�Í����ς݃A�[�J�C�o����ׂ̈̃v���W�F�N�g�ł��B
+CryptedZip Projectは、暗号化済みアーカイバ制作の為のプロジェクトです。
 
-�g�p�p�r�ɃQ�[���̃��\�[�X(�A�Z�b�g)�̃A�[�J�C�u��z�肵�Ă��܂��B
-�Ȃ̂ňÍ������͒P���ł����A���ƂłȂ��Ɖ�ǂł��Ȃ����x�ɂ͍��x�ȈÍ��ł��B
-���݁A�����ɕK�v�Ȍ��̑g�ݍ��킹��34359738360�ʂ�(==0xFFFFFFFF*8)�ɂȂ��Ă��܂��B
+使用用途にゲームのリソース(アセット)のアーカイブを想定しています。
+なので暗号方式は単純ですが、専門家でないと解読できない程度には高度な暗号です。
+現在、復号に必要な鍵の組み合わせは34359738360通り(==0xFFFFFFFF*8)になっています。
 
-���̃A�[�J�C�o�̓f�B���N�g�����T�|�[�g���Ă��܂��B
-�f�B���N�g�����ƃA�[�J�C�u����ꍇ�́A�e�f�B���N�g�����w�肵�ăA�[�J�C�u���Ă��������B
-�K�w�����Ă��Ă��A�ċA�I�Ƀt�@�C�����A�[�J�C�u����܂��B
+このアーカイバはディレクトリをサポートしています。
+ディレクトリごとアーカイブする場合は、親ディレクトリを指定してアーカイブしてください。
+階層化していても、再帰的にファイルがアーカイブされます。
 
-�Ȃ��A���݂��̃A�[�J�C�o�̓t�@�C�����̈Í������T�|�[�g���Ă��܂���B
-���̃A�[�J�C�o���U���҂����肵���ꍇ�́A�e�ՂɃt�@�C�����ƃf�B���N�g�����o���Ă��܂��܂��B���ӂ��Ă��������B
-�������͎����Ŏ������邩�A�N������������̂�҂��Ă��������B
-�����Ŏ��������ꍇ�́A���J���Ă��������B���肢���܂��B
+なお、現在このアーカイバはファイル名の暗号化をサポートしていません。
+このアーカイバを攻撃者が入手した場合は、容易にファイル名とディレクトリがバレてしまいます。注意してください。
+もしくは自分で実装するか、誰かが実装するのを待ってください。
+自分で実装した場合は、公開してください。お願いします。
 
-CryptedZip�v���W�F�N�g�̊J���ɕK�v�Ȃ��͈̂ȉ��̂Ƃ���:
-	�EBoost
-	�E�Í����Z�p�ɂ��Ă̒m��
-	�E�_����
+CryptedZipプロジェクトの開発に必要なものは以下のとおり:
+	・Boost
+	・暗号化技術についての知識
+	・論理力
 
-���ɘ_���͕͂K�v�ł��B�Í���/���������͌��ʂ��琄���ł���悤�ȃo�O�͖ő��ɂ���܂���B
-�g������test.cpp���Q�l�ɂ��Ă��������B����͂��Ƃ��ƃf�o�b�O�p�̂��̂Ȃ̂ł��낢�낲���Ⴒ���Ⴕ�Ă��܂��B�����܂���B
+特に論理力は必要です。暗号化/復号処理は結果から推理できるようなバグは滅多にありません。
+使い方はtest.cppを参考にしてください。これはもともとデバッグ用のものなのでいろいろごちゃごちゃしています。すいません。
 
-���C�Z���X�ɂ���
+ライセンスについて
 ------------------
-�ǂ���̃v���W�F�N�g���A���̃��C�Z���X�ɏ]���܂��B
+どちらのプロジェクトも、次のライセンスに従います。
 
-������l����ђc�̂ɑ΂��āA�{���C�Z���X���K�p�����\�t�g�E�F�A����у\�t�g�E�F�A�ɕt������h�L�������g�i�ȉ��u�\�t�g�E�F�A�v�j����肵�A�g�p�A�����A�\���A�z�z�A���s�A���n���邱�ƁA�\�t�g�E�F�A�̓񎟗��p���s�����ƁA�\�t�g�E�F�A��񋟂��ꂽ��O�҂ɓ��l�̌�����^���邱�Ƃ��A�����ōs���邱�Ƃ������ɋ����܂��B�@�����͉��L�̒ʂ�ł�
+あらゆる個人および団体に対して、本ライセンスが適用されるソフトウェアおよびソフトウェアに付随するドキュメント（以下「ソフトウェア」）を入手し、使用、複製、表示、配布、実行、譲渡すること、ソフトウェアの二次利用を行うこと、ソフトウェアを提供された第三者に同様の権利を与えることを、無料で行えることをここに許可します。　条件は下記の通りです
 
-�����̃v���W�F�N�g����̔h�����ʕ��͂��ׂČ��J����Ȃ���΂Ȃ�܂���B���J���ׂ��͈͂̓\�t�g�E�F�A�̉��ϕ��������ł��B�Ȃ��A���ϕ����Ƃ́A�\�t�g�E�F�A�����P���悤�Ƃ����ӎu�̂��Ɖ�����ꂽ�A�Ƒ�O�҂ɔ��f���ꂤ�镔���S�Ăł��B�l�ō쐬�����\�t�g�E�F�A�S�̂ɊJ����v�����邱�Ƃ͂���܂���B�\�t�g�E�F�A�܂��͔h�����ʕ����R���p�C���������̂͏�����܂��B
+これらのプロジェクトからの派生成果物はすべて公開されなければなりません。公開すべき範囲はソフトウェアの改変部分だけです。なお、改変部分とは、ソフトウェアを改善しようという意志のもと加えられた、と第三者に判断されうる部分全てです。個人で作成したソフトウェア全体に開示を要求することはありません。ソフトウェアまたは派生成果物をコンパイルしたものは除かれます。
 
 
-�l�I�Ȃ��肢�ł����A�����̃\�t�g�E�F�A���g������i�����J�����ꍇ�A��҂ł��鎵���ɒm�点�Ă���������Ɗ������ł��B
-���C�Z���X�𕶂�Boost Software License - Version 1.0���Q�l�ɂ����Ă��������܂����B
+個人的なお願いですが、これらのソフトウェアを使った作品を公開した場合、作者である七条に知らせていただけると嬉しいです。
+ライセンス条文はBoost Software License - Version 1.0を参考にさせていただきました。
 
 =============
-������������
+何かあったら
 =============
 
 twitter
-  �������I http://twitter.com/shitijyou
+  七条彰紀 http://twitter.com/shitijyou
 e-mail
   shitijyou_a (at) gmail.com
-�ӂ�܂ł��A����������
+辺りまでご連絡ください
 
 Copyright (C) 2011 Kii Masanobu (shitijyou)
