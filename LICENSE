@@ -1,4 +1,5 @@
 ﻿---------------------------------------------------------------------------------------------------
+# using at KVARCO and CryptedZip
 
 Mersenne Twister
 Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura,
@@ -30,11 +31,41 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ---------------------------------------------------------------------------------------------------
+# using at KVARCO 
 
 libpng　Copyright (c) 1998-2004 Glenn Randers-Pehrson.
-zlib　Copyright (C) 1995-2004 Jean-loup Gailly and Mark Adler.
 
 ---------------------------------------------------------------------------------------------------
+# using at CryptedZip
+
+/* zlib.h -- interface of the 'zlib' general purpose compression library
+  version 1.2.2, October 3rd, 2004
+
+  Copyright (C) 1995-2004 Jean-loup Gailly and Mark Adler
+
+  This software is provided 'as-is', without any express or implied
+  warranty.  In no event will the authors be held liable for any damages
+  arising from the use of this software.
+
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
+
+  1. The origin of this software must not be misrepresented; you must not
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+     misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
+
+  Jean-loup Gailly jloup@gzip.org
+  Mark Adler madler@alumni.caltech.edu
+
+*/
+
+---------------------------------------------------------------------------------------------------
+# using at KVARCO
 
 ogg_static, vorbis_static, vorbisfile_static
 Copyright (C) 1994-2002 XIPHOPHORUS Company http://www.xiph.org/ .
@@ -67,6 +98,7 @@ or tort (including negligence or otherwise) arising in any way out of the use of
 software, even if advised of the possibility of such damage. 
 
 ---------------------------------------------------------------------------------------------------
+# using at KVARCO and CryptedZip
 
 Boost Software License - Version 1.0 - August 17th, 2003
 
@@ -93,5 +125,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 
 ---------------------------------------------------------------------------------------------------
+# using at KVARCO
 
 OpenAL及びALUTはLGPLで頒布されています
