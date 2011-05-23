@@ -360,6 +360,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ArchiveManager.h"
+					>
+				</File>
+				<File
 					RelativePath=".\AudioItem.h"
 					>
 				</File>
@@ -377,6 +381,10 @@
 				</File>
 				<File
 					RelativePath=".\ScriptManager.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TextureManager.h"
 					>
 				</File>
 			</Filter>

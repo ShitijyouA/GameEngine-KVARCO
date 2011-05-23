@@ -87,6 +87,7 @@ public:
     void operator()(LoadedFile& target) const
     {
 		target.compiled_code_	=xtal::null;
+		xtal::full_gc();
 		target.compiled_code_	=new_code_;
 
 		target.time_stamp_		=new_time_stamp_;
@@ -161,6 +162,7 @@ void ScriptManager::Release()
 		seq_list.modify(i,eraser);
 		i=seq_list.erase(i);
 	}
+	xtal::full_gc();
 }
 
 void ScriptManager::bind(const xtal::ClassPtr it)

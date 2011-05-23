@@ -173,3 +173,6 @@ namespace CryptedZip
 
 }
 }
+
+//TODO:
+//	boost.iostreamでRC4+CBC mode
