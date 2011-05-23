@@ -13,19 +13,21 @@ KVARCO(クヴァルコ)は組み込みスクリプト言語Xtalを組み込ん�
 ----------
 
 KVARCO開発に必要なライブラリは以下の通り:
-・Xtal
-・DXライブラリ
-・Boost
-・OggVorbis
-・OpenAL
+
+- Xtal
+- DXライブラリ
+- Boost
+- OggVorbis
+- OpenAL
 
 現在実装済みの関数などをまとめたドキュメントがないため、使用したい関数は自分で見つけてください。すいません。
 
 ビルドしたKVARCOの起動には次のものが必要です:
-	・"setting.ini"	
-	・メインのXtalスクリプトファイル
-	・読み込むべきスクリプトファイルを列挙したXtalスクリプトファイル
-        (以下、「スクリプトファイルリスト」)
+
+- "setting.ini"	
+- メインのXtalスクリプトファイル
+- 読み込むべきスクリプトファイルを列挙したXtalスクリプトファイル
+    (以下、「スクリプトファイルリスト」)
 
 
 setting.iniについて
@@ -33,34 +35,34 @@ setting.iniについて
 "setting.ini"にはKVARCOの環境設定を書いておきます。
 
 **サンプル**
+::
+    [WindowSetting]
+    Title			=GameName	//ウィンドウのタイトルになります
+    UseIcon			=1			//使うアイコンの番号。resouce.rcでのアイコン画像の番号です
+    WndWidth		=640		//ウィンドウの幅(px単位)
+    WndHeight		=480		//ウィンドウの高さ(px単位)
 
-[WindowSetting]
-Title			=GameName	//ウィンドウのタイトルになります
-UseIcon			=1			//使うアイコンの番号。resouce.rcでのアイコン画像の番号です
-WndWidth		=640		//ウィンドウの幅(px単位)
-WndHeight		=480		//ウィンドウの高さ(px単位)
+    //フルスクリーンモード	で起動する場合は1
+    //ウィンドウモード		で起動する場合は0
+    //を設定してください
+    FullScreen		=0
 
-//フルスクリーンモード	で起動する場合は1
-//ウィンドウモード		で起動する場合は0
-//を設定してください
-FullScreen		=0
+    [SystemSetting]
+    AlwaysRun		=1			//ウィンドウが非アクティブの時も実行し続けるか
 
-[SystemSetting]
-AlwaysRun		=1			//ウィンドウが非アクティブの時も実行し続けるか
+    //可変フレームレートで起動する場合は1
+    //固定フレームレートで起動する場合は0
+    //を設定してください
+    RockFPS			=0
 
-//可変フレームレートで起動する場合は1
-//固定フレームレートで起動する場合は0
-//を設定してください
-RockFPS			=0
+    //1を設定すると30fps以下になったとき、プログラムの実行優先度を上げます
+    //ただしこれは悪魔の契約です。PC全体が不安定になる可能性があります
+    //基本的に使用しないでください
+    UpPG_Priority	=0
 
-//1を設定すると30fps以下になったとき、プログラムの実行優先度を上げます
-//ただしこれは悪魔の契約です。PC全体が不安定になる可能性があります
-//基本的に使用しないでください
-UpPG_Priority	=0
-
-//スクリプトファイルリストの実行ファイルがあるフォルダからの相対パス
-[ScriptSetting]
-LoadFileList	=Script\LoadFileList.xtal
+    //スクリプトファイルリストの実行ファイルがあるフォルダからの相対パス
+    [ScriptSetting]
+    LoadFileList	=Script\LoadFileList.xtal
 
 スクリプトファイルリストについて
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -70,31 +72,36 @@ LoadFileList	=Script\LoadFileList.xtal
 メインのXtalスクリプトファイルもここで読み込ませます。
 
 **サンプル**
-return [
-	"Script\\main.xtal"					,
-	"Script\\stage.xtal"				,
-	"Script\\own_char.xtal"				,
-	"Script\\boss.xtal"					,
-];
+::
+    return [
+        "Script\\main.xtal"					,
+        "Script\\stage.xtal"				,
+        "Script\\own_char.xtal"				,
+        "Script\\boss.xtal"					,
+    ];
 
 メインスクリプトファイルについて
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 メインのXtalスクリプトファイルには、
-・Init()
-・Run()
-・Draw()
+
+- Init()
+- Run()
+- Draw()
+
 という関数(メソッド)を持った一つのsingletonクラスが書かれている必要があります。
 これらの関数を含むsingletonクラスはlib::GameFrameworkに代入してください。
 
 **サンプル**
-singleton Game
-{
-	Init()	{}
-	Run()	{}
-	Draw()	{}
-}
-lib::GameFramework: Game;
+::
+    singleton Game
+    {
+        Init()	{}
+        Run()	{}
+        Draw()	{}
+    }
+
+    lib::GameFramework: Game;
 
 =====================
 CryptedZip Project
@@ -115,9 +122,10 @@ CryptedZip Projectは、暗号化済みアーカイバ制作の為のプロジ�
 自分で実装した場合は、公開してください。お願いします。
 
 CryptedZipプロジェクトの開発に必要なものは以下のとおり:
-	・Boost
-	・暗号化技術についての知識
-	・論理力
+
+- Boost
+- 暗号化技術についての知識
+- 論理力
 
 特に論理力は必要です。暗号化/復号処理は結果から推理できるようなバグは滅多にありません。
 使い方はtest.cppを参考にしてください。これはもともとデバッグ用のものなのでいろいろごちゃごちゃしています。すいません。
@@ -141,7 +149,7 @@ CryptedZipプロジェクトの開発に必要なものは以下のとおり:
 twitter
   七条彰紀 http://twitter.com/shitijyou
 e-mail
-  shitijyou_a (at) gmail.com
+  shitijyou.a1072 (at) gmail.com
 辺りまでご連絡ください
 
 Copyright (C) 2011 Kii Masanobu (shitijyou)
