@@ -1,4 +1,5 @@
 #include "CryptedZip.h"
+#include "CryptFilter.h"
 const std::string kvarco::crypted_zip::ZIP_HEADER="kvcz";
 
 namespace kvarco
@@ -85,40 +86,6 @@ void EncryptedZip::MakeCentralHeaderList()
 	}
 }
 
-namespace
-{
-
-class Crypter1Byte
-{
-	BYTE prev_byte_;
-	detail::DiceSet& dices_;
-
-public:
-	Crypter1Byte(BYTE& first_byte,detail::DiceSet& dices)
-		:prev_byte_(first_byte),dices_(dices)
-	{}
-
-	BYTE operator()(const char x)
-		{
-			BYTE apply_CBC	=x^prev_byte_;								//CBC mode
-			BYTE cipher		=detail::BitLeftRotate<BYTE>(apply_CBC,5);	//bit rotate
-			cipher			=cipher^dices_.DiceBYTE();					//XOR with random byte
-
-			prev_byte_=cipher;
-			return cipher;
-		}
-};
-
-struct NoCrypter
-{
-	BYTE operator()(const char x)
-		{
-			return x;
-		}
-};
-
-}
-
 template<typename StreamType>
 void EncryptedZip::CryptingAndZipping_impl(const fsys::path& path,StreamType& dst_stream)
 {
@@ -133,18 +100,8 @@ void EncryptedZip::CryptingAndZipping_impl(const fsys::path& path,StreamType& ds
 
 	std::ostream_iterator<char> ofs_iter(dst_stream);
 
-	BYTE first_byte=(dices_.DiceBYTE()^0xb6)^(dices_.DiceBYTE()^0x49);
-
-	if(do_encrypt_)
-	{
-		Crypter1Byte crypter(first_byte,dices_);
-		boost::range::transform(mapped_iterator_range,ofs_iter,crypter);
-	}
-	else
-	{
-		NoCrypter crypter;
-		boost::range::transform(mapped_iterator_range,ofs_iter,crypter);
-	}
+	//copy
+	range::copy(mapped_iterator_range,ofs_iter);
 }
 
 namespace
@@ -167,17 +124,6 @@ void WriteTerminalHeader(StreamType& dst_stream,const header::TerminalHeader& it
 	dst_stream.write(reinterpret_cast<const char*>(&it.header_),sizeof(it));
 }
 
-template<typename OutStreamType,typename InStreamType>
-void CopyStream(InStreamType& istream,OutStreamType& ostream)
-{
-	while(true)
-	{
-		int x=istream.get();
-		ostream.put(x);
-		if(istream.eof()) return;
-	}
-}
-
 }
 
 template<typename DstStreamType>
@@ -191,12 +137,28 @@ bool EncryptedZip::CompToTemp(header::PathAndCentralHeader& it,DstStreamType& ds
 		ios::file_sink fsink("tmp",std::ios::out | std::ios::binary);
 		if(!fsink.is_open()) return false;
 
-		//open temp ostream
-		ios::filtering_ostream tmp_ostream(comp | fsink);
+		//init crypt filter and open temp stream,crypt
+		if(do_encrypt_)
+		{
+			dices_.InitByKey(it.second.key_);
+			detail::CryptFilter cfilter(dices_);
 
-		//compress
-		dices_.InitByKey(it.second.key_);
-		CryptingAndZipping_impl(it.first,tmp_ostream);
+			//open temp stream
+			ios::filtering_ostream tmp_ostream(comp | cfilter | fsink);
+
+			//do compress and crypt
+			CryptingAndZipping_impl(it.first,tmp_ostream);
+		}
+		else
+		{
+			detail::NoCryptFilter cfilter;
+
+			//open temp stream
+			ios::filtering_ostream tmp_ostream(comp | cfilter | fsink);
+
+			//do compress and crypt
+			CryptingAndZipping_impl(it.first,tmp_ostream);
+		}
 	}
 
 	//write to dst
@@ -207,7 +169,14 @@ bool EncryptedZip::CompToTemp(header::PathAndCentralHeader& it,DstStreamType& ds
 
 		//copy to dst file
 		it.second.data_pos_	=static_cast<boost::intmax_t>(dst_stream.tellp());
-		CopyStream(tmp_istream,dst_stream);
+
+		std::copy
+		(
+			std::istream_iterator<char>(tmp_istream),
+			std::istream_iterator<char>(),
+			std::ostream_iterator<char>(dst_stream)
+		);
+
 		it.second.size_		=static_cast<boost::intmax_t>(dst_stream.tellp())-it.second.data_pos_;
 	}
 

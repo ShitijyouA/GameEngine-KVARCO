@@ -11,7 +11,7 @@ int main()
 		czip::EncryptedZip enzip
 		(
 			"C:\\Documents and Settings\\KiiMasanobu\\My Documents\\Projects\\NOW_HERE-in_KVARCO\\Resouce\\Graph\\Char"
-			,false
+			,true
 		);
 
 		enzip.OutToFile(SAMPLE_DIR/"dst.czg");

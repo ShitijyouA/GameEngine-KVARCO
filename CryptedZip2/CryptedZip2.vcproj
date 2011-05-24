@@ -184,6 +184,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CryptFilter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\detail.h"
 				>
 			</File>

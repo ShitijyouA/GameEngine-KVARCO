@@ -1,4 +1,9 @@
-#pragma once
+#ifndef KVARCO_CRYPTED_ZIP_DETAIL_H_
+#define KVARCO_CRYPTED_ZIP_DETAIL_H_
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/variate_generator.hpp>
@@ -82,3 +87,5 @@ namespace detail
 } //namespace detail
 } //namespace crypted_zip
 } //namespace kvarco
+
+#endif

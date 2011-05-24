@@ -1,11 +1,19 @@
 //Boost! Boost! Boost!
-#pragma once
+
+#ifndef KVARCO_CRYPTED_ZIP_CRYPTED_ZIP_H_
+#define KVARCO_CRYPTED_ZIP_CRYPTED_ZIP_H_
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+# pragma warning(push)
+# pragma warning(disable:4996)
+#endif
 
 #include <boost/interprocess/file_mapping.hpp>
 #include <boost/interprocess/mapped_region.hpp>
 #include <boost/interprocess/streams/bufferstream.hpp>
 
-#include <boost/range/algorithm/transform.hpp>
+#include <boost/range/algorithm/copy.hpp>
 #include <boost/range/iterator_range.hpp>
 
 #include <boost/iostreams/filtering_stream.hpp>
@@ -38,6 +46,7 @@ namespace crypted_zip
 namespace ios	=boost::iostreams;
 namespace ipc	=boost::interprocess;
 namespace fsys	=boost::filesystem;
+namespace range	=boost::range;
 
 typedef unsigned long DWORD;
 typedef unsigned char BYTE;
@@ -102,3 +111,9 @@ public:
 
 } //namespace crypted_zip
 } //namespace kvarco
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma warning(pop)
+#endif
+
+#endif

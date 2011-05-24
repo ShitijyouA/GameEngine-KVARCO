@@ -1,4 +1,9 @@
-#pragma once
+#ifndef KVARCO_CRYPTED_ZIP_HEADER_H_
+#define KVARCO_CRYPTED_ZIP_HEADER_H_
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
 
 #ifndef BOOST_FILESYSTEM_VERSION
 	#define BOOST_FILESYSTEM_VERSION 3
@@ -50,3 +55,5 @@ typedef boost::unordered_map<fsys::path,CentralHeader>	CentralHeaderMap;
 } //namespace header
 } //namespace crypted_zip
 } //namespace kvarco
+
+#endif
