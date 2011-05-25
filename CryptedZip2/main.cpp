@@ -8,10 +8,12 @@ const fsys::path SAMPLE_DIR("..\\SampleFiles\\");
 int main()
 {
 	{
+		czip::EncryptedZip::CompresserParamType param(9); // --best
 		czip::EncryptedZip enzip
 		(
 			"C:\\Documents and Settings\\KiiMasanobu\\My Documents\\Projects\\NOW_HERE-in_KVARCO\\Resouce\\Graph\\Char"
 			,true
+			,param
 		);
 
 		enzip.OutToFile(SAMPLE_DIR/"dst.czg");

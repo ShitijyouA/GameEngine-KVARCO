@@ -7,8 +7,8 @@ namespace kvarco
 namespace crypted_zip
 {
 
-EncryptedZip::EncryptedZip(const fsys::path& source,bool do_encrypt,ios::zlib_params params)
-	: zipping_params_(params),do_encrypt_(do_encrypt)
+EncryptedZip::EncryptedZip(const fsys::path& source,bool do_encrypt,CompresserParamType params)
+	: compress_params_(params),do_encrypt_(do_encrypt)
 {
 	AddPackFile(source);
 }
@@ -131,7 +131,7 @@ bool EncryptedZip::CompToTemp(header::PathAndCentralHeader& it,DstStreamType& ds
 {
 	//compress and write to temp file
 	{
-		static ios::zlib_compressor comp(zipping_params_);
+		static CompresserType comp(compress_params_);
 		
 		//open new temp file
 		ios::file_sink fsink("tmp",std::ios::out | std::ios::binary);

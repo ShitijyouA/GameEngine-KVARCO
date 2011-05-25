@@ -4,10 +4,12 @@
 #define KVARCO_CRYPTED_ZIP_CRYPTED_ZIP_H_
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-# pragma warning(push)
-# pragma warning(disable:4996)
+#	pragma once
+#	pragma warning(push)
+#	pragma warning(disable:4996)
 #endif
+
+#include "config.h"
 
 #include <boost/interprocess/file_mapping.hpp>
 #include <boost/interprocess/mapped_region.hpp>
@@ -16,8 +18,13 @@
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/range/iterator_range.hpp>
 
+#ifdef KVARCO_CRYPTED_ZIP_USE_ZLIB
+#	include <boost/iostreams/filter/zlib.hpp>
+#else
+#	include <boost/iostreams/filter/gzip.hpp>
+#endif
+
 #include <boost/iostreams/filtering_stream.hpp>
-#include <boost/iostreams/filter/zlib.hpp>
 #include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/copy.hpp>
 
@@ -58,7 +65,17 @@ extern const std::string ZIP_HEADER;
 */
 class EncryptedZip
 {
-	ios::zlib_params zipping_params_; 
+public:
+	#ifdef KVARCO_CRYPTED_ZIP_USE_ZLIB
+		typedef ios::zlib_compressor	CompresserType;
+		typedef ios::zlib_params		CompresserParamType;
+	#else
+		typedef ios::gzip_compressor	CompresserType;
+		typedef ios::gzip_params		CompresserParamType;
+	#endif
+	
+private:
+	CompresserParamType compress_params_;
 	
 	bool do_encrypt_;
 	detail::DiceSet dices_;
@@ -82,7 +99,7 @@ public:
 	* \param do_encrypt 暗号化するかどうか
 	* \param params 圧縮するためのパラメータ。詳細はboost::iostreams::zlib_paramsの解説を参照
 	*/
-	EncryptedZip(const fsys::path& source,bool do_encrypt=true,ios::zlib_params params=ios::zlib_params());
+	EncryptedZip(const fsys::path& source,bool do_encrypt=true,CompresserParamType params=CompresserParamType());
 	~EncryptedZip();
 
 	/// \brief 圧縮するファイルの追加
