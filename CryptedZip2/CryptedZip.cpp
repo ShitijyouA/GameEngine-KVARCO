@@ -17,18 +17,18 @@ void EncryptedZip::AddPackFile(const fsys::path& source)
 {
 	if(!fsys::exists(source)) return;
 
+	parent_dir_=fsys::absolute(source);
+
 	if(fsys::is_directory(source))
-	{
 		InsertAllFilePath(source);
-	}
 	else
 		input_file_path_list_.push_back(source.filename());
+
+	MakeCentralHeaderList();
 }
 
 void EncryptedZip::InsertAllFilePath(const fsys::path& dir)
 {
-	parent_dir_=fsys::absolute(dir);
-
 	fsys::directory_iterator end;
 	for(fsys::directory_iterator di(dir); di!=end; ++di)
 	{
@@ -84,6 +84,8 @@ void EncryptedZip::MakeCentralHeaderList()
 
 		central_header_list_.push_back(std::make_pair(*ii,tmp));
 	}
+
+	input_file_path_list_.clear();
 }
 
 template<typename StreamType>
@@ -186,9 +188,6 @@ bool EncryptedZip::CompToTemp(header::PathAndCentralHeader& it,DstStreamType& ds
 bool EncryptedZip::OutToFile(const fsys::path& dst)
 {
 	bool success=true;
-
-	//
-	MakeCentralHeaderList();
 
 	//if the file exists,remove
 	if(fsys::exists(dst)) fsys::remove(dst);
