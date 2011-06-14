@@ -20,20 +20,25 @@ namespace crypted_zip
 {
 	
 typedef unsigned long DWORD;
+typedef unsigned short WORD;
 typedef unsigned char BYTE;
+
 typedef boost::intmax_t intmax_t;
+typedef boost::uintmax_t uintmax_t;
+
 namespace fsys	=boost::filesystem;
 namespace header
 {
 
 struct TerminalHeader
 {
-	typedef char* HeaderType;
+	typedef char HeaderType;
 
-	HeaderType	header_;
+	HeaderType*	header_;
 
 	DWORD		file_num_;
 	intmax_t	central_headers_pos_;
+	bool		is_crypted_;
 };
 
 struct CentralHeader
@@ -41,10 +46,12 @@ struct CentralHeader
 	typedef fsys::path::value_type NameCharType;
 
 	intmax_t	data_pos_;
-	intmax_t	size_;
+	uintmax_t	raw_size_;
+	uintmax_t	comped_size_;
+
 	DWORD		key_;
 
-	DWORD			name_len_;
+	WORD			name_len_;
 	NameCharType*	name_;
 };
 

@@ -26,9 +26,9 @@ using namespace std;
 #include <DxLib.h>
 
 #ifdef _DEBUG
-	#pragma comment(lib,"DxLib_d.lib")
+#	pragma comment(lib,"DxLib_d.lib")
 #else
-	#pragma comment(lib,"DxLib.lib")
+#	pragma comment(lib,"DxLib.lib")
 #endif
 
 #undef max
@@ -60,6 +60,18 @@ namespace fsys=boost::filesystem;
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/variate_generator.hpp>
 #include <boost/random/uniform_01.hpp>
+
+//kvarco::crypted_zip
+#if 0
+
+#include <CryptedZip/CryptedZip.h>
+#ifdef _DEBUG
+#	pragma comment(lib,"CryptedZip_d.lib")
+#else
+#	pragma comment(lib,"CryptedZip.lib")
+#endif
+
+#endif
 
 //xtal::
 #define DONOT_USE_STRING_LT

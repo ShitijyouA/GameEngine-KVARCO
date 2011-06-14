@@ -166,11 +166,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\CryptedZip.cpp"
+				RelativePath=".\DecryptedZip.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\detail.cpp"
+				RelativePath=".\EncryptedZip.cpp"
 				>
 			</File>
 		</Filter>
@@ -184,11 +184,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CryptedZip.h"
+				RelativePath=".\DecryptedZip.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CryptFilter.h"
+				RelativePath=".\DecryptFilter.h"
 				>
 			</File>
 			<File
@@ -196,7 +196,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\EncryptedZip.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EncryptFilter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Header.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Logger.h"
 				>
 			</File>
 		</Filter>

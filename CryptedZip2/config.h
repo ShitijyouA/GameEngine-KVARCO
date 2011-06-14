@@ -5,11 +5,13 @@
 #	pragma once
 #endif
 
-/**	圧縮にzlibを用いる場合、defineする
+/**
+*	圧縮にzlibを用いる場合、defineする
 *	defineしないならgzipが使われる
 */
-#ifndef KVARCO_CRYPTED_ZIP_USE_ZLIB
 //#define KVARCO_CRYPTED_ZIP_USE_ZLIB
-#endif
+
+/// 圧縮しない場合定義する
+//#define KVARCO_CRYPTED_ZIP_USE_NO_COMP
 
 #endif

@@ -13,6 +13,7 @@ class ActorManager
 {
 	ActorList	AllActors;
 	ActorMap	ActorsMap;
+
 public:
 	//ActorManage
 	void AddActor(xtal::AnyPtr actor,bool debug=false);

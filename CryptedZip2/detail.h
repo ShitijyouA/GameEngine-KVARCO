@@ -18,7 +18,9 @@
 
 #include <boost/interprocess/mapped_region.hpp>
 
-#include <climits>	//for CHAR_BIT
+#include <boost/type_traits/make_unsigned.hpp>
+
+#include <limits>	//for CHAR_BIT
 #include <utility>	//for std::pair
 
 #include "Header.h"
@@ -37,49 +39,64 @@ namespace rand	=boost::random;
 
 namespace detail
 {
-	template<class Type>
-	boost::iterator_range<Type*> make_mapped_range(const ipc::mapped_region& region)
+	template<typename Type>
+	inline Type GetLowBitsMask(BYTE n)
 	{
-		Type* begin	=reinterpret_cast<Type*>(region.get_address());
-		Type* end	=reinterpret_cast<Type*>(region.get_address()) + region.get_size();
+		if(n>sizeof(Type)*CHAR_BIT) return static_cast<Type>(0xFFFFFFFFFFFFFFFF);
+		Type result=0;
 
-		return boost::iterator_range<Type*>(begin,end);
+		for(int i=0; i<n; ++i) result|=(1<<i);
+		return result;
 	}
 
+	//if x is not unsigned type, becomes an arithmetic shift
 	template<typename Type>
-	inline Type BitLeftRotate(Type x,BYTE rotate)
+	inline Type BitLeftRotate(Type x__,BYTE rotate)
 	{
+		boost::make_unsigned<Type>::type x=x__;
 		return (x<<rotate | x>>((sizeof(Type)*CHAR_BIT)-rotate));
 	}
 
 	template<typename Type>
-	inline Type BitRightRotate(Type x,BYTE rotate)
+	inline Type BitRightRotate(Type x__,BYTE rotate)
 	{
+		boost::make_unsigned<Type>::type x=x__;
 		return (x>>rotate | x<<(sizeof(Type)*CHAR_BIT-rotate));
 	}
 
 	class DiceSet
 	{
-		typedef rand::variate_generator<rand::mt19937&,boost::uniform_int<DWORD> >	mt_DWORD_gen;
-		typedef rand::variate_generator<rand::mt19937&,boost::uniform_int<BYTE> >	mt_BYTE_gen;
+		typedef rand::mt19937 RandomGeneratorType;
 		
-		rand::mt19937		RandomGenerator;
+		template<typename NumType>
+		struct GeneratorType
+		{
+			typedef typename rand::variate_generator<rand::mt19937&,boost::uniform_int<NumType> > Type;
+		};
 
-		boost::uniform_int<DWORD>	UniformDWORD;
-		boost::uniform_int<BYTE>	UniformBYTE;
+		RandomGeneratorType random_generator_;
 
 	public:
-		mt_BYTE_gen		DiceBYTE;
-		mt_DWORD_gen	DiceDWORD;
 
-		DiceSet()
-			:
-				UniformDWORD(0,UINT_MAX),				UniformBYTE(0,UCHAR_MAX),
-				DiceDWORD(RandomGenerator,UniformDWORD),DiceBYTE(RandomGenerator,UniformBYTE)
-		{}
+		template<typename Type>
+		Type RollDice()
+			{
+				boost::uniform_int<Type> uniform(0,std::numeric_limits<Type>::max());
+				GeneratorType<Type>::Type Dice(random_generator_,uniform);
 
-		//
-		DiceSet& InitByKey(DWORD key);
+				return Dice();
+			}
+
+		DiceSet& InitByKey(DWORD key)
+			{
+				random_generator_.seed(key);
+
+				//truncat to make sure (at least 7 times)
+				int truncat=(RollDice<DWORD>()&0xff)+7;
+				for(int i=0; i<truncat; i++) random_generator_();
+
+				return *this;
+			}
 	};
 
 	typedef std::list<fsys::path> PathList;

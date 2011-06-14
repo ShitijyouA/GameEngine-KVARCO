@@ -1,18 +1,19 @@
-#include "CryptedZip.h"
-#include "CryptFilter.h"
+#include "EncryptedZip.h"
+#include "EncryptFilter.h"
 const std::string kvarco::crypted_zip::ZIP_HEADER="kvcz";
 
 namespace kvarco
 {
 namespace crypted_zip
 {
-
-EncryptedZip::EncryptedZip(const fsys::path& source,bool do_encrypt,CompresserParamType params)
-	: compress_params_(params),do_encrypt_(do_encrypt)
+/*
+template<typename LoggerType>
+EncryptedZip::EncryptedZip(const fsys::path& source,bool do_encrypt,CompresserParamType params,const LoggerType logger)
+	: compress_params_(params),do_encrypt_(do_encrypt),logger_(new LoggerType)
 {
 	AddPackFile(source);
 }
-
+*/
 void EncryptedZip::AddPackFile(const fsys::path& source)
 {
 	if(!fsys::exists(source)) return;
@@ -29,18 +30,24 @@ void EncryptedZip::AddPackFile(const fsys::path& source)
 
 void EncryptedZip::InsertAllFilePath(const fsys::path& dir)
 {
+	logger_->Log("*at begin of EncryptedZip_impl::InsertAllFilePath*");
 	fsys::directory_iterator end;
 	for(fsys::directory_iterator di(dir); di!=end; ++di)
 	{
 		if(!fsys::is_directory(*di))
+		{
 			input_file_path_list_.push_back(fsys::absolute(di->path()));
+			logger_->Log(fsys::absolute(di->path()).string());
+		}
 		else
 			InsertAllFilePath(di->path());
 	}
+	logger_->Log("*at end of EncryptedZip_impl::InsertAllFilePath*");
 }
 
 void EncryptedZip::MakeRltPathList(detail::PathList& rls_path_list)
 {
+	logger_->Log("*at begin of EncryptedZip_impl::MakeRltPathList*");
 	for(detail::PathList::iterator i=input_file_path_list_.begin(); i!=input_file_path_list_.end(); ++i)
 	{
 		if(fsys::is_directory(*i))
@@ -58,7 +65,9 @@ void EncryptedZip::MakeRltPathList(detail::PathList& rls_path_list)
 		for(--ii; ii!=(*i).end(); ++ii) rlt_path/=*ii;
 
 		rls_path_list.push_back(rlt_path);
+		logger_->Log(rlt_path.string());
 	}
+	logger_->Log("*at end of EncryptedZip_impl::MakeRltPathList*");
 }
 
 void EncryptedZip::MakeCentralHeaderList()
@@ -72,13 +81,14 @@ void EncryptedZip::MakeCentralHeaderList()
 	)
 	{
 		header::CentralHeader tmp;
-		tmp.data_pos_	=0;
 
-		if(do_encrypt_)	tmp.key_=dices_.DiceDWORD();
+		tmp.data_pos_	=0;
+		tmp.raw_size_	=fsys::file_size(*ii);
+
+		if(do_encrypt_)	tmp.key_=dices_.RollDice<DWORD>();
 		else			tmp.key_=0;
 
-		tmp.name_len_	=(*i).wstring().size();
-
+		tmp.name_len_	=(*i).generic_wstring().size();
 		tmp.name_		=new header::CentralHeader::NameCharType[tmp.name_len_+1];
 		::wcscpy_s(tmp.name_,tmp.name_len_+1,(*i).c_str());
 
@@ -93,17 +103,14 @@ void EncryptedZip::CryptingAndZipping_impl(const fsys::path& path,StreamType& ds
 {
 	if(!fsys::exists(path)) return;
 
-	//file open
-	ipc::file_mapping file_map(path.string().c_str(),ipc::read_only);
-	ipc::mapped_region file_map_region(file_map,ipc::read_only);
-
-	boost::iterator_range<const char*>
-		mapped_iterator_range(detail::make_mapped_range<const char>(file_map_region));
-
-	std::ostream_iterator<char> ofs_iter(dst_stream);
-
-	//copy
-	range::copy(mapped_iterator_range,ofs_iter);
+	logger_->Log("zipping : "+path.string());
+	std::ifstream src_stream(path.string().c_str(),std::ios::in | std::ios::binary);
+	std::copy
+	(
+		std::istream_iterator<char>(src_stream),
+		std::istream_iterator<char>(),
+		std::ostream_iterator<char>(dst_stream)
+	);
 }
 
 namespace
@@ -113,7 +120,8 @@ template<typename StreamType>
 void WriteCentralHeader(StreamType& dst_stream,const header::PathAndCentralHeader& it)
 {
 	dst_stream.write(reinterpret_cast<const char*>(&it.second),sizeof(it.second));
-	dst_stream.write(
+	dst_stream.write
+	(
 		reinterpret_cast<const char*>(it.second.name_),
 		sizeof(header::CentralHeader::NameCharType)*(it.second.name_len_+1)
 	);
@@ -129,59 +137,69 @@ void WriteTerminalHeader(StreamType& dst_stream,const header::TerminalHeader& it
 }
 
 template<typename DstStreamType>
-bool EncryptedZip::CompToTemp(header::PathAndCentralHeader& it,DstStreamType& dst_stream)
+bool EncryptedZip::WriteToTemp(header::PathAndCentralHeader& it,DstStreamType& dst_stream)
 {
-	//compress and write to temp file
+	CompresserType comp(compress_params_);
+	//open new temp file
+	//ios::file_sink fsink("tmp",std::ios::out | std::ios::binary);
+	std::ofstream fsink("tmp",std::ios::out | std::ios::binary);
+	if(!fsink.is_open()) return false;
+
+	//init crypt filter and open temp stream,crypt
+	//open temp stream
+	ios::filtering_ostream tmp_ostream;
+
+	tmp_ostream.push(comp);
+	if(do_encrypt_)
 	{
-		static CompresserType comp(compress_params_);
-		
-		//open new temp file
-		ios::file_sink fsink("tmp",std::ios::out | std::ios::binary);
-		if(!fsink.is_open()) return false;
+		dices_.InitByKey(it.second.key_);
+		detail::EncryptFilter cfilter(dices_);
 
-		//init crypt filter and open temp stream,crypt
-		if(do_encrypt_)
-		{
-			dices_.InitByKey(it.second.key_);
-			detail::CryptFilter cfilter(dices_);
-
-			//open temp stream
-			ios::filtering_ostream tmp_ostream(comp | cfilter | fsink);
-
-			//do compress and crypt
-			CryptingAndZipping_impl(it.first,tmp_ostream);
-		}
-		else
-		{
-			detail::NoCryptFilter cfilter;
-
-			//open temp stream
-			ios::filtering_ostream tmp_ostream(comp | cfilter | fsink);
-
-			//do compress and crypt
-			CryptingAndZipping_impl(it.first,tmp_ostream);
-		}
+		tmp_ostream.push(cfilter);
 	}
+	tmp_ostream.push(fsink);
+
+	//do compress and crypt
+	logger_->Log("zipping : "+it.first.string());
+	std::ifstream src_stream(it.first.string().c_str(),std::ios::in | std::ios::binary);
+
+	ios::copy(src_stream,tmp_ostream);
+
+	return true;
+}
+
+template<typename DstStreamType>
+bool EncryptedZip::WriteToDst(header::PathAndCentralHeader& it,DstStreamType& dst_stream)
+{
+	//open temp file
+	std::ifstream tmp_istream("tmp",std::ios::in | std::ios::binary);
+	if(!tmp_istream.is_open()) return false;
+
+	//copy to dst file
+	it.second.data_pos_		=static_cast<boost::intmax_t>(dst_stream.tellp());
+	std::copy
+	(
+		std::istreambuf_iterator<char>	(tmp_istream.rdbuf()),
+		std::istreambuf_iterator<char>	(),
+		std::ostream_iterator<char>		(dst_stream)
+	);
+	it.second.comped_size_	=static_cast<boost::intmax_t>(dst_stream.tellp())-it.second.data_pos_;
+
+	return true;
+}
+
+template<typename DstStreamType>
+bool EncryptedZip::CompToDst(header::PathAndCentralHeader& it,DstStreamType& dst_stream)
+{
+	logger_->Log("*at begin of EncryptedZip_impl::CompToTemp*");
+
+	//compress and write to temp file
+	if(!WriteToTemp(it,dst_stream))	return false;
 
 	//write to dst
-	{
-		//open temp file
-		std::fstream tmp_istream("tmp",std::ios::in | std::ios::binary);
-		if(!tmp_istream.is_open()) return false;
+	if(!WriteToDst(it,dst_stream))	return false;
 
-		//copy to dst file
-		it.second.data_pos_	=static_cast<boost::intmax_t>(dst_stream.tellp());
-
-		std::copy
-		(
-			std::istream_iterator<char>(tmp_istream),
-			std::istream_iterator<char>(),
-			std::ostream_iterator<char>(dst_stream)
-		);
-
-		it.second.size_		=static_cast<boost::intmax_t>(dst_stream.tellp())-it.second.data_pos_;
-	}
-
+	logger_->Log("*at end of EncryptedZip_impl::CompToTemp*");
 	return true;
 }
 
@@ -198,7 +216,7 @@ bool EncryptedZip::OutToFile(const fsys::path& dst)
 	//write tmp files
 	BOOST_FOREACH(header::PathAndCentralHeader& it,central_header_list_)
 	{
-		success&=CompToTemp(it,dst_stream);
+		success&=CompToDst(it,dst_stream);
 	}
 
 	if(fsys::exists("tmp")) fsys::remove("tmp");
@@ -215,6 +233,7 @@ bool EncryptedZip::OutToFile(const fsys::path& dst)
 	header::TerminalHeader t_header;
 	t_header.file_num_				=central_header_list_.size();
 	t_header.central_headers_pos_	=tmp_central_headers_pos;
+	t_header.is_crypted_			=do_encrypt_;
 
 	//write TerminalHeader
 	WriteTerminalHeader(dst_stream,t_header);
