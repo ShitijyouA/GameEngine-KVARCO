@@ -1,20 +1,14 @@
 #include "EncryptedZip.h"
-#include "EncryptFilter.h"
+#include "CryptingFilter.h"
 const std::string kvarco::crypted_zip::ZIP_HEADER="kvcz";
 
 namespace kvarco
 {
 namespace crypted_zip
 {
-/*
+
 template<typename LoggerType>
-EncryptedZip::EncryptedZip(const fsys::path& source,bool do_encrypt,CompresserParamType params,const LoggerType logger)
-	: compress_params_(params),do_encrypt_(do_encrypt),logger_(new LoggerType)
-{
-	AddPackFile(source);
-}
-*/
-void EncryptedZip::AddPackFile(const fsys::path& source)
+void EncryptedZip_impl<LoggerType>::AddPackFile(const fsys::path& source)
 {
 	if(!fsys::exists(source)) return;
 
@@ -28,26 +22,28 @@ void EncryptedZip::AddPackFile(const fsys::path& source)
 	MakeCentralHeaderList();
 }
 
-void EncryptedZip::InsertAllFilePath(const fsys::path& dir)
+template<typename LoggerType>
+void EncryptedZip_impl<LoggerType>::InsertAllFilePath(const fsys::path& dir)
 {
-	logger_->Log("*at begin of EncryptedZip_impl::InsertAllFilePath*");
+	logger_("*at begin of EncryptedZip_impl<LoggerType>_impl::InsertAllFilePath*");
 	fsys::directory_iterator end;
 	for(fsys::directory_iterator di(dir); di!=end; ++di)
 	{
 		if(!fsys::is_directory(*di))
 		{
 			input_file_path_list_.push_back(fsys::absolute(di->path()));
-			logger_->Log(fsys::absolute(di->path()).string());
+			logger_(fsys::absolute(di->path()).string());
 		}
 		else
 			InsertAllFilePath(di->path());
 	}
-	logger_->Log("*at end of EncryptedZip_impl::InsertAllFilePath*");
+	logger_("*at end of EncryptedZip_impl<LoggerType>_impl::InsertAllFilePath*");
 }
 
-void EncryptedZip::MakeRltPathList(detail::PathList& rls_path_list)
+template<typename LoggerType>
+void EncryptedZip_impl<LoggerType>::MakeRltPathList(detail::PathList& rls_path_list)
 {
-	logger_->Log("*at begin of EncryptedZip_impl::MakeRltPathList*");
+	logger_("*at begin of EncryptedZip_impl<LoggerType>_impl::MakeRltPathList*");
 	for(detail::PathList::iterator i=input_file_path_list_.begin(); i!=input_file_path_list_.end(); ++i)
 	{
 		if(fsys::is_directory(*i))
@@ -65,12 +61,13 @@ void EncryptedZip::MakeRltPathList(detail::PathList& rls_path_list)
 		for(--ii; ii!=(*i).end(); ++ii) rlt_path/=*ii;
 
 		rls_path_list.push_back(rlt_path);
-		logger_->Log(rlt_path.string());
+		logger_(rlt_path.string());
 	}
-	logger_->Log("*at end of EncryptedZip_impl::MakeRltPathList*");
+	logger_("*at end of EncryptedZip_impl<LoggerType>_impl::MakeRltPathList*");
 }
 
-void EncryptedZip::MakeCentralHeaderList()
+template<typename LoggerType>
+void EncryptedZip_impl<LoggerType>::MakeCentralHeaderList()
 {
 	detail::PathList rls_path_list;
 	MakeRltPathList(rls_path_list);
@@ -98,12 +95,13 @@ void EncryptedZip::MakeCentralHeaderList()
 	input_file_path_list_.clear();
 }
 
+template<typename LoggerType>
 template<typename StreamType>
-void EncryptedZip::CryptingAndZipping_impl(const fsys::path& path,StreamType& dst_stream)
+void EncryptedZip_impl<LoggerType>::CryptingAndZipping_impl(const fsys::path& path,StreamType& dst_stream)
 {
 	if(!fsys::exists(path)) return;
 
-	logger_->Log("zipping : "+path.string());
+	logger_("zipping : "+path.string());
 	std::ifstream src_stream(path.string().c_str(),std::ios::in | std::ios::binary);
 	std::copy
 	(
@@ -136,12 +134,12 @@ void WriteTerminalHeader(StreamType& dst_stream,const header::TerminalHeader& it
 
 }
 
+template<typename LoggerType>
 template<typename DstStreamType>
-bool EncryptedZip::WriteToTemp(header::PathAndCentralHeader& it,DstStreamType& dst_stream)
+bool EncryptedZip_impl<LoggerType>::WriteToTemp(header::PathAndCentralHeader& it,DstStreamType& dst_stream)
 {
 	CompresserType comp(compress_params_);
 	//open new temp file
-	//ios::file_sink fsink("tmp",std::ios::out | std::ios::binary);
 	std::ofstream fsink("tmp",std::ios::out | std::ios::binary);
 	if(!fsink.is_open()) return false;
 
@@ -150,17 +148,21 @@ bool EncryptedZip::WriteToTemp(header::PathAndCentralHeader& it,DstStreamType& d
 	ios::filtering_ostream tmp_ostream;
 
 	tmp_ostream.push(comp);
-	if(do_encrypt_)
+	if(!password_.empty())
 	{
+		typedef detail::CryptingFilterTypeByStreamType<ios::filtering_ostream>::type filter_type;
+		arcfour::Arcfour arcfour(password_);
+
 		dices_.InitByKey(it.second.key_);
-		detail::EncryptFilter cfilter(dices_);
+		filter_type::type iv=filter_type::InitialBlock(dices_);
+		filter_type cfilter(iv,arcfour);
 
 		tmp_ostream.push(cfilter);
 	}
 	tmp_ostream.push(fsink);
 
 	//do compress and crypt
-	logger_->Log("zipping : "+it.first.string());
+	logger_("zipping : "+it.first.string());
 	std::ifstream src_stream(it.first.string().c_str(),std::ios::in | std::ios::binary);
 
 	ios::copy(src_stream,tmp_ostream);
@@ -168,8 +170,9 @@ bool EncryptedZip::WriteToTemp(header::PathAndCentralHeader& it,DstStreamType& d
 	return true;
 }
 
+template<typename LoggerType>
 template<typename DstStreamType>
-bool EncryptedZip::WriteToDst(header::PathAndCentralHeader& it,DstStreamType& dst_stream)
+bool EncryptedZip_impl<LoggerType>::WriteToDst(header::PathAndCentralHeader& it,DstStreamType& dst_stream)
 {
 	//open temp file
 	std::ifstream tmp_istream("tmp",std::ios::in | std::ios::binary);
@@ -188,10 +191,11 @@ bool EncryptedZip::WriteToDst(header::PathAndCentralHeader& it,DstStreamType& ds
 	return true;
 }
 
+template<typename LoggerType>
 template<typename DstStreamType>
-bool EncryptedZip::CompToDst(header::PathAndCentralHeader& it,DstStreamType& dst_stream)
+bool EncryptedZip_impl<LoggerType>::CompToDst(header::PathAndCentralHeader& it,DstStreamType& dst_stream)
 {
-	logger_->Log("*at begin of EncryptedZip_impl::CompToTemp*");
+	logger_("*at begin of EncryptedZip_impl<LoggerType>_impl::CompToTemp*");
 
 	//compress and write to temp file
 	if(!WriteToTemp(it,dst_stream))	return false;
@@ -199,11 +203,12 @@ bool EncryptedZip::CompToDst(header::PathAndCentralHeader& it,DstStreamType& dst
 	//write to dst
 	if(!WriteToDst(it,dst_stream))	return false;
 
-	logger_->Log("*at end of EncryptedZip_impl::CompToTemp*");
+	logger_("*at end of EncryptedZip_impl<LoggerType>_impl::CompToTemp*");
 	return true;
 }
 
-bool EncryptedZip::OutToFile(const fsys::path& dst)
+template<typename LoggerType>
+bool EncryptedZip_impl<LoggerType>::OutToFile(const fsys::path& dst)
 {
 	bool success=true;
 
@@ -233,7 +238,6 @@ bool EncryptedZip::OutToFile(const fsys::path& dst)
 	header::TerminalHeader t_header;
 	t_header.file_num_				=central_header_list_.size();
 	t_header.central_headers_pos_	=tmp_central_headers_pos;
-	t_header.is_crypted_			=do_encrypt_;
 
 	//write TerminalHeader
 	WriteTerminalHeader(dst_stream,t_header);
@@ -243,7 +247,8 @@ bool EncryptedZip::OutToFile(const fsys::path& dst)
 	return success;
 }
 
-EncryptedZip::~EncryptedZip()
+template<typename LoggerType>
+EncryptedZip_impl<LoggerType>::~EncryptedZip_impl()
 {
 	BOOST_FOREACH(header::PathAndCentralHeader& it,central_header_list_)
 	{
@@ -251,6 +256,10 @@ EncryptedZip::~EncryptedZip()
 		it.second.name_=NULL;
 	}
 }
+
+//
+template class EncryptedZip_impl<logger::NullLogger>;
+template class EncryptedZip_impl<logger::StdLogger>;
 
 } //namespace kvarco
 } //namespace crypted_zip

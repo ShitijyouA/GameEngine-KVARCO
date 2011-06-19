@@ -41,6 +41,7 @@
 #include <boost/foreach.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/range/istream_range.hpp>
 
 #include <fstream>
 #include <algorithm>
@@ -50,6 +51,7 @@
 #include "detail.h"
 #include "Logger.h"
 #include "Header.h"
+#include "Arcfour.h"
 
 namespace kvarco
 {
@@ -67,7 +69,8 @@ typedef unsigned char BYTE;
 extern const std::string ZIP_HEADER;
 
 /// \brief ファイルを暗号化/圧縮/アーカイブするクラス
-class EncryptedZip
+template<typename LoggerType>
+class EncryptedZip_impl
 {
 public:
 	#ifdef KVARCO_CRYPTED_ZIP_USE_ZLIB
@@ -78,17 +81,15 @@ public:
 		typedef ios::gzip_params		CompresserParamType;
 	#endif
 	typedef boost::intmax_t SizeType;
-
-	typedef boost::scoped_ptr<concept::Logger>	LoggerPtrType;
-	//concept::Logger*	LoggerPtrType;
 	
 private:
-	LoggerPtrType logger_;
+	LoggerType logger_;
 
 	CompresserParamType compress_params_;
 	
 	bool do_encrypt_;
 	detail::DiceSet dices_;
+	const std::string password_;
 
 	fsys::path					parent_dir_;			///< アーカイブするファイル(フォルダ)がある親フォルダのパス。変化する
 	header::CentralHeaderList	central_header_list_;	///< 各ファイルのCentralHeader
@@ -113,17 +114,21 @@ private:
 public:
 	/** \brief コンストラクタ
 	* \param source アーカイブするファイル(フォルダ)のパス。相対パスでも絶対パスでも可
-	* \param do_encrypt 暗号化するかどうか
+	* \param password 暗号化の際のパスワード。""(空文字)なら暗号化しない
 	* \param params 圧縮するためのパラメータ。詳細はboost::iostreams::zlib_paramsの解説を参照
 	*/
-	template<typename LoggerType>
-	EncryptedZip(const fsys::path& source,bool do_encrypt=true,CompresserParamType params=CompresserParamType(),LoggerType logger=logger::NullLogger())
-			: compress_params_(params),do_encrypt_(do_encrypt),logger_(new LoggerType)
+	EncryptedZip_impl
+		(
+			const fsys::path& source						,
+			std::string password							,
+			CompresserParamType params=CompresserParamType()
+		)
+			: password_(password),compress_params_(params)
 		{
 			AddPackFile(source);
 		}
 
-	~EncryptedZip();
+	~EncryptedZip_impl();
 
 	/// \brief 圧縮するファイルの追加
 	void AddPackFile(const fsys::path& source);
@@ -139,6 +144,10 @@ public:
 	*/
 	bool OutToFile(const fsys::path& dst);
 };
+
+typedef EncryptedZip_impl<logger::NullLogger>	NullLogEncryptedZip;
+typedef EncryptedZip_impl<logger::StdLogger>	StdLogEncryptedZip;
+typedef StdLogEncryptedZip						EncryptedZip;
 
 } //namespace crypted_zip
 } //namespace kvarco

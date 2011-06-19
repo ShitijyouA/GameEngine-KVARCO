@@ -180,15 +180,19 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\Arcfour.h"
+				>
+			</File>
+			<File
 				RelativePath=".\config.h"
 				>
 			</File>
 			<File
-				RelativePath=".\DecryptedZip.h"
+				RelativePath=".\CryptingFilter.h"
 				>
 			</File>
 			<File
-				RelativePath=".\DecryptFilter.h"
+				RelativePath=".\DecryptedZip.h"
 				>
 			</File>
 			<File
@@ -197,10 +201,6 @@
 			</File>
 			<File
 				RelativePath=".\EncryptedZip.h"
-				>
-			</File>
-			<File
-				RelativePath=".\EncryptFilter.h"
 				>
 			</File>
 			<File

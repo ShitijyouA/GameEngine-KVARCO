@@ -13,14 +13,13 @@
 	#define BOOST_FILESYSTEM_VERSION 3
 #endif
 #include <boost/filesystem/path.hpp>
-
 #include <boost/range/iterator_range.hpp>
-
 #include <boost/interprocess/mapped_region.hpp>
-
 #include <boost/type_traits/make_unsigned.hpp>
 
 #include <limits>	//for CHAR_BIT
+#include <iterator>
+#include <iostream>
 #include <utility>	//for std::pair
 
 #include "Header.h"
@@ -63,6 +62,17 @@ namespace detail
 		boost::make_unsigned<Type>::type x=x__;
 		return (x>>rotate | x<<(sizeof(Type)*CHAR_BIT-rotate));
 	}
+
+	//template<typename Type,typename Elem,typename Traits> inline
+	//	boost::range::iterator_range<std::istreambuf_iterator<Type,Elem,Traits> >
+	//istreambuf_range(std::basic_istream<Elem,Traits>& in)
+ //   {
+ //       return boost::range::iterator_range<std::istreambuf_iterator<Type,Elem,Traits> >
+	//	(
+	//		std::istreambuf_iterator<Type>(in),
+	//		std::istreambuf_iterator<Type>()
+	//	);
+ //   }
 
 	class DiceSet
 	{

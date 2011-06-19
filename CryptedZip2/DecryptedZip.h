@@ -40,6 +40,7 @@
 #include <boost/foreach.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/range/istream_range.hpp>
 //#include <boost/flyweight.hpp>
 
 #include <fstream>
@@ -50,6 +51,7 @@
 #include "detail.h"
 #include "Logger.h"
 #include "Header.h"
+#include "Arcfour.h"
 
 namespace kvarco
 {
@@ -87,6 +89,7 @@ private:
 	const fsys::path		archive_path_;
 	header::TerminalHeader	terminal_;
 	CentralHeaderMap		centrals_;
+	const std::string		password_;
 
 	template<typename StreamType>
 	void ReadCentralHeader(StreamType& stream);
@@ -100,7 +103,7 @@ private:
 public:
 
 	/// \brief コンストラクタ
-	DecryptedZip(const fsys::path& source,DWORD key);
+	DecryptedZip(const fsys::path& source,std::string password);
 
 	/// \brief デストラクタ
 	~DecryptedZip();
@@ -123,18 +126,18 @@ public:
 	{
 		const std::string	archive_name_;
 		const bool			this_file_exists_;
-		const bool			is_crypted_;
+		const std::string	password_;
 
 		friend ArchivedFilePtr DecryptedZip::GetFile(fsys::path& file);
 		friend class filtering_istream_ptr;
 		friend class ArchivedFile_Exist;
 
 		/// \brief コンストラクタ
-		ArchivedFile(const std::string& archive_name,const bool& this_file_exists,const bool& is_crypted)
+		ArchivedFile(const std::string& archive_name,const bool& this_file_exists,const std::string& password)
 			:
 				archive_name_(archive_name)			,
 				this_file_exists_(this_file_exists)	,
-				is_crypted_(is_crypted)
+				password_(password)
 		{}
 
 	public:
@@ -144,7 +147,7 @@ public:
 			:
 				archive_name_(src.archive_name_)		,
 				this_file_exists_(src.this_file_exists_),
-				is_crypted_(src.is_crypted_)
+				password_(src.password_)
 		{}
 
 		/// \return アーカイブ内にあるファイルならtrueを返す
@@ -231,16 +234,16 @@ public:
 				const std::string& archive_name		,
 				const fsys::path& rlt_path			,
 				const header::CentralHeader& info	,
-				const bool& is_crypted				,
+				const std::string& password			,
 				ipc::file_mapping& file_map
 			)
 		:
-			ArchivedFile(archive_name,true,is_crypted)	,
+			ArchivedFile(archive_name,true,password)	,
 			rlt_path_(rlt_path)							,
 			file_info_(info)							,
 			//it can read range of the file
 			file_view_(file_map,ipc::read_only,
-						file_info_.data_pos_,file_info_.data_pos_+file_info_.comped_size_)
+						file_info_.data_pos_,file_info_.comped_size_)
 		{}
 
 		//
@@ -252,12 +255,13 @@ public:
 		ipc_ibufferstream_ptr		source_stream;
 
 		filtering_istream_ptr MakeInputStream();
+
 	public:
 
 		/// \brief ムーブコンストラクタ
 		ArchivedFile_Exist(ArchivedFile_Exist& src)
 			:
-				ArchivedFile(src.archive_name_,true,src.is_crypted_),
+				ArchivedFile(src.archive_name_,true,src.password_)	,
 				rlt_path_(src.rlt_path_)							,
 				file_info_(src.file_info_)
 		{

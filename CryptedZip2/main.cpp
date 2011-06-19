@@ -14,9 +14,8 @@ int main()
 		czip::EncryptedZip enzip
 		(
 			SAMPLE_SOUCE_DIR/"Graph"/"Char"
-			,true
+			,"SomePassword"
 			,param
-			,czip::logger::StdLogger()	//TODO : ‚ß‚ñ‚Ç‚¤‚È‚Ì‚Å‚Ç‚¤‚É‚©‚·‚é
 		);
 		//enzip+=(SAMPLE_SOUCE_DIR/"Audio");
 
@@ -24,7 +23,7 @@ int main()
 	}
 
 	{
-		czip::DecryptedZip dezip(SAMPLE_DIR/"dst.czg",123456);
+		czip::DecryptedZip dezip(SAMPLE_DIR/"dst.czg","SomePassword");
 		czip::DecryptedZip::ArchivedFilePtr the_file=dezip.GetFile(fsys::path("Char\\E-1.png"));
 
 		if(the_file->Exists())

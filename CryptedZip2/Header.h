@@ -38,7 +38,6 @@ struct TerminalHeader
 
 	DWORD		file_num_;
 	intmax_t	central_headers_pos_;
-	bool		is_crypted_;
 };
 
 struct CentralHeader
