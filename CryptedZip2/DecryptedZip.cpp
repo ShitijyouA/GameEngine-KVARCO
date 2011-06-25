@@ -1,5 +1,6 @@
 #include "DecryptedZip.h"
 #include "CryptingFilter.h"
+#include <sstream>
 
 namespace boost
 {
@@ -175,7 +176,7 @@ DecryptedZip::ArchivedFile_Exist::filtering_istream_ptr
 	return boost::move(tmp_istream);
 }
 
-bool DecryptedZip::ArchivedFile_Exist::OutToFile(const fsys::path& dst)
+bool DecryptedZip::ArchivedFile_Exist::UnzipToFile(const fsys::path& dst)
 {
 	std::ofstream dst_stream(dst.string().c_str(),std::ios::out | std::ios::binary);
 	if(!dst_stream.is_open()) return false;
@@ -184,22 +185,27 @@ bool DecryptedZip::ArchivedFile_Exist::OutToFile(const fsys::path& dst)
 
 	ios::copy(*tmp_istream,dst_stream);
 
+	tmp_istream.reset();
+	source_stream.reset();
+
 	return true;
 }
 
-bool DecryptedZip::ArchivedFile_Exist::OutToMemory(BYTE* dst,DWORD dst_size)
+bool DecryptedZip::ArchivedFile_Exist::UnzipToMemory(BYTE* dst,DWORD dst_size)
 {
 	if(dst_size<file_info_.raw_size_) return false;
 
+	std::stringstream dst_buf(std::ios::in | std::ios::out | std::ios::binary);
+	//dst_buf.write(reinterpret_cast<const char*>(dst),dst_size);
+
 	filtering_istream_ptr tmp_istream=MakeInputStream();
 
-	std::istreambuf_iterator<char> begin_ite(*tmp_istream);
-	std::istreambuf_iterator<char> end_ite;	
+	ios::copy(*tmp_istream,dst_buf);
 
-	for(DWORD i=0; begin_ite!=end_ite && i<dst_size; ++i)
-	{	
-		dst[i]=*begin_ite;
-	}
+	dst_buf.read(reinterpret_cast<char*>(dst),dst_size);
+
+	tmp_istream.reset();
+	source_stream.reset();
 
 	return true;
 }

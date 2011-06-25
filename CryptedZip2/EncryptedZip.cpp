@@ -208,7 +208,7 @@ bool EncryptedZip_impl<LoggerType>::CompToDst(header::PathAndCentralHeader& it,D
 }
 
 template<typename LoggerType>
-bool EncryptedZip_impl<LoggerType>::OutToFile(const fsys::path& dst)
+bool EncryptedZip_impl<LoggerType>::ZipToFile(const fsys::path& dst)
 {
 	bool success=true;
 

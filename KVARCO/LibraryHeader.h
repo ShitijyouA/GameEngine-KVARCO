@@ -62,15 +62,12 @@ namespace fsys=boost::filesystem;
 #include <boost/random/uniform_01.hpp>
 
 //kvarco::crypted_zip
-#if 0
-
-#include <CryptedZip/CryptedZip.h>
+//#include <../CryptedZip2/EncryptedZip.h>
+#include <../CryptedZip2/DecryptedZip.h>
 #ifdef _DEBUG
-#	pragma comment(lib,"CryptedZip_d.lib")
+#	pragma comment(lib,"lib/CryptedZip_d.lib")
 #else
-#	pragma comment(lib,"CryptedZip.lib")
-#endif
-
+#	pragma comment(lib,"lib/CryptedZip.lib")
 #endif
 
 //xtal::

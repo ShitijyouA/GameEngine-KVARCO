@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="C:\Librarys\DxLib_VC;C:\Librarys\Xtal\src\xtal;C:\Librarys\boost;C:\Librarys\Ogg;C:\Librarys\OpenAL;C:\Librarys"
+				AdditionalIncludeDirectories="C:\Librarys\DxLib_VC;C:\Librarys\Xtal\src\xtal;C:\Librarys\boost;C:\Librarys\Ogg;C:\Librarys\OpenAL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -120,7 +120,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="C:\Librarys\DxLib;C:\Librarys\Xtal\src\xtal;C:\Librarys\boost"
+				AdditionalIncludeDirectories="C:\Librarys\DxLib_VC;C:\Librarys\Xtal\src\xtal;C:\Librarys\boost;C:\Librarys\Ogg;C:\Librarys\OpenAL;C:\Librarys"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				FloatingPointModel="2"
@@ -255,6 +255,10 @@
 				>
 				<File
 					RelativePath=".\ActorManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ArchiveManager.cpp"
 					>
 				</File>
 				<File

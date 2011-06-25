@@ -114,7 +114,7 @@ public:
 	
 	/** \brief ファイルのArchivedFileクラスインスタンスを取得する
 	*	\return ArchivedFileクラスインスタンス
-	*	Exists(file)==falseの場合でもno throwだが、返されたインスタンスのOutTo***系関数は必ずfalseを返す
+	*	Exists(file)==falseの場合でもno throwだが、返されたインスタンスのUnzipTo***系関数は必ずfalseを返す
 	*/
 	ArchivedFilePtr GetFile(fsys::path& file);
 
@@ -185,7 +185,7 @@ public:
 		*	\param dst_size 出力先メモリの確保済みサイズ(bytes)
 		*	\return 出力まで成功したらtrueを返し、そうでないならflaseを返す
 		*/
-		virtual bool OutToMemory(BYTE* dst,DWORD dst_size)
+		virtual bool UnzipToMemory(BYTE* dst,DWORD dst_size)
 			{
 				return false;
 			}
@@ -194,7 +194,7 @@ public:
 		*	\param dst 出力先ファイルパス
 		*	\return 出力まで成功したらtrueを返し、そうでないならflaseを返す
 		*/
-		virtual bool OutToFile(const fsys::path& dst)
+		virtual bool UnzipToFile(const fsys::path& dst)
 			{
 				return false;
 			}
@@ -291,13 +291,13 @@ public:
 		*	\param dst_size 出力先メモリの確保済みサイズ(bytes)
 		*	\return 出力まで成功したらtrueを返し、そうでないならflaseを返す
 		*/
-		bool OutToMemory(BYTE* dst,DWORD dst_size);
+		bool UnzipToMemory(BYTE* dst,DWORD dst_size);
 		
 		/**	\brief 復号/伸長/アンアーカイブしたイメージをファイルに出力する
 		*	\param dst 出力先ファイルパス
 		*	\return 出力まで成功したらtrueを返し、そうでないならflaseを返す
 		*/
-		bool OutToFile(const fsys::path& dst);
+		bool UnzipToFile(const fsys::path& dst);
 	};
 
 };

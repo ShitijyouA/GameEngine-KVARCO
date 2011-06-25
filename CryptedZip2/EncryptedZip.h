@@ -142,7 +142,7 @@ public:
 	/** \brief 暗号化/圧縮/アーカイブしたイメージをファイルに出力する
 	*	\return 出力まで成功したらtrueを返し、そうでないならflaseを返す
 	*/
-	bool OutToFile(const fsys::path& dst);
+	bool ZipToFile(const fsys::path& dst);
 };
 
 typedef EncryptedZip_impl<logger::NullLogger>	NullLogEncryptedZip;

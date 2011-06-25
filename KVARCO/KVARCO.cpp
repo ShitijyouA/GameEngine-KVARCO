@@ -88,7 +88,7 @@ int	LoadGraph(xtal::String GrName,xtal::String RelaPath)
 		grinfo.Size.left	=0;	grinfo.Size.top		=0;
 		grinfo.Size.right	=w;	grinfo.Size.bottom	=h;
 #endif
-		kvarco::ImageNameList.insert(make_pair(GrName.c_str(),grinfo));
+		kvarco::ImageNameList.insert(std::make_pair(GrName.c_str(),grinfo));
 	}
 
 	return grinfo.GrHandle;

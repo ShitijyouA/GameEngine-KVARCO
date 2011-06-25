@@ -14,14 +14,14 @@
 
 //通常のクラスバインド
 //コンストラクタが引数を取らず、bind関数が定義されているクラスで使える
-#define XDEF_CTOR0_USE_BIND_METHOD(class_name_)		\
-	XTAL_PREBIND(class_name_)						\
-	{												\
-		it->def_ctor0<class_name_>();				\
-	}												\
-	XTAL_BIND(class_name_)							\
-	{												\
-		class_name_::bind(it);						\
+#define XDEF_CTOR0_USE_BIND_METHOD(class_name_)	\
+	XTAL_PREBIND(class_name_)					\
+	{											\
+		it->def_ctor0<class_name_>();			\
+	}											\
+	XTAL_BIND(class_name_)						\
+	{											\
+		class_name_::bind(it);					\
 	}
 
 XDEF_CTOR0_USE_BIND_METHOD(BaseActor)
@@ -61,6 +61,7 @@ XDEF_CTOR0_USE_BIND_METHOD(ScriptManager)
 XDEF_CTOR0_USE_BIND_METHOD(AudioManager)
 XDEF_CTOR0_USE_BIND_METHOD(SceneManager)
 XDEF_CTOR0_USE_BIND_METHOD(ActorManager)
+XDEF_CTOR0_USE_BIND_METHOD(ArchiveManager)
 
 //各種構造体のバインド
 
@@ -241,6 +242,9 @@ void Game::bind()
 
 	//AudioManager
 	XTAL_BIND_SINGLETON(AudioManager,AudioMngr)
+
+	//ArchiveManager
+	XTAL_BIND_SINGLETON(ArchiveManager,ArchiveMngr)
 
 #undef XTAL_BIND_SINGLETON
 }
