@@ -18,26 +18,26 @@ class Font
 {
 protected:
 	FontGraphArray Chars;
-	void LoadFontGraph(const GrInfo* set_gr_info,const string& set_string,const lPoint& offset,lSize_o size);
+	void LoadFontGraph(const GrInfo* set_gr_info,const std::string& set_string,const lPoint& offset,lSize_o size);
 
 	lSize FontSize;
-	DWORD GetLineNum(const string& string_);
-	DWORD GetMaxCharNumInLine(const string& string_);
+	DWORD GetLineNum(const std::string& string_);
+	DWORD GetMaxCharNumInLine(const std::string& string_);
 
-	static const string StdSetString;
+	static const std::string StdSetString;
 	static const lPoint StdOffset;
 
 public:
 	Font();
-	Font(string& set_gr_name);
-	Font(string& set_gr_name,string& set_string);
-	Font(string& set_gr_name,string& set_string,lSize& size);
-	Font(string& set_gr_name,string& set_string,lPoint& offset);
-	Font(string& set_gr_name,string& set_string,lPoint& offset,lSize& size);
+	Font(std::string& set_gr_name);
+	Font(std::string& set_gr_name,std::string& set_string);
+	Font(std::string& set_gr_name,std::string& set_string,lSize& size);
+	Font(std::string& set_gr_name,std::string& set_string,lPoint& offset);
+	Font(std::string& set_gr_name,std::string& set_string,lPoint& offset,lSize& size);
 
 	//â¸çsÇÕ-1Ç≈ï\Ç∑
-	inline CharArray ToStringInFont(const string& string_);
-	void DrawInFont(long x,long y,const string& string_);
+	inline CharArray ToStringInFont(const std::string& string_);
+	void DrawInFont(long x,long y,const std::string& string_);
 };
 
 class FontX : public Font

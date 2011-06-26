@@ -1,28 +1,28 @@
 ﻿#include "pch.h"
 #include "BaseActor.h"
 #include "XtalHelper.h"
-#include "LoadingThread.h"
+#include "LoadThread.h"
 #include "Layer2.h"
 #include "SceneManager.h"
 #include "AudioManager.h"
 #include "Game.h"
 
-boost::unordered_map<string,GrInfo>	kvarco::ImageNameList;
-CLoadingThread*						kvarco::LoadingThread;
+boost::unordered_map<std::string,GrInfo>	kvarco::ImageNameList;
+LoadThread*									kvarco::LoadingThread;
 
 //スクリプトロードなどのみ。画像ロードなどは行わない
 namespace kvarco
 {
 // ファイル名からパスを取り出して返す
-string GetFilePath(string s)
+std::string GetFilePath(std::string s)
 {
 	int pos=s.rfind("\\");
-	if (pos==(int)string::npos) return "";
+	if (pos==(int)std::string::npos) return "";
 	return s.substr(0, pos+1);
 }
 
 // 実行ファイルのパスを返す（末尾に\が付く）
-string GetExePath()
+std::string GetExePath()
 {
 	char buf[MAX_PATH+1];
 	GetModuleFileName(NULL, buf, MAX_PATH);
@@ -43,7 +43,7 @@ void Game::Boot(const fsys::path& ini_file)
 	using kvarco::OutputLog;
 
 	OutputLog("*********************************************************");
-	OutputLog("    -KVARCO ver1.08- %s","2011-05-12");
+	OutputLog("    -KVARCO ver1.12- %s","2011-06-27");
 	OutputLog("動作ログ");
 	OutputLog("*********************************************************\n");
 
@@ -256,7 +256,7 @@ void Game::UnInit()
 	//ローディングスレッド実行中に終了した場合はkill
 	if(!kvarco::IsLoadingEnd())
 	{
-		CLoadingThread::Release();
+		LoadThread::Release();
 		SAFE_DELETE(kvarco::LoadingThread);
 	}
 

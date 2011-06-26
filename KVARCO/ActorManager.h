@@ -7,7 +7,7 @@
 class ActorManager;
 //typedef xtal::SmartPtr<ActorManager> ActorMngrPtr;
 typedef ActorManager* ActorMngrPtr;
-typedef boost::unordered_map<string,xtal::AnyPtr>	ActorMap;
+typedef boost::unordered_map<std::string,xtal::AnyPtr>	ActorMap;
 
 class ActorManager
 {

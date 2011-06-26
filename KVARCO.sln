@@ -4,24 +4,45 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KVARCO", "KVARCO\KVARCO.vcproj", "{E2847E5B-CE9A-49DF-86C5-B3C2BBFC2FA5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F526251A-E417-4CBC-A242-A54F2CE7A25B} = {F526251A-E417-4CBC-A242-A54F2CE7A25B}
+		{68590069-97DE-4287-BFDF-053C7A788F8D} = {68590069-97DE-4287-BFDF-053C7A788F8D}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CryptedZip2", "CryptedZip2\CryptedZip2.vcproj", "{F526251A-E417-4CBC-A242-A54F2CE7A25B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xtallib", "..\..\..\..\..\Librarys\Xtal\vc9\xtallib\xtallib.vcproj", "{68590069-97DE-4287-BFDF-053C7A788F8D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
+		DebugAsExec|Win32 = DebugAsExec|Win32
 		Release|Win32 = Release|Win32
+		ReleaseAsExec|Win32 = ReleaseAsExec|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E2847E5B-CE9A-49DF-86C5-B3C2BBFC2FA5}.Debug|Win32.ActiveCfg = Debug|Win32
 		{E2847E5B-CE9A-49DF-86C5-B3C2BBFC2FA5}.Debug|Win32.Build.0 = Debug|Win32
+		{E2847E5B-CE9A-49DF-86C5-B3C2BBFC2FA5}.DebugAsExec|Win32.ActiveCfg = Debug|Win32
+		{E2847E5B-CE9A-49DF-86C5-B3C2BBFC2FA5}.DebugAsExec|Win32.Build.0 = Debug|Win32
 		{E2847E5B-CE9A-49DF-86C5-B3C2BBFC2FA5}.Release|Win32.ActiveCfg = Release|Win32
 		{E2847E5B-CE9A-49DF-86C5-B3C2BBFC2FA5}.Release|Win32.Build.0 = Release|Win32
+		{E2847E5B-CE9A-49DF-86C5-B3C2BBFC2FA5}.ReleaseAsExec|Win32.ActiveCfg = Release|Win32
+		{E2847E5B-CE9A-49DF-86C5-B3C2BBFC2FA5}.ReleaseAsExec|Win32.Build.0 = Release|Win32
 		{F526251A-E417-4CBC-A242-A54F2CE7A25B}.Debug|Win32.ActiveCfg = Debug|Win32
 		{F526251A-E417-4CBC-A242-A54F2CE7A25B}.Debug|Win32.Build.0 = Debug|Win32
+		{F526251A-E417-4CBC-A242-A54F2CE7A25B}.DebugAsExec|Win32.ActiveCfg = DebugAsExec|Win32
+		{F526251A-E417-4CBC-A242-A54F2CE7A25B}.DebugAsExec|Win32.Build.0 = DebugAsExec|Win32
 		{F526251A-E417-4CBC-A242-A54F2CE7A25B}.Release|Win32.ActiveCfg = Release|Win32
 		{F526251A-E417-4CBC-A242-A54F2CE7A25B}.Release|Win32.Build.0 = Release|Win32
+		{F526251A-E417-4CBC-A242-A54F2CE7A25B}.ReleaseAsExec|Win32.ActiveCfg = ReleaseAsExec|Win32
+		{F526251A-E417-4CBC-A242-A54F2CE7A25B}.ReleaseAsExec|Win32.Build.0 = ReleaseAsExec|Win32
+		{68590069-97DE-4287-BFDF-053C7A788F8D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{68590069-97DE-4287-BFDF-053C7A788F8D}.Debug|Win32.Build.0 = Debug|Win32
+		{68590069-97DE-4287-BFDF-053C7A788F8D}.DebugAsExec|Win32.ActiveCfg = Debug|Win32
+		{68590069-97DE-4287-BFDF-053C7A788F8D}.DebugAsExec|Win32.Build.0 = Debug|Win32
+		{68590069-97DE-4287-BFDF-053C7A788F8D}.Release|Win32.ActiveCfg = Release|Win32
+		{68590069-97DE-4287-BFDF-053C7A788F8D}.Release|Win32.Build.0 = Release|Win32
+		{68590069-97DE-4287-BFDF-053C7A788F8D}.ReleaseAsExec|Win32.ActiveCfg = Release|Win32
+		{68590069-97DE-4287-BFDF-053C7A788F8D}.ReleaseAsExec|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

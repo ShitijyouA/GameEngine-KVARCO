@@ -13,7 +13,7 @@ namespace OpenAL_Ogg
 {
 	void Init();
 	void UnInit();
-	void Check(string plus);
+	void Check(std::string plus);
 	extern bool OpenALInited;
 }
 

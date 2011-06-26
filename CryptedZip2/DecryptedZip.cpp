@@ -4,14 +4,15 @@
 
 namespace boost
 {
-	namespace filesystem3
-	{
-		size_t hash_value(const path& data)
-		{
-			size_t h=boost::hash_value(data.native());
-			return h;
-		}
-	}
+namespace filesystem3
+{
+
+inline size_t hash_value(const path& data)
+{
+	return boost::hash_value(data.native());
+}
+
+}
 }
 
 namespace kvarco

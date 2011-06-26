@@ -28,7 +28,7 @@ public:
 	GETTER(xtal::String,Name)
 
 #pragma optimize("",off)
-	string GetName_s() const { return Name.c_str(); }
+	std::string GetName_s() const { return Name.c_str(); }
 #pragma optimize("",on)
 
 	GETTER(int,Handle)
@@ -51,9 +51,9 @@ typedef multi_index_container
 		Layer*,
 		indexed_by
 		<
-			ordered_unique<tag<tag_Name>,	const_mem_fun<Layer,string,&Layer::GetName_s	> >,
-			ordered_unique<tag<tag_Z>,		const_mem_fun<Layer,int,	&Layer::GetZ		> >,
-			ordered_unique<tag<tag_Handle>,	const_mem_fun<Layer,int,	&Layer::GetHandle	> >
+			ordered_unique<tag<tag_Name>,	const_mem_fun<Layer,std::string,&Layer::GetName_s	> >,
+			ordered_unique<tag<tag_Z>,		const_mem_fun<Layer,int,		&Layer::GetZ		> >,
+			ordered_unique<tag<tag_Handle>,	const_mem_fun<Layer,int,		&Layer::GetHandle	> >
 		>
 	> LayerMap;
 
@@ -63,7 +63,7 @@ typedef LayerMap::index<tag_Handle>::type	LayerMap_tag_Handle;
 
 class LayerManager
 {
-	LayerMap		Layers;
+	LayerMap			Layers;
 	std::queue<Layer*>	LayerPool;
 
 public:
@@ -75,11 +75,11 @@ public:
 	void	DrawAll();
 	void	DrawLayer	(int layer_handle);
 
-	void		SetArea		(int layer_handle,fRect area);
-	void		SetZ		(int layer_handle,int z);
-	fRectPtrX	GetArea		(int layer_handle);
-	int			GetZ		(int layer_handle);
-	xtal::StringPtr GetName(int layer_handle);
+	void			SetArea		(int layer_handle,fRect area);
+	void			SetZ		(int layer_handle,int z);
+	fRectPtrX		GetArea		(int layer_handle);
+	int				GetZ		(int layer_handle);
+	xtal::StringPtr GetName		(int layer_handle);
 
 	fPointPtrX	TransPointLocal_p(int layer_handle,fPoint Point);
 	fPointPtrX	TransPointGlobal_p(int layer_handle,fPoint Point);

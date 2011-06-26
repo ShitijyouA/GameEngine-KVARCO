@@ -17,7 +17,7 @@ void OpenAL_Ogg::UnInit()
 	OpenALInited=false;
 }
 
-void OpenAL_Ogg::Check(string plus)
+void OpenAL_Ogg::Check(std::string plus)
 {
 #ifndef NOT_CHECK
 	if(!OpenALInited) return;
@@ -93,7 +93,7 @@ bool OpenAL_Ogg_Stream::Stream(ALuint buffers)
 		if(res>0)		size+=res;
 		else
 		{
-			if(res<0)		throw string("Error on ov_read()");
+			if(res<0)		throw std::string("Error on ov_read()");
 			else
 			if(DoRepeat)	ov_pcm_seek(&OggFile,LoopPoint);
 			else			break;
@@ -136,7 +136,7 @@ void OpenAL_Ogg_Stream::PlayBack()
 	if(PlayingNow()) return;
 	    
 	for(int i=0; i<BUFFER_NUM; i++)
-		if(Stream(Buffers[i])) throw string("Can't more read");
+		if(Stream(Buffers[i])) throw std::string("Can't more read");
 
 	alSourceQueueBuffers(SourceID,BUFFER_NUM,Buffers);
 	OpenAL_Ogg::Check("on PlayBack_alSourceQueueBuffers()");

@@ -17,8 +17,6 @@
 //#include <sstream>
 //#include <complex>
 
-using namespace std;
-
 #define	STRICT
 #include <windows.h>
 
@@ -62,12 +60,12 @@ namespace fsys=boost::filesystem;
 #include <boost/random/uniform_01.hpp>
 
 //kvarco::crypted_zip
-//#include <../CryptedZip2/EncryptedZip.h>
-#include <../CryptedZip2/DecryptedZip.h>
+//#include "../CryptedZip2/EncryptedZip.h"
+#include "../CryptedZip2/DecryptedZip.h"
 #ifdef _DEBUG
-#	pragma comment(lib,"lib/CryptedZip_d.lib")
+#	pragma comment(lib,"../lib/CryptedZip2_d.lib")
 #else
-#	pragma comment(lib,"lib/CryptedZip.lib")
+#	pragma comment(lib,"../lib/CryptedZip2.lib")
 #endif
 
 //xtal::
@@ -77,7 +75,6 @@ namespace fsys=boost::filesystem;
 #include <xtal.h>
 #include <xtal_macro.h>
 
-//元TYEPDEF.h
 typedef unsigned long		DWORD;
 typedef unsigned char		BYTE;
 typedef unsigned short		WORD;

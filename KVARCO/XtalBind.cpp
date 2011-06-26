@@ -9,6 +9,7 @@
 #include "ActorManager.h"
 #include "SceneManager.h"
 #include "AudioManager.h"
+#include "ArchiveManager.h"
 #include "Bezier.h"
 #include "Font.h"
 

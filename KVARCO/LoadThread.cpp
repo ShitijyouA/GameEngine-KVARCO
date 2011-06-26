@@ -1,16 +1,15 @@
 ﻿#include "pch.h"
-#include "LoadingThread.h"
-//#include <process.h>
+#include "LoadThread.h"
 
-CLoadingThread::thread_ptr CLoadingThread::ThisThread;
+LoadThread::ThreadPtr LoadThread::ThisThread;
 
-CLoadingThread::CLoadingThread(xtal::AnyPtr load_list)
+LoadThread::LoadThread(xtal::AnyPtr load_list)
 {
-	AnyPtrToVector_CloadItem(load_list);
-	ThisThread=thread_ptr( new boost::thread(&CLoadingThread::DataLoad,&(*this)) );
+	AnyPtrToVector_LoadItem(load_list);
+	ThisThread=ThreadPtr( new boost::thread(&LoadThread::DataLoad,&(*this)) );
 }
 
-void CLoadingThread::DataLoad()
+void LoadThread::DataLoad()
 {
 	BOOST_FOREACH(LoadBasePtrX& i,LoadFileList)
 	{
@@ -18,7 +17,7 @@ void CLoadingThread::DataLoad()
 	}
 }
 
-void CLoadingThread::Release()
+void LoadThread::Release()
 {
 	if(ThisThread)
 	{
@@ -28,12 +27,12 @@ void CLoadingThread::Release()
 	}
 }
 
-CLoadingThread::~CLoadingThread()
+LoadThread::~LoadThread()
 {
 	Release();
 }
 
-bool CLoadingThread::IsEnded()
+bool LoadThread::IsEnded()
 {
 	if(!ThisThread) return true;
 	if(ThisThread->timed_join(posix_time::milliseconds(0)))
@@ -46,7 +45,7 @@ bool CLoadingThread::IsEnded()
 }
 
 //Xtal依存
-void CLoadingThread::AnyPtrToVector_CloadItem(xtal::AnyPtr load_list)
+void LoadThread::AnyPtrToVector_LoadItem(xtal::AnyPtr load_list)
 {
 	xtal::ArrayPtr xlist=load_list.to_a();
 	if(xtal::is_undefined(xlist)) return;

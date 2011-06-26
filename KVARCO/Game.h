@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "ScriptManager.h"
 #include "XtalHelper.h"
-#include "LoadingThread.h"
+#include "LoadThread.h"
 
 //FPS計測用定数
 #define FRAME_COUNT			30
@@ -34,7 +34,7 @@ public:
 
 	bool	UpPG_Priority;
 
-	string LoadFileList;
+	std::string LoadFileList;
 };
 
 typedef xtal::SmartPtr<GameBootSetting> GameBootSettingPtr;
@@ -118,10 +118,10 @@ public:
 namespace kvarco
 {
 	//イメージ名とイメージハンドルを登録するmap
-	extern boost::unordered_map<string,GrInfo>	ImageNameList;
+	extern boost::unordered_map<std::string,GrInfo>	ImageNameList;
 
 	//ローディングクラスのポインタ。実行してないとNULL
-	extern CLoadingThread*	LoadingThread;
+	extern LoadThread*	LoadingThread;
 
 	extern	GameBootSetting InitFromIniFile(const fsys::path& path);
 	extern	GameBootSettingPtr GetGameSetting();

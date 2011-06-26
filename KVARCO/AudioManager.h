@@ -3,62 +3,62 @@
 #include "Utillity.h"
 #include "AudioItem.h"
 
-typedef xtal::SmartPtr<AudioItem> AudioItemPtrX;
-typedef xtal::SmartPtr<BGM_Item> BGM_ItemPtr;
-typedef boost::unordered_map<string,AudioItemPtrX> AudioMap;
-typedef AudioMap::iterator AudioMap_i;
-
-class AudioManager;
-typedef AudioManager* AudioMngrPtr;
-
 class AudioManager
 {
-	AudioMap AudioItemMap;
+public:
+	typedef xtal::SmartPtr<AudioItem>						AudioItemPtrX;
+	typedef xtal::SmartPtr<BGM_Item>						BGM_ItemPtr;
+	typedef boost::unordered_map<std::string,AudioItemPtrX>	AudioMapType;
+	typedef AudioMapType::iterator							AudioMapIteratorType;
+	typedef AudioManager*									AudioMngrPtr;
 
-	BYTE BGM_Volume;
-	BYTE SE_Volume;
+private:
+	AudioMapType audio_item_map_;
 
-	AudioMap_i FindItem(string& name);
+	BYTE BGM_volume_;
+	BYTE SE_volume_;
+
+	AudioMapIteratorType FindItem(std::string& name);
 	void ReleaseAllAudioItem();
 
 	//同時に再生できるBGMアイテムは一つのみ
-	BGM_ItemPtr CurrentBGM;
+	BGM_ItemPtr current_BGM_item_;
 
 public:
-	void LoadAudio(AudioItemPtrX item,string name);
+	void LoadAudio(AudioItemPtrX item,std::string name);
 	void LoadAudioX(xtal::AnyPtr item,xtal::StringPtr name)
 		{
 			AudioItemPtrX tmp=xtal::ptr_cast<AudioItem>(item);
 			LoadAudio(tmp,name->c_str());
 		}
 
-	void UnLoadAudio(string name);
+	void UnLoadAudio(std::string name);
 	void UnLoadAudioX(xtal::StringPtr name)
 		{
 			UnLoadAudio(name->c_str());
 		}
 
-	void PlayAudio(string name);
+	void PlayAudio(std::string name);
 	void NAME_IN_X(PlayAudio)(xtal::StringPtr name)
 		{
 			PlayAudio(name->c_str());
 		}
 
-	void StopAudio(string name);
+	void StopAudio(std::string name);
 	void NAME_IN_X(StopAudio)(xtal::StringPtr name)
 		{
 			StopAudio(name->c_str());
 		}
 
-	void PauseBGM(string name);
+	void PauseBGM(std::string name);
 	void NAME_IN_X(PauseBGM)(xtal::StringPtr name)
 		{
 			PauseBGM(name->c_str());
 		}
 
-	SET_GET(BYTE,SE_Volume)
-	SETTER_(BYTE,BGM_Volume)
-	GETTER(BYTE,BGM_Volume)
+	SET_GET(BYTE,SE_volume_)
+	SETTER_(BYTE,BGM_volume_)
+	GETTER(BYTE,BGM_volume_)
 
 	void Release()
 		{

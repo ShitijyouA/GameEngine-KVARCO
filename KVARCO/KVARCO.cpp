@@ -3,7 +3,7 @@
 #include "KVARCO.h"
 #include "BaseActor.h"
 #include "XtalHelper.h"
-#include "LoadingThread.h"
+#include "LoadThread.h"
 
 namespace kvarco
 {
@@ -69,7 +69,7 @@ void SetDrawArea_default()
 //グラフィック関係
 int	LoadGraph(xtal::String GrName,xtal::String RelaPath)
 {
-	string name=GrName.c_str();
+	std::string name=GrName.c_str();
 	fsys::path path=fsys::absolute(RelaPath.c_str(),kvarco::ExePath);
 
 	GrInfo grinfo;
@@ -96,9 +96,9 @@ int	LoadGraph(xtal::String GrName,xtal::String RelaPath)
 
 GrInfo* GetGrInfo_p(xtal::String GrName)
 {
-	string name=GrName.c_str();
+	std::string name=GrName.c_str();
 
-	boost::unordered_map<string,GrInfo>::iterator i=kvarco::ImageNameList.find(name);
+	boost::unordered_map<std::string,GrInfo>::iterator i=kvarco::ImageNameList.find(name);
 	if(i!=kvarco::ImageNameList.end())
 		return &((*i).second);
 	return NULL;
@@ -142,7 +142,7 @@ int	LoadCutGraph_H(xtal::String NewName,int GrHandle,long x,long y,long w,long h
 	GrInfo grnew;
 	grnew.GrHandle=DxLib::DerivationGraph(x,y,w,h,GrHandle);
 	
-	string name=NewName.c_str();
+	std::string name=NewName.c_str();
 	if(name!="")
 	{
 #ifdef USE_SIZE_STRCT
@@ -215,26 +215,26 @@ void DrawString( long x, long y, xtal::String str, int Color, int EdgeColor)
 }
 
 //Tools
-typedef string::size_type str_index;
+typedef std::string::size_type str_index;
 xtal::StringPtr SplitOption(xtal::String src_x,xtal::String opt_x)
 {
-	string src_=src_x.c_str();
-	string option=opt_x.c_str();
+	std::string src_=src_x.c_str();
+	std::string option=opt_x.c_str();
 
 	//[]の部分を切り出す
 	str_index psh,pse;
 	psh=src_.find("[");pse=src_.find_last_of("]");
-	if(psh==string::npos || pse==string::npos) return "";
-	string src=src_.substr(psh+1,pse-1);
+	if(psh==std::string::npos || pse==std::string::npos) return "";
+	std::string src=src_.substr(psh+1,pse-1);
 
 	str_index ph,nph;
 	str_index src_size=src.size();
 
 	ph=src.find(option);				//指定された-PARAMの位置
-	if(ph==string::npos) return xtal::StringPtr("");
+	if(ph==std::string::npos) return xtal::StringPtr("");
 	ph+=option.size();
 
-	string arg;
+	std::string arg;
 	for(nph=ph; nph<src_size; nph++)
 	{
 		char c=src[nph];
@@ -257,13 +257,13 @@ DWORD GetColorHandle(int r,int g,int b)
 
 xtal::StringPtr SplitWords(xtal::String src_x)
 {
-	string src_=src_x.c_str();
+	std::string src_=src_x.c_str();
 
 	str_index pse;
 	pse=src_.find_last_of("]");
-	if(pse==string::npos) return xtal::StringPtr("");
+	if(pse==std::string::npos) return xtal::StringPtr("");
 
-	string src=src_.substr(pse+1,string::npos);
+	std::string src=src_.substr(pse+1,std::string::npos);
 	str_index src_size=src.size();
 
 	//両端から
@@ -287,7 +287,7 @@ xtal::StringPtr SplitWords(xtal::String src_x)
 void StartGraphLoading(xtal::AnyPtr LoadList)
 {
 	OutputLog("テクスチャ読み込み用のスレッドを起動");
-	kvarco::LoadingThread=new CLoadingThread(LoadList);
+	kvarco::LoadingThread=new LoadThread(LoadList);
 }
 
 bool IsLoadingEnd()

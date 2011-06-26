@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include <OpenAL/alut.h>
-#include <OpenAL/al.h>
-#include <OpenAL/alc.h>
+#include <alut.h>
+#include <al.h>
+#include <alc.h>
 #include <vorbis/vorbisfile.h>
 #include <ogg/ogg.h>
 

@@ -44,8 +44,8 @@ namespace kvarco
 {
 	extern void Boot(const fsys::path& LoadFileList);	//ゲームの起動
 	extern fsys::path ExePath;							//この実行ファイルがあるフォルダの絶対パス
-	extern string GetFilePath(string s);
-	extern string GetExePath();
+	extern std::string GetFilePath(std::string s);
+	extern std::string GetExePath();
 
 	//Handle値
 	extern DWORD MakeHandle();

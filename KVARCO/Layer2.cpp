@@ -239,7 +239,7 @@ int LayerManager::NewLayer(xtal::StringPtr layer_name,int z,fRect area)
 void LayerManager::DeleteLayer(xtal::String layer_name)
 {
 	LayerMap_tag_Name& layer_name_list=Layers.get<tag_Name>();
-	LayerMap::iterator i=layer_name_list.find(string(layer_name.c_str()));
+	LayerMap::iterator i=layer_name_list.find(std::string(layer_name.c_str()));
 
 	LayerPool.push(*i);
 	Layers.erase(i);

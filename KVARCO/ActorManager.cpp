@@ -49,7 +49,8 @@ void ActorManager::RunAll(bool debug,bool gc)
 xtal::ArrayPtr ActorManager::GetByType(DWORD type)
 {
 	ActorList_tag_Type& list=AllActors.get<tag_Type>();
-	pair<ActorList_tag_Type::iterator,ActorList_tag_Type::iterator> equal=list.equal_range(type);
+	typedef std::pair<ActorList_tag_Type::iterator,ActorList_tag_Type::iterator> IteRangeType;
+	IteRangeType equal=list.equal_range(type);
 
 	ActorList_tag_Type::iterator i;
 	xtal::ArrayPtr ar=xtal::xnew<xtal::Array>();
@@ -77,7 +78,7 @@ xtal::ArrayPtr ActorManager::GetAllActor()
 void ActorManager::AddItem(xtal::StringPtr name,xtal::AnyPtr actor)
 {
 	if(!xtal::can_cast<BaseActor>(actor)) return;
-	ActorsMap.insert(make_pair(name->c_str(),actor));
+	ActorsMap.insert(std::make_pair(name->c_str(),actor));
 }
 
 xtal::AnyPtr ActorManager::GetItem(xtal::StringPtr name)

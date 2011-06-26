@@ -11,7 +11,7 @@ CSource::CSource(const fsys::path& path)
 
 	//Oggファイルを開く
 	int open_res=ov_fopen(path.string().c_str(),&OggFile);
-	if(open_res!=0)	throw string("Couldn't Open OggFile(at ov_open())");
+	if(open_res!=0)	throw std::string("Couldn't Open OggFile(at ov_open())");
 	
 	//ファイルの設定を取得
 	vorbis_info* info=ov_info(&OggFile, -1);
@@ -32,7 +32,7 @@ void CSource::Load()
 		if(bytes<0)
 		{
 			ov_clear(&OggFile);
-			throw string("Error on ov_read()");
+			throw std::string("Error on ov_read()");
 		}
 
 		Buffer.insert(Buffer.end(),data,data+bytes);

@@ -6,10 +6,10 @@ class CSource
 {
 	friend class CSimplePlay;
 
-	OggVorbis_File	OggFile;
-	ALenum			Format;
-	ALsizei			Frequency;
-	vector<char>	Buffer;
+	OggVorbis_File		OggFile;
+	ALenum				Format;
+	ALsizei				Frequency;
+	std::vector<char>	Buffer;
 
 public:
 	CSource(const fsys::path& path);

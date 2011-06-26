@@ -5,23 +5,20 @@ class ArchiveManager
 {
 public:
 	typedef ArchiveManager*									ArchiveMngrPtr;
-	
-private:
-	typedef crypted_zip::DecryptedZip						ArchiveType;
+	typedef kvarco::crypted_zip::DecryptedZip				ArchiveType;
 	typedef boost::shared_ptr<ArchiveType>					ArchivePtrType;
-	typedef ArchivedFileType::ArchivedFilePtr				ArchiveFilePtrType;
+	typedef ArchiveType::ArchivedFilePtr					ArchiveFilePtrType;
 	typedef boost::shared_ptr<ArchiveType::ArchivedFile>	ArchiveFileSharedPtrType;
 	typedef boost::unordered_map<fsys::path,ArchivePtrType>	ArchivesMapType;
-	typedef ArchivesMap::value_type							ArchiveInfoType;
-
+	typedef ArchivesMapType::value_type						ArchiveInfoType;
+	
+private:
 	/// ".XXX"形式のアーカイブファイルの拡張子
-	fsys::path extention_;
+	std::string extention_;
 	std::string password_;
 
-	ArchivesMap archives_map_;
+	ArchivesMapType archives_map_;
 	inline ArchivesMapType::iterator GetLoadedArchiveIterator(const fsys::path& arc);
-
-	ArchivePtrType LoadArchive(const fsys::path& archive);
 
 	/// アーカイブファイル内のファイルパスまでを含んだパスから、アーカイブファイルまでのパスだけを返す
 	fsys::path GetArchivePath(const fsys::path& archive);
@@ -35,22 +32,37 @@ private:
 	void DivideArchivedFilePath(const fsys::path& file,fsys::path* archive_path,fsys::path* archived_file_path);
 
 	///メモリを確保してから展開(実装)
-	template<typename Type=char,typename Alloc=std::allocator<Type> >
-	Type* UnzipToMemory_impl(fsys::path& file);
+	template<typename Type,typename Alloc>
+	Type* UnzipToMemory_impl(fsys::path& file,boost::intmax_t* buf_size);
 
-	ArchiveFileSharedPtrType GetArchivedFile(fsys::path& file);
+	ArchiveFileSharedPtrType GetArchivedFile(const fsys::path& file);
 
 public:
-	/// \param ext アーカイブファイルの拡張子(標準では"kcz")
+	/// \param ext アーカイブファイルの拡張子(標準では"kcz")(ver.native)
 	void SetExtentionOfArchive(const fsys::path& ext)
 		{
-			extention_=ext;
+			static const std::string dot(".");
+			extention_=dot+ext.string();
 		}
 
-	/// \param password アーカイブファイルのパスワード
+	/// \param password アーカイブファイルのパスワード(ver.native)
 	void SetPassword(const std::string& password)
 		{
 			password_=password;
+		}
+
+	/// \param ext アーカイブファイルの拡張子(標準では"kcz")(ver.xtal)
+	void SetExtentionOfArchiveX(xtal::String& ext)
+		{
+			static const xtal::String dot(".");
+			xtal::StringPtr full=dot.cat(ext.to_s());
+			extention_=full->c_str();
+		}
+
+	/// \param password アーカイブファイルのパスワード(ver.xtal)
+	void SetPasswordX(xtal::String& password)
+		{
+			password_=password.c_str();
 		}
 
 	/// \return 指定されたファイルがあったらtrue。アーカイブ違いでもfalseになる
@@ -60,16 +72,22 @@ public:
 	/// \return 指定されたアーカイブがあったらtrue
 	inline bool ArchiveExists(const fsys::path& archive);
 	
+	/// 指定されたアーカイブを読み込む(ver.native)
+	ArchivePtrType LoadArchive(const fsys::path& archive);
+
+	/// 指定されたアーカイブを読み込む(ver.xtal)
+	void LoadArchiveX(const xtal::String& archive);
+
 	/// すでに確保されたメモリに展開
 	/// \return ファイル展開に成功した場合はtrue,失敗した場合はfalse
-	bool UnzipToMemory(fsys::path& file,BYTE* dst,DWORD dst_size);
+	bool UnzipToMemory(const fsys::path& file,BYTE* dst,DWORD dst_size);
 
 	/// メモリを確保してから展開(ver.native)
-	template<typename Type=char,typename Alloc=std::allocator<Type> >
-	boost::shared_array<Type> UnzipToAllocatedMemory(fsys::path& file);
+	template<typename Type,typename Alloc>
+	boost::shared_array<Type> UnzipToAllocatedMemory(const fsys::path& file);
 
 	/// メモリを確保してから展開(ver.xtal)
-	xtal::MemoryStreamPtr UnzipToAllocatedMemoryX(xta::String& file);
+	xtal::MemoryStreamPtr UnzipToAllocatedMemoryX(xtal::String& file);
 
 	/// 指定ファイルに展開
 	bool UnzipToFile(fsys::path& file,fsys::path& dst_file);
@@ -83,6 +101,6 @@ private:
 		{}
 
 public:
-	void bind(xtal::ClassPtr it);
+	static void bind(xtal::ClassPtr it);
 	static ArchiveMngrPtr GetInst();
 };
