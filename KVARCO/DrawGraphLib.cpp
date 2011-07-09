@@ -100,7 +100,7 @@ void kvarco::DrawRotaZoomAlpha_H(int GrHandle,float ZoomRateX,float ZoomRateY,fl
 }
 //void kvarco::DrawRotaZoomAlpha2_H(int GrHandle,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans);
 
-
+/**
 ///////////////////////////////////////////
 //////////グラフィックネーム指定型///////////
 ///////////////////////////////////////////
@@ -148,3 +148,5 @@ void kvarco::DrawRotaZoomAlpha_N(xtal::String GrName,float ZoomRateX,float ZoomR
 	USE_GR_HANDLE(GrHandle,GrName) DrawRotaZoomAlpha_H(GrHandle,ZoomRateX,ZoomRateY,Angle,cx,cy,Alpha,Trans);
 }
 //void kvarco::DrawRotaZoomAlpha2_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans);
+
+**/

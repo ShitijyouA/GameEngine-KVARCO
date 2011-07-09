@@ -65,7 +65,7 @@ void SetDrawArea_default()
 
 	kvarco::SetDrawArea(area);
 }
-
+/**
 //グラフィック関係
 int	LoadGraph(xtal::String GrName,xtal::String RelaPath)
 {
@@ -88,7 +88,7 @@ int	LoadGraph(xtal::String GrName,xtal::String RelaPath)
 		grinfo.Size.left	=0;	grinfo.Size.top		=0;
 		grinfo.Size.right	=w;	grinfo.Size.bottom	=h;
 #endif
-		kvarco::ImageNameList.insert(std::make_pair(GrName.c_str(),grinfo));
+		kvarco::ImageNameList.insert(std::make_pair(name,grinfo));
 	}
 
 	return grinfo.GrHandle;
@@ -179,7 +179,7 @@ void DeleteGraph_N(xtal::String GrName)
 	int GrHandle=GetGrHandle(GrName);
 	if(GrHandle!=-1) kvarco::DeleteGraph_H(GrHandle);
 }
-
+**/
 void SetDrawBlendModeLight(BYTE mode,BYTE param)
 {
 	static BYTE NowMode=DX_BLENDMODE_NOBLEND;

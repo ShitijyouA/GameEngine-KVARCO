@@ -11,16 +11,7 @@ GameBootSetting kvarco::InitFromIniFile(const fsys::path& path)
 #define SET_MEMBER(member_name,data_name)\
 	wrapper.SetMember(&GameBootSetting::member_name,#data_name)
 
-#define SET_MEMBER_XTYPE(member_name,data_name,value_type)\
-	wrapper.SetMemberXtype<value_type>(&GameBootSetting::member_name,#data_name)
-
-	boost::optional<std::string> temp;
-
-	//TitleÇÕoperator>>ÇéùÇΩÇ»Ç¢ÇÃÇ≈ì¡ï 
-	temp=wrapper.GetPropertyTree().get_optional<std::string>("WindowSetting.Title");
-	if(temp.is_initialized()) res.Title=temp->c_str();
-
-	//
+	SET_MEMBER		(Title,			WindowSetting.Title			);
 	SET_MEMBER		(UseIcon,		WindowSetting.UseIcon		);
 	SET_MEMBER		(FullScreen,	WindowSetting.FullScreen	);
 	SET_MEMBER		(WndWidth,		WindowSetting.WndWidth		);

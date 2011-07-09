@@ -242,6 +242,14 @@
 				Name="Audio"
 				>
 				<File
+					RelativePath=".\AudioItem.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\AudioManager.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\OpenAL_Ogg.cpp"
 					>
 				</File>
@@ -262,14 +270,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\AudioItem.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\AudioManager.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Layer2.cpp"
 					>
 				</File>
@@ -281,6 +281,10 @@
 					RelativePath=".\ScriptManager.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\TextureManager.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -288,14 +292,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\ActorList.h"
-				>
-			</File>
-			<File
-				RelativePath=".\BaseActor.h"
-				>
-			</File>
 			<File
 				RelativePath=".\BaseScene.h"
 				>
@@ -306,6 +302,10 @@
 			</File>
 			<File
 				RelativePath=".\Collision.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Config.h"
 				>
 			</File>
 			<File
@@ -330,6 +330,10 @@
 			</File>
 			<File
 				RelativePath=".\Input.h"
+				>
+			</File>
+			<File
+				RelativePath=".\KVARCO.h"
 				>
 			</File>
 			<File
@@ -360,19 +364,7 @@
 				Name="Manager"
 				>
 				<File
-					RelativePath=".\ActorManager.h"
-					>
-				</File>
-				<File
 					RelativePath=".\ArchiveManager.h"
-					>
-				</File>
-				<File
-					RelativePath=".\AudioItem.h"
-					>
-				</File>
-				<File
-					RelativePath=".\AudioManager.h"
 					>
 				</File>
 				<File
@@ -387,14 +379,18 @@
 					RelativePath=".\ScriptManager.h"
 					>
 				</File>
-				<File
-					RelativePath=".\TextureManager.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="Audio"
 				>
+				<File
+					RelativePath=".\AudioItem.h"
+					>
+				</File>
+				<File
+					RelativePath=".\AudioManager.h"
+					>
+				</File>
 				<File
 					RelativePath=".\OpenAL_Ogg.h"
 					>
@@ -405,6 +401,38 @@
 				</File>
 				<File
 					RelativePath=".\PlayThread.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Texture"
+				>
+				<File
+					RelativePath=".\Texture.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TextureManager.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TextureParam.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Actor"
+				>
+				<File
+					RelativePath=".\ActorList.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ActorManager.h"
+					>
+				</File>
+				<File
+					RelativePath=".\BaseActor.h"
 					>
 				</File>
 			</Filter>
@@ -460,7 +488,11 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\KVARCO.h"
+			RelativePath="..\LICENSE"
+			>
+		</File>
+		<File
+			RelativePath="..\README.rst"
 			>
 		</File>
 	</Files>

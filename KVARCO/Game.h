@@ -22,19 +22,19 @@ public:
 		LoadFileList("")
 	{;}
 
-	xtal::String	Title;
-	int		UseIcon;
-	bool	FullScreen;
+	std::string	Title;
+	std::string LoadFileList;
 
+	int		UseIcon;
+	
 	int		WndWidth;
 	int		WndHeight;
+	bool	FullScreen;
 
 	bool	RockFPS;
 	bool	AlwaysRun;
 
 	bool	UpPG_Priority;
-
-	std::string LoadFileList;
 };
 
 typedef xtal::SmartPtr<GameBootSetting> GameBootSettingPtr;
@@ -117,9 +117,10 @@ public:
 
 namespace kvarco
 {
+/**
 	//イメージ名とイメージハンドルを登録するmap
 	extern boost::unordered_map<std::string,GrInfo>	ImageNameList;
-
+**/
 	//ローディングクラスのポインタ。実行してないとNULL
 	extern LoadThread*	LoadingThread;
 

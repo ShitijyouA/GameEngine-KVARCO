@@ -71,9 +71,21 @@ bool ArchiveManager::Exists(const fsys::path& file)
 	return false;
 }
 
+bool ArchiveManager::ExistsX(const xtal::String file)
+{
+	fsys::path tmp(file.c_str());
+	return Exists(tmp);
+}
+
 inline bool ArchiveManager::ArchiveExists(const fsys::path& archive)
 {
 	return !GetArchivePath(archive).empty();
+}
+
+inline bool ArchiveManager::ArchiveExistsX(const xtal::String archive)
+{
+	fsys::path tmp(archive.c_str());
+	return ArchiveExists(tmp);
 }
 
 ArchiveManager::ArchivePtrType ArchiveManager::LoadArchive(const fsys::path& archive)
@@ -101,9 +113,10 @@ ArchiveManager::ArchiveFileSharedPtrType ArchiveManager::GetArchivedFile(const f
 	return the_file;
 }
 
-bool ArchiveManager::UnzipToMemory(const fsys::path& file,BYTE* dst,DWORD dst_size)
+bool ArchiveManager::UnzipToMemory(const fsys::path& file,BYTE* dst,boost::intmax_t dst_size,boost::intmax_t* res_size)
 {
 	ArchiveFileSharedPtrType the_file=GetArchivedFile(file);
+	*res_size=0;
 	if(!the_file->Exists()) return false;
 
 	//‘½•ª‚¢‚ç‚È‚¢‚¯‚ÇAˆê‰ž‘‚¢‚Ä‚¨‚­
@@ -112,6 +125,7 @@ bool ArchiveManager::UnzipToMemory(const fsys::path& file,BYTE* dst,DWORD dst_si
 	//else
 	//	return the_file->UnzipToMemory(dst,dst_size);
 
+	*res_size=the_file->RawSize();
 	return the_file->UnzipToMemory(dst,dst_size);
 }
 
@@ -129,22 +143,24 @@ Type* ArchiveManager::UnzipToMemory_impl(fsys::path& file,boost::intmax_t* buf_s
 
 	the_file->UnzipToMemory(reinterpret_cast<kvarco::crypted_zip::BYTE*>(dst_buf),size);
 
+	*buf_size=0;
 	if(buf_size!=NULL) *buf_size=size;
+	
 	return dst_buf;
 }
 
 template<typename Type,typename Alloc>
-boost::shared_array<Type> ArchiveManager::UnzipToAllocatedMemory(const fsys::path& file)
+boost::shared_array<Type> ArchiveManager::UnzipToAllocatedMemory(const fsys::path& file,boost::intmax_t* buf_size)
 {
 	return boost::shared_array<Type>(UnzipToMemory_impl<Type,Alloc>(file,NULL));
 }
 
-xtal::MemoryStreamPtr ArchiveManager::UnzipToAllocatedMemoryX(xtal::String& file)
-{
-	boost::intmax_t size=0;
-	char* mem_stream=UnzipToMemory_impl<char,std::allocator<char> >(fsys::path(file.c_str()),&size);
-	return xtal::xnew<xtal::MemoryStream>(mem_stream,size);
-}
+//xtal::MemoryStreamPtr ArchiveManager::UnzipToAllocatedMemoryX(xtal::String& file,DWORD* buf_size)
+//{
+//	boost::intmax_t size=0;
+//	char* mem_stream=UnzipToMemory_impl<char,std::allocator<char> >(fsys::path(file.c_str()),&size);
+//	return xtal::xnew<xtal::MemoryStream>(mem_stream,size);
+//}
 
 bool ArchiveManager::UnzipToFile(fsys::path& file,fsys::path& dst_file)
 {
@@ -164,11 +180,11 @@ void ArchiveManager::bind(xtal::ClassPtr it)
 {
 	USE_XDEFZ(ArchiveManager);
 
-	Xdef_method_alias(SetExtentionOfArchive,&SetExtentionOfArchiveX);
-	Xdef_method_alias(SetPassword,&SetPasswordX);
-	Xdef_method(Exists);
-	Xdef_method(ArchiveExists);
-	Xdef_method_alias(LoadArchive,&LoadArchiveX);
-	Xdef_method_alias(UnzipToMemory,&UnzipToAllocatedMemoryX);
+	Xdef_method_alias(SetExtentionOfArchive,	&SetExtentionOfArchiveX);
+	Xdef_method_alias(SetPassword,				&SetPasswordX);
+	Xdef_method_alias(Exists,					&ExistsX);
+	Xdef_method_alias(ArchiveExists,			&ArchiveExistsX);
+	Xdef_method_alias(LoadArchive,				&LoadArchiveX);
+	Xdef_method_alias(UnzipToMemory,			&UnzipToAllocatedMemoryX);
 	Xdef_method(UnzipToFile);
 }

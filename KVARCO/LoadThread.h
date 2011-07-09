@@ -10,7 +10,7 @@ public:
 	typedef boost::shared_ptr<boost::thread>		ThreadPtr;
 
 private:
-	LoadBasePtrXVector LoadFileList;
+	LoadBasePtrXVector	LoadFileList;
 
 	void AnyPtrToVector_LoadItem(xtal::AnyPtr load_list);
 public:

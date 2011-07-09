@@ -1,6 +1,6 @@
 #pragma once
 #include "KVARCO.h"
-//#define USE_WCHAR
+#include "Config.h"
 
 #ifndef USE_WCHAR
 	#include <boost/array.hpp>

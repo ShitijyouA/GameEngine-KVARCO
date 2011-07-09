@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Config.h"
 
 //標準ウィンドウサイズ
 const DWORD StdWndWidth		=640;
@@ -27,8 +28,6 @@ const DWORD			LOG_MAX_LENGTH	=256;
 #include "Warning.h"
 #include "Input.h"
 #include "Collision.h"
-
-//#define USE_SIZE_STRCT		//tSizeを使うときdefine。define推奨
 
 struct GrInfo
 {
@@ -60,8 +59,9 @@ namespace kvarco
 
 	//画像関係関数
 		//GrNameもしくはNewNameが""(空文字)だと、グローバルテーブルに登録されない
-	extern int	LoadGraph(xtal::String GrName,xtal::String RelaPath);	//ロード
+	 extern int	LoadGraph(xtal::String GrName,xtal::String RelaPath);	//ロード
 
+/**
 		//グラフィックネームからの変換
 	extern int			GetGrHandle(xtal::String GrName);	//グラフィックネームからグラフィックハンドルへの変換
 #ifdef USE_SIZE_STRCT
@@ -79,7 +79,7 @@ namespace kvarco
 		//グラフィックハンドル指定型
 	extern int	LoadCutGraph_N(xtal::String NewName,xtal::String GrName,long x,long y,long w,long h);		//ロード済みの画像から一部を切り出し、新しい画像として利用出来るようにする。切り出し元が削除されると利用できなくなる
 	extern void	DeleteGraph_N(xtal::String GrName);	//画像削除
-
+**/
 		//画像ブレンド設定(軽量)
 	extern inline void SetDrawBlendModeLight(BYTE mode,BYTE param);
 
@@ -99,6 +99,7 @@ namespace kvarco
 	extern void DrawRotaZoomAlpha_H(int GrHandle,float ZoomRateX,float ZoomRateY,float Angle,long cx,long cy,int Alpha,bool Trans=true);
 	//extern void DrawRotaZoomAlpha2_H(int GrHandle,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans=true);
 
+/**
 		//グラフィックネーム指定型
 	extern void DrawGraph_N(xtal::String GrName,long x,long y,bool Trans=true);
 	extern void DrawRotaGraph_N(xtal::String GrName,float Angle,long cx,long cy,bool Trans=true);
@@ -113,6 +114,7 @@ namespace kvarco
 	//extern void DrawRotaZoom2_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,bool Trans=true);
 	extern void DrawRotaZoomAlpha_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long cx,long cy,int Alpha,bool Trans=true);
 	//extern void DrawRotaZoomAlpha2_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans=true);
+**/
 
 	//文字列描画
 	extern DWORD GetColorHandle(int r,int g,int b);

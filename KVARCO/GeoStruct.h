@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Config.h"
 
 //矩形を表す構造体
 template<typename NUM=long>
@@ -50,11 +51,11 @@ struct TriFunc
 template<typename NUM=long>
 struct tSize
 {
-	NUM width;
-	NUM height;
+	NUM width_;
+	NUM height_;
 
 	tSize(NUM w=0,NUM h=0)
-		:width(w),height(h)
+		:width_(w),height_(h)
 	{}
 };
 
@@ -63,44 +64,40 @@ typedef tSize<float>	dSize;
 typedef xtal::SmartPtr<lSize>	lSizePtrX;
 typedef xtal::SmartPtr<dSize>	dSizePtrX;
 
-//デフォルトでラディアンを使うかの設定
-//ライブラリ関数にラディアンを使っているならdefine推奨
-#define USE_RADIAN_AS_DEFAULT
-
-//Degreeを表す構造体
+//degree_を表す構造体
 template<typename NUM=float>
-class tDegree
+class tdegree_
 {
 	typedef NUM Type;
 
 	static const Type DegreeToRadian;
 	static const Type RadianToDegree;
 
-	Type Degree;
+	Type degree_;
 public:
 
-	tDegree()
-		:Degree(0.0)
+	tdegree_()
+		:degree_(0.0)
 	{}
 
 	Type SetRadian(const Type rad)
 		{
-			Degree=rad*RadianToDegree;
+			degree_=rad*RadianToDegree;
 		}
 
 	Type SetDegree(const Type deg)
 		{
-			Degree=deg;
+			degree_=deg;
 		}
 
 	Type GetAsDegree() const
 		{
-			return Degree;
+			return degree_;
 		}
 
 	Type GetAsRadian() const
 		{
-			return Degree*DegreeToRadian;
+			return degree_*DegreeToRadian;
 		}
 
 	Type GetAngle()
@@ -137,7 +134,7 @@ public:
 			Radian=rad;
 		}
 
-	Type SetDegree(const Type deg)
+	Type Setdegree_(const Type deg)
 		{
 			Radian=deg*DegreeToRadian;
 		}

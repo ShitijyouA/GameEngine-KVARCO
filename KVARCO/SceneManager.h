@@ -29,7 +29,7 @@ public:
 
 	void CleanPrevScene() { ToDoCleanPrevScene=true;	}
 
-	static void bind(const xtal::ClassPtr it); 
+	static void bind(xtal::ClassPtr it); 
 	//singleton pattern
 	//コンストラクタを書かなくてはならなかったのでマクロは使わずに
 private:

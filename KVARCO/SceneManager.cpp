@@ -110,7 +110,7 @@ void SceneManager::ReleaseAllScene()
 	}
 }
 
-void SceneManager::bind(const xtal::ClassPtr it)
+void SceneManager::bind(xtal::ClassPtr it)
 {
 	USE_XDEFZ(SceneManager);
 

@@ -69,8 +69,14 @@ public:
 	/// \param file 形式は [アーカイブ名]/[アーカイブ内でのファイルパス]
 	bool Exists(const fsys::path& file);
 
+	/// Exists() ver.xtal
+	bool ExistsX(const xtal::String file);
+
 	/// \return 指定されたアーカイブがあったらtrue
 	inline bool ArchiveExists(const fsys::path& archive);
+
+	/// ArchiveExists() ver.xtal
+	inline bool ArchiveExistsX(const xtal::String archive);
 	
 	/// 指定されたアーカイブを読み込む(ver.native)
 	ArchivePtrType LoadArchive(const fsys::path& archive);
@@ -80,14 +86,14 @@ public:
 
 	/// すでに確保されたメモリに展開
 	/// \return ファイル展開に成功した場合はtrue,失敗した場合はfalse
-	bool UnzipToMemory(const fsys::path& file,BYTE* dst,DWORD dst_size);
+	bool UnzipToMemory(const fsys::path& file,BYTE* dst,boost::intmax_t dst_size,boost::intmax_t* res_size);
 
 	/// メモリを確保してから展開(ver.native)
 	template<typename Type,typename Alloc>
-	boost::shared_array<Type> UnzipToAllocatedMemory(const fsys::path& file);
+	boost::shared_array<Type> UnzipToAllocatedMemory(const fsys::path& file,boost::intmax_t* buf_size);
 
 	/// メモリを確保してから展開(ver.xtal)
-	xtal::MemoryStreamPtr UnzipToAllocatedMemoryX(xtal::String& file);
+	//xtal::MemoryStreamPtr UnzipToAllocatedMemoryX(xtal::String& file,DWORD* buf_size);
 
 	/// 指定ファイルに展開
 	bool UnzipToFile(fsys::path& file,fsys::path& dst_file);

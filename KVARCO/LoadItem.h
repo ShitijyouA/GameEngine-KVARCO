@@ -5,20 +5,16 @@ namespace LoadItem
 	class BaseLoadItem
 	{
 	protected:
-		bool	Loaded;
+		volatile bool	loaded_;
 
-		xtal::String Name;
-		xtal::String Path;
+		volatile const	xtal::String name_;
+		volatile const	xtal::String path_;
 
 	public:
-
 		//コンストラクタだけXtal依存
 		BaseLoadItem(xtal::StringPtr name,xtal::StringPtr path)
-			:Loaded(false)
-		{
-			Name=name->c_str();
-			Path=path->c_str();
-		}
+			:loaded_(false),name_(name->c_str()),path_(path->c_str())
+		{}
 
 		virtual void Load()=0;
 
@@ -35,12 +31,11 @@ namespace LoadItem
 
 		void Load()
 		{
-			if(!Loaded)
-			{
-				kvarco::LoadGraph(Name.c_str(),Path.c_str());
-				kvarco::OutputLog("%sをロード",Path.c_str());
-				Loaded=true;
-			}
+			if(loaded_) return;
+
+			kvarco::LoadGraph(const_cast<xtal::String&>(name_),const_cast<xtal::String&>(path_));
+			kvarco::OutputLog("%sをロード",const_cast<xtal::String*>(&path_)->c_str());
+			loaded_=true;
 		}
 	};
 }
