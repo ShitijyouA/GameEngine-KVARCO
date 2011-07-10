@@ -1,6 +1,6 @@
 #include "DecryptedZip.h"
 #include "CryptingFilter.h"
-#include <sstream>
+#include <strstream>
 
 namespace boost
 {
@@ -196,14 +196,10 @@ bool DecryptedZip::ArchivedFile_Exist::UnzipToMemory(BYTE* dst,DWORD dst_size)
 {
 	if(dst_size<file_info_.raw_size_) return false;
 
-	std::stringstream dst_buf(std::ios::in | std::ios::out | std::ios::binary);
-	//dst_buf.write(reinterpret_cast<const char*>(dst),dst_size);
+	std::strstream dst_buf(reinterpret_cast<char*>(dst),dst_size,std::ios::in | std::ios::out | std::ios::binary);
 
 	filtering_istream_ptr tmp_istream=MakeInputStream();
-
 	ios::copy(*tmp_istream,dst_buf);
-
-	dst_buf.read(reinterpret_cast<char*>(dst),dst_size);
 
 	tmp_istream.reset();
 	source_stream.reset();
