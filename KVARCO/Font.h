@@ -1,24 +1,31 @@
 #pragma once
 #include "KVARCO.h"
 #include "Config.h"
+#include "Texture.h"
+#include "TextureManager.h"
 
 #ifndef USE_WCHAR
-	#include <boost/array.hpp>
-	typedef boost::array<int,0xFF>		FontGraphArray;
-#else
-	typedef std::vector<wchar_t>		FontGraphArray
+#	include <boost/array.hpp>
 #endif
-
-typedef std::vector<int>		CharArray;
-typedef lPoint*					lPointPtr;
-typedef boost::optional<lSize>	lSize_o;
 
 //this class run faster if USE_WCHAR hadn't defined
 class Font
 {
+public:
+	typedef TextureManager::TexturePtr		TextureType;
+	typedef std::vector<const TextureType>	CharArray;
+	typedef lPoint*							lPointPtr;
+	typedef boost::optional<lSize>			lSize_o;
+
+#ifndef USE_WCHAR
+	typedef boost::array<TextureType,0xFF>	FontGraphArray;
+#else
+	typedef std::vector<Texture>			FontGraphArray
+#endif
+
 protected:
 	FontGraphArray Chars;
-	void LoadFontGraph(const GrInfo* set_gr_info,const std::string& set_string,const lPoint& offset,lSize_o size);
+	void LoadFontGraph(TextureType texture,const std::string& set_string,const lPoint& offset,lSize_o size);
 
 	lSize FontSize;
 	DWORD GetLineNum(const std::string& string_);
@@ -28,7 +35,7 @@ protected:
 	static const lPoint StdOffset;
 
 public:
-	Font();
+	Font() {}
 	Font(std::string& set_gr_name);
 	Font(std::string& set_gr_name,std::string& set_string);
 	Font(std::string& set_gr_name,std::string& set_string,lSize& size);

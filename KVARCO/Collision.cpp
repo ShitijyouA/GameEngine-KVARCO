@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Collision.h"
 #include "ActorManager.h"
+#include "KVARCO.h"
 
 ColPolygonPtrX ColPolygon::VoidPolygon=xtal::null;
 
@@ -9,54 +10,54 @@ ColPolygon::ColPolygon(DWORD poly_num)
 	if(xtal::is_null(VoidPolygon) && poly_num!=0)
 	{
 		VoidPolygon=xtal::xnew<ColPolygon>(0);
-		VoidPolygon->Polygon.clear();
+		VoidPolygon->polygon_.clear();
 	}
 
 	if(poly_num<=2) poly_num=3;
-	Polygon.resize(poly_num+1); Polygon.clear();
-	for(DWORD i=0; i<(poly_num+1); i++) Polygon.push_back(fPoint());
+	polygon_.resize(poly_num+1); polygon_.clear();
+	for(DWORD i=0; i<(poly_num+1); i++) polygon_.push_back(fPoint());
 }
 
 void ColPolygon::SetAABB()
 {
-	AABB.top	=LONG_MIN;	AABB.bottom	=LONG_MAX;
-	AABB.left	=LONG_MIN;	AABB.right	=LONG_MAX;
+	aabb_.top_	=LONG_MIN;	aabb_.bottom_	=LONG_MAX;
+	aabb_.left_	=LONG_MIN;	aabb_.right_	=LONG_MAX;
 
-	BOOST_FOREACH(fPoint& i,Polygon)
+	BOOST_FOREACH(fPoint& i,polygon_)
 	{
 		long ix=static_cast<long>(i.x);
 		long iy=static_cast<long>(i.y);
 
-		if(AABB.top		<=iy) AABB.top		=iy;
-		if(AABB.bottom	>=iy) AABB.bottom	=iy;
-		if(AABB.left	<=ix) AABB.left		=ix;
-		if(AABB.right	>=ix) AABB.right	=ix;
+		if(aabb_.top_	<=iy)	aabb_.top_		=iy;
+		if(aabb_.bottom_>=iy)	aabb_.bottom_	=iy;
+		if(aabb_.left_	<=ix)	aabb_.left_		=ix;
+		if(aabb_.right_	>=ix)	aabb_.right_	=ix;
 	}
 }
 
 bool ColPolygon::CheckAABB(ColPolygonPtrX col)
 {
 	return
-	(	AABB.top	>col->AABB.bottom	&&
-		AABB.bottom	<col->AABB.top		&&
-		AABB.left	>col->AABB.right	&&
-		AABB.right	<col->AABB.left		);
+	(	aabb_.top_		>col->aabb_.bottom_	&&
+		aabb_.bottom_	<col->aabb_.top_	&&
+		aabb_.left_		>col->aabb_.right_	&&
+		aabb_.right_	<col->aabb_.left_	);
 }
 
 bool ColPolygon::ColWithPoint(float x,float y)
 {
-	DWORD size=Polygon.size();
+	DWORD size=polygon_.size();
 	if(size <= 2) return false;
 	DWORD count = 0;
-	float lastx = Polygon[0].x;
-	float lasty = Polygon[0].y;
+	float lastx = polygon_[0].x;
+	float lasty = polygon_[0].y;
 	float curx;
 	float cury;
 	for(DWORD i=size; i>0;lastx = curx,lasty =cury)
 	{
 		--i;
-		curx = Polygon[i].x;
-		cury = Polygon[i].y;
+		curx = polygon_[i].x;
+		cury = polygon_[i].y;
 		if(cury == lasty)				continue;
 
 		float leftx;
@@ -108,23 +109,23 @@ bool ColPolygon::ColWithPoint(fPoint Point)
 
 bool ColPolygon::Check(ColPolygonPtrX col)
 {
-	if(Polygon.size()<=2)	return false;
+	if(polygon_.size()<=2)	return false;
 	if(!CheckAABB(col))		return false;
 
-	for(DWORD i=0; i<Polygon.size()-1; i++)
-		if(col->ColWithPoint(Polygon[i]))	return true;
+	for(DWORD i=0; i<polygon_.size()-1; i++)
+		if(col->ColWithPoint(polygon_[i]))	return true;
 
-	for(DWORD i=0; i<col->Polygon.size(); i++)
-		if(ColWithPoint(col->Polygon[i]))	return true;
+	for(DWORD i=0; i<col->polygon_.size(); i++)
+		if(ColWithPoint(col->polygon_[i]))	return true;
 
 	return false;
 }
 
 ColPolygonPtrX ColPolygon::Move(float cx,float cy,float deg)
 {
-	if(Polygon.size() <= 2) return xtal::null;
+	if(polygon_.size() <= 2) return xtal::null;
 
-	DWORD size=Polygon.size()-1;
+	DWORD size=polygon_.size()-1;
 	ColPolygonPtrX out=xtal::xnew<ColPolygon>(size);
 
 	//先に計算しておく
@@ -132,25 +133,25 @@ ColPolygonPtrX ColPolygon::Move(float cx,float cy,float deg)
 	{
 		for(DWORD i=0; i<size; ++i)
 		{
-			out->Polygon[i].x=Polygon[i].x+	cx;
-			out->Polygon[i].y=Polygon[i].y+	cy;
+			out->polygon_[i].x=polygon_[i].x+	cx;
+			out->polygon_[i].y=polygon_[i].y+	cy;
 		}
 	}
 	else
 	{
-		float rad	=deg*D2R;
-		float sin_	=sin(rad);
-		float cos_	=cos(rad);
+		Radian angle(deg);
+		float sin_	=sin(angle.GetAsRadian());
+		float cos_	=cos(angle.GetAsRadian());
 
 		for(DWORD i=0; i<size; ++i)
 		{
-			out->Polygon[i].x=-sin_*Polygon[i].y+cos_*Polygon[i].x+cx;
-			out->Polygon[i].y= cos_*Polygon[i].y+sin_*Polygon[i].x+cy;
+			out->polygon_[i].x=-sin_*polygon_[i].y+cos_*polygon_[i].x+cx;
+			out->polygon_[i].y= cos_*polygon_[i].y+sin_*polygon_[i].x+cy;
 		}
 	}
 
 	out->SetAABB();
-	out->Polygon[size]=out->Polygon[0];
+	out->polygon_[size]=out->polygon_[0];
 
 	return out;
 }
@@ -162,61 +163,62 @@ ColPolygonPtrX ColPolygon::Movep(fPoint cPoint,float deg)
 
 void ColPolygon::SetBox(float width,float height)
 {
-	if(Polygon.size()!=5) return;
+	if(polygon_.size()!=5) return;
 
 	float width_2=width*0.5f,height_2=height*0.5f;
-	Polygon[0].x=-width_2;	Polygon[0].y=-height_2;
-	Polygon[1].x=width_2;	Polygon[1].y=-height_2;
-	Polygon[2].x=width_2;	Polygon[2].y=height_2;
-	Polygon[3].x=-width_2;	Polygon[3].y=height_2;
-	Polygon[4]=Polygon[0];
+	polygon_[0].x=-width_2;	polygon_[0].y=-height_2;
+	polygon_[1].x=width_2;	polygon_[1].y=-height_2;
+	polygon_[2].x=width_2;	polygon_[2].y=height_2;
+	polygon_[3].x=-width_2;	polygon_[3].y=height_2;
+	polygon_[4]=polygon_[0];
 }
 
 void ColPolygon::SetPolygon(float radius,float offset_deg)
 {
-	if(Polygon.size() <= 2) return;
+	if(polygon_.size() <= 2) return;
 
-	DWORD polygon=Polygon.size()-1;
-	float crad=M_PI2/polygon;
-	float rad=-offset_deg*D2R;
-	for(DWORD i=0; i<polygon; i++)
+	DWORD poly_size=polygon_.size()-1;
+	Radian crad(math::constants::pi<float>()/poly_size);
+	Degree tmp_offset(offset_deg);
+
+	for(DWORD i=0; i<poly_size; i++)
 	{
-		Polygon[i].x=cos(rad)*radius;
-		Polygon[i].y=sin(rad)*radius;
-		rad+=crad;
+		polygon_[i].x=cos(-tmp_offset.GetAsRadian())*radius;
+		polygon_[i].y=sin(-tmp_offset.GetAsRadian())*radius;
+		tmp_offset+=crad;
 	}
-	Polygon[polygon]=Polygon[0];
+	polygon_[poly_size]=polygon_[0];
 }
 
 void ColPolygon::SetPolygon2(xtal::ArrayPtr polygon)
 {
 	if(xtal::is_undefined(polygon))	return;
 	if(polygon->size()<=2)			return;
-	Polygon.clear();
+	polygon_.clear();
 
 	for(DWORD i=0; i<polygon->size(); ++i)
 	{
 		xtal::SmartPtr<fPoint> tmp=xtal::unchecked_ptr_cast<fPoint>(polygon->at(i));
-		Polygon.push_back(fPoint(tmp->x,tmp->y));
+		polygon_.push_back(fPoint(tmp->x,tmp->y));
 	}
 
-	DWORD end_index		=Polygon.size()-1;
-	Polygon[end_index].x=Polygon[0].x;
-	Polygon[end_index].y=Polygon[0].y;
+	DWORD end_index		=polygon_.size()-1;
+	polygon_[end_index].x=polygon_[0].x;
+	polygon_[end_index].y=polygon_[0].y;
 }
 
 void ColPolygon::DrawCollision(xtal::String layer_name,DWORD color)
 {
-	if(Polygon.size() <= 2) return;
+	if(polygon_.size() <= 2) return;
 
 	fRectPtrX area=LayerManager::GetInst()->GetArea(LayerManager::GetInst()->GetHandle(layer_name.c_str()));
-	for(DWORD i=0; i<Polygon.size()-1; i++)
+	for(DWORD i=0; i<polygon_.size()-1; i++)
 	{
 		kvarco::DrawLine(
-			static_cast<int>(Polygon[i].x	+area->left),
-			static_cast<int>(Polygon[i].y	+area->top),
-			static_cast<int>(Polygon[i+1].x	+area->left),
-			static_cast<int>(Polygon[i+1].y	+area->top),
+			static_cast<int>(polygon_[i].x	+area->left_	),
+			static_cast<int>(polygon_[i].y	+area->top_		),
+			static_cast<int>(polygon_[i+1].x+area->left_	),
+			static_cast<int>(polygon_[i+1].y+area->top_		),
 			color
 			);
 	}

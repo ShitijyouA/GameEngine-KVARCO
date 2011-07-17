@@ -29,7 +29,7 @@ public:
 			{
 				boost::property_tree::read_ini(path.string().c_str(),init_file_ptree_);
 			}
-			catch(boost::property_tree::ini_parser::ini_parser_error& e)
+			catch(...)
 			{
 				exists_that_file_=false;
 			}

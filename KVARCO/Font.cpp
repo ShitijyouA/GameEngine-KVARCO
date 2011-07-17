@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "Font.h"
+#include "CharacterParam.h"
 const std::string Font::StdSetString=" !\"#$%&\'()*+,-./012\n3456789:;<=>?@ABCDE\nFGHIJKLMNOPQRSTUVWX\nYZ[\\]^_`abcdefghijk\nlmnopqrstuvwxyz{|}~";
 const lPoint Font::StdOffset(0,0);
 
-void Font::LoadFontGraph(const GrInfo* set_gr_info,const std::string& set_string,const lPoint& offset,lSize_o size)
+void Font::LoadFontGraph(TextureType texture,const std::string& set_string,const lPoint& offset,lSize_o size)
 {
 	DWORD line_num		=GetLineNum(set_string);
 	DWORD max_char_num	=GetMaxCharNumInLine(set_string);
@@ -11,19 +12,14 @@ void Font::LoadFontGraph(const GrInfo* set_gr_info,const std::string& set_string
 	lSize set_size;
 	if(!size)
 	{
-#ifdef USE_SIZE_STRCT
-		set_size.width	=set_gr_info.Size.width	-offset.x;
-		set_size.height	=set_gr_info.Size.height-offset.y;
-#else
-		set_size.width	=set_gr_info->Size.right	-offset.x;
-		set_size.height	=set_gr_info->Size.bottom-offset.y;
-#endif
+		set_size.width_		=texture->GetSize().width_ -offset.x;
+		set_size.height_	=texture->GetSize().height_-offset.y;
 	}
 	else
 		FontSize=*size;
 
-	FontSize.width	=set_size.width		/max_char_num;
-	FontSize.height	=set_size.height	/line_num;
+	FontSize.width_	=texture->GetSize().width_/max_char_num;
+	FontSize.height_=texture->GetSize().height_/line_num;
 
 	DWORD char_num	=set_string.size();
 
@@ -32,13 +28,13 @@ void Font::LoadFontGraph(const GrInfo* set_gr_info,const std::string& set_string
 	{
 		if(i!='\n')
 		{
-			Chars[set_string[i]]=
-				kvarco::LoadCutGraph_H("",set_gr_info->GrHandle,cut_offset.x,cut_offset.y,FontSize.width,FontSize.height);
+			TextureManager::RectType rect(cut_offset.x,cut_offset.y,FontSize.width_,FontSize.height_);
+			Chars[set_string[i]]=TextureManager::GetInst()->CutTexture(texture.get(),"",rect);
 
-			cut_offset.x+=FontSize.width;
+			cut_offset.x+=FontSize.width_;
 		}
 		else
-			cut_offset.y+=FontSize.height;
+			cut_offset.y+=FontSize.height_;
 	}
 }
 
@@ -66,14 +62,14 @@ DWORD Font::GetMaxCharNumInLine(const std::string& string_)
 	return max_char_num;
 }
 
-CharArray Font::ToStringInFont(const std::string& string_)
+Font::CharArray Font::ToStringInFont(const std::string& string_)
 {
 	CharArray res(string_.size());
 	res.clear();	//’Ç‰Á‚ðappend()‚É“ˆê‚·‚é‚½‚ß
 
 	BOOST_FOREACH(const char& i,string_)
 	{
-		if(i=='\n') res.push_back(-1);
+		if(i=='\n') res.push_back(TextureType());
 		else		res.push_back(Chars[i]);
 	}
 
@@ -84,58 +80,55 @@ void Font::DrawInFont(long x,long y,const std::string& string_)
 {
 	lPoint draw_point(x,y);
 	CharArray in_font=ToStringInFont(string_);
-	BOOST_FOREACH(const char& i,string_)
+
+	BOOST_FOREACH(TextureManager::TexturePtr& tex,in_font)
 	{
-		if(i!=-1)
+		if(tex->Get()!=-1)
 		{
-			kvarco::DrawGraph_H(i,draw_point.x,draw_point.y);
-			draw_point.x+=FontSize.width;
+			kvarco::detail::DrawGraphRaw(tex->Get(),draw_point.x,draw_point.y,true,false);
+			draw_point.x+=FontSize.width_;
 		}
 		else
-			draw_point.y+=FontSize.height;
+			draw_point.y+=FontSize.height_;
 	}
-}
-
-Font::Font()
-{
-	BOOST_FOREACH(int& i,Chars) { i=-1; }
 }
 
 Font::Font(std::string& set_gr_name)
 {
-	Font();
-	LoadFontGraph(kvarco::GetGrInfo_p(set_gr_name.c_str()),StdSetString,StdOffset,lSize_o());
+	TextureManager::TexturePtr tmp(TextureManager::GetInst()->GetAsTexture(set_gr_name.c_str()).get());
+	LoadFontGraph(tmp,StdSetString,StdOffset,lSize_o());
 }
 
 Font::Font(std::string& set_gr_name,std::string& set_string)
 {
-	Font();
-	LoadFontGraph(kvarco::GetGrInfo_p(set_gr_name.c_str()),set_string,StdOffset,lSize_o());
+	TextureManager::TexturePtr tmp(TextureManager::GetInst()->GetAsTexture(set_gr_name.c_str()).get());
+	LoadFontGraph(tmp,set_string,StdOffset,lSize_o());
 }
 
 Font::Font(std::string& set_gr_name,std::string& set_string,lSize& size)
 {
-	Font();
-	LoadFontGraph(kvarco::GetGrInfo_p(set_gr_name.c_str()),set_string,StdOffset,lSize_o(size));
+	TextureManager::TexturePtr tmp(TextureManager::GetInst()->GetAsTexture(set_gr_name.c_str()).get());
+	LoadFontGraph(tmp,set_string,StdOffset,lSize_o(size));
 }
 
 Font::Font(std::string& set_gr_name,std::string& set_string,lPoint& offset)
 {
-	Font();
-	LoadFontGraph(kvarco::GetGrInfo_p(set_gr_name.c_str()),set_string,offset,lSize_o());
+	TextureManager::TexturePtr tmp(TextureManager::GetInst()->GetAsTexture(set_gr_name.c_str()).get());
+	LoadFontGraph(tmp,set_string,offset,lSize_o());
 }
 
 Font::Font(std::string& set_gr_name,std::string& set_string,lPoint& offset,lSize& size)
 {
-	Font();
-	LoadFontGraph(kvarco::GetGrInfo_p(set_gr_name.c_str()),set_string,offset,lSize_o(size));
+	TextureManager::TexturePtr tmp(TextureManager::GetInst()->GetAsTexture(set_gr_name.c_str()).get());
+	LoadFontGraph(tmp,set_string,offset,lSize_o(size));
 }
 
 //NAME_IN_X(Font)
 NAME_IN_X(Font)::NAME_IN_X(Font)(xtal::StringPtr set_gr_name,xtal::StringPtr set_string,lPointPtrX offset,lSizePtrX size)
 {
 	std::string tmp_str_set_string=set_gr_name->c_str();
-	LoadFontGraph(kvarco::GetGrInfo_p(set_gr_name->c_str()),tmp_str_set_string,*offset,lSize_o(*size));
+	TextureManager::TexturePtr tmp(TextureManager::GetInst()->GetAsTexture(set_gr_name->c_str()).get());
+	LoadFontGraph(tmp,tmp_str_set_string,*offset,lSize_o(*size));
 }
 
 xtal::ArrayPtr NAME_IN_X(Font)::NAME_IN_X(ToStringInFont)(xtal::StringPtr string_)
@@ -146,7 +139,7 @@ xtal::ArrayPtr NAME_IN_X(Font)::NAME_IN_X(ToStringInFont)(xtal::StringPtr string
 	xtal::ArrayPtr res	=xtal::xnew<xtal::Array>(tmp_array.size());
 	for(DWORD i=0; i<tmp_array.size(); ++i)
 	{
-		res->set_at(i,tmp_array[i]);
+		res->set_at(i,&tmp_array[i]);
 	}
 
 	return res;

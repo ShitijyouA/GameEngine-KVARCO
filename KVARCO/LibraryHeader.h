@@ -1,6 +1,7 @@
 ﻿//STLヘッダ
 #pragma once
 
+#define _CRT_SECURE_NO_WARNINGS //Xtalのヘッダでfopen()を使っているため
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
@@ -53,6 +54,8 @@ namespace fsys=boost::filesystem;
 #include <boost/foreach.hpp>
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/math/constants/constants.hpp>
+namespace math=boost::math;
 
 //boost.random
 #include <boost/random/mersenne_twister.hpp>
@@ -71,7 +74,6 @@ namespace fsys=boost::filesystem;
 //xtal::
 #define DONOT_USE_STRING_LT
 #define XTAL_DEBUG_PRINT
-#define _CRT_SECURE_NO_WARNINGS
 #include <xtal.h>
 #include <xtal_macro.h>
 

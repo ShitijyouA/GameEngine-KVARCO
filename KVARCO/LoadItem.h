@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "TextureManager.h"
 
 namespace LoadItem
 {
@@ -32,9 +33,12 @@ namespace LoadItem
 		void Load()
 		{
 			if(loaded_) return;
+	
+			TextureManager::TextureNameType	name_ptr=const_cast<xtal::String*>(&name_);
+			TextureManager::PathType		path_ptr=const_cast<xtal::String*>(&path_);
 
-			kvarco::LoadGraph(const_cast<xtal::String&>(name_),const_cast<xtal::String&>(path_));
-			kvarco::OutputLog("%sをロード",const_cast<xtal::String*>(&path_)->c_str());
+			TextureManager::GetInst()->LoadX(path_ptr,name_ptr);
+			kvarco::OutputLog("%sをロード",path_ptr->c_str());
 			loaded_=true;
 		}
 	};

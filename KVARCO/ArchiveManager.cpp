@@ -82,9 +82,9 @@ inline bool ArchiveManager::ArchiveExists(const fsys::path& archive)
 	return !GetArchivePath(archive).empty();
 }
 
-inline bool ArchiveManager::ArchiveExistsX(const xtal::String archive)
+inline bool ArchiveManager::ArchiveExistsX(const ArchiveManager::PathTypeX archive)
 {
-	fsys::path tmp(archive.c_str());
+	fsys::path tmp(archive->c_str());
 	return ArchiveExists(tmp);
 }
 
@@ -95,9 +95,9 @@ ArchiveManager::ArchivePtrType ArchiveManager::LoadArchive(const fsys::path& arc
 	return arc_ptr;
 }
 
-void ArchiveManager::LoadArchiveX(const xtal::String& archive)
+void ArchiveManager::LoadArchiveX(const ArchiveManager::PathTypeX& archive)
 {
-	LoadArchive(archive.c_str());
+	LoadArchive(archive->c_str());
 }
 
 ArchiveManager::ArchiveFileSharedPtrType ArchiveManager::GetArchivedFile(const fsys::path& file)
@@ -131,7 +131,7 @@ bool ArchiveManager::UnzipToMemory(const fsys::path& file,BYTE* dst,boost::intma
 
 ///ÉÅÉÇÉäÇämï€ÇµÇƒÇ©ÇÁìWäJ(é¿ëï)
 template<typename Type,typename Alloc>
-Type* ArchiveManager::UnzipToMemory_impl(fsys::path& file,boost::intmax_t* buf_size)
+Type* ArchiveManager::UnzipToMemory_impl(const fsys::path& file,boost::intmax_t* buf_size)
 {
 	ArchiveFileSharedPtrType the_file(GetArchivedFile(file));
 	if(!the_file->Exists()) return NULL;
@@ -149,18 +149,17 @@ Type* ArchiveManager::UnzipToMemory_impl(fsys::path& file,boost::intmax_t* buf_s
 	return dst_buf;
 }
 
-template<typename Type,typename Alloc>
-boost::shared_array<Type> ArchiveManager::UnzipToAllocatedMemory(const fsys::path& file,boost::intmax_t* buf_size)
+ArchiveManager::AllocatedMemoryType ArchiveManager::UnzipToAllocatedMemory(const fsys::path& file,boost::intmax_t* buf_size)
 {
-	return boost::shared_array<Type>(UnzipToMemory_impl<Type,Alloc>(file,NULL));
+	return AllocatedMemoryType(UnzipToMemory_impl<char,std::allocator<char> >(file,NULL));
 }
 
-//xtal::MemoryStreamPtr ArchiveManager::UnzipToAllocatedMemoryX(xtal::String& file,DWORD* buf_size)
-//{
-//	boost::intmax_t size=0;
-//	char* mem_stream=UnzipToMemory_impl<char,std::allocator<char> >(fsys::path(file.c_str()),&size);
-//	return xtal::xnew<xtal::MemoryStream>(mem_stream,size);
-//}
+xtal::MemoryStreamPtr ArchiveManager::UnzipToAllocatedMemoryX(ArchiveManager::PathTypeX& file)
+{
+	boost::intmax_t size=0;
+	char* mem_stream=UnzipToMemory_impl<char,std::allocator<char> >(fsys::path(file->c_str()),&size);
+	return xtal::xnew<xtal::MemoryStream>(mem_stream,size);
+}
 
 bool ArchiveManager::UnzipToFile(fsys::path& file,fsys::path& dst_file)
 {

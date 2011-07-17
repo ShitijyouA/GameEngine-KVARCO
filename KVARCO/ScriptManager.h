@@ -2,10 +2,11 @@
 #include "KVARCO.h"
 #include "XtalHelper.h"
 #include "Utillity.h"
+#include "Tag.h"
 
 //#define COMPLATE_CODING_SERIALIZE	//シリアライズ周りが完了したらdefine
 
-//ロードしたファイル1つ分
+/// ロード済ファイルの情報
 struct LoadedFile
 {
 	typedef fsys::path	PathType;
@@ -24,16 +25,13 @@ struct LoadedFile
 	LoadedFile();
 };
 
-struct tag_Path {};
-struct tag_Seq {};
-
 typedef boost::multi_index::multi_index_container
 	<
 		LoadedFile,
 		indexed_by
 		<
-			ordered_unique<	tag<tag_Path>,member<LoadedFile,LoadedFile::PathType,&LoadedFile::abs_path_> >,
-			sequenced<		tag<tag_Seq> >
+			ordered_unique<	kvarco::tag::detail::Path,member<LoadedFile,LoadedFile::PathType,&LoadedFile::abs_path_> >,
+			sequenced<		kvarco::tag::detail::Sequence >
 		>
 	>
 LoadedScriptMap;
@@ -48,15 +46,16 @@ public:
 	typedef LoadedFile::TimeStampType	TimeStampType;
 
 private:
-	typedef LoadedScriptMap::index<tag_Path>::type	LoadedScriptMap_tag_Path;
-	typedef LoadedScriptMap::index<tag_Seq>::type	LoadedScriptMap_tag_Seq;
+	typedef LoadedScriptMap::index<kvarco::tag::Path>		::type	LoadedScriptMap_tag_Path;
+	typedef LoadedScriptMap::index<kvarco::tag::Sequence>	::type	LoadedScriptMap_tag_Seq;
 
 	LoadedScriptMap loaded_scripts_;
 
 	bool IsLoaded(const PathType& path,const TimeStampType& time_stamp);
 
-	xtal::AnyPtr LoadOneFile_impl(const fsys::path& abs_file_path);
+	xtal::CodePtr CompileOneFileFromArchive(const fsys::path& abs_file_path);
 	xtal::CodePtr CompileOneFile_impl(const fsys::path& abs_file_path);
+	xtal::AnyPtr LoadOneFile_impl(const fsys::path& abs_file_path);
 	void ReLoad_impl(LoadedScriptMap_tag_Seq::iterator i,LoadedScriptMap_tag_Seq& map);
 
 public:

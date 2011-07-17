@@ -1,152 +1,173 @@
 ﻿#include "pch.h"
 #include "KVARCO.h"
-using namespace kvarco;
+#include "CharacterParam.h"
 
-///////////////////////////////////////////
-/////////グラフィックハンドル指定型//////////
-///////////////////////////////////////////
-void kvarco::DrawGraph_H(int GrHandle,long x,long y,bool Trans,bool call_alpha)
+namespace kvarco
 {
-	if(!call_alpha) SetDrawBlendModeLight(DX_BLENDMODE_NOBLEND,255);
+namespace detail
+{
+
+void DrawGraphRaw(int GrHandle,long x,long y,bool Trans,bool call_alpha)
+{
+	if(!call_alpha) kvarco::SetDrawBlendModeLight(DX_BLENDMODE_NOBLEND,0xFF);
 	DxLib::DrawGraph(x,y,GrHandle,(int )Trans);
 }
 
-void kvarco::DrawRotaGraph_H(int GrHandle,float Angle,long cx,long cy,bool Trans,bool call_alpha)
+void DrawRotaGraph(int GrHandle,float Angle,long cx,long cy,bool Trans,bool call_alpha)
 {
-	if(!call_alpha) SetDrawBlendModeLight(DX_BLENDMODE_NOBLEND,255);
+	if(!call_alpha) kvarco::SetDrawBlendModeLight(DX_BLENDMODE_NOBLEND,0xFF);
 	DxLib::DrawRotaGraph(cx,cy,1.0,Angle,GrHandle,(int )Trans,1);
 }
 
-void kvarco::DrawRotaGraph2_H(int GrHandle,float Angle,long x,long y,long cx,long cy,bool Trans,bool call_alpha)
+void DrawGraphAlpha(int GrHandle,long x,long y,int Alpha,bool Trans)
 {
-	if(!call_alpha) SetDrawBlendModeLight(DX_BLENDMODE_NOBLEND,255);
-	DxLib::DrawRotaGraph2(x,y,cx,cy,1.0,Angle,GrHandle,(int )Trans);
+	kvarco::SetDrawBlendModeLight(DX_BLENDMODE_ALPHA,(Alpha&0xFF));
+	DrawGraphRaw(GrHandle,x,y,Trans,true);
 }
 
-void kvarco::DrawGraphAlpha_H(int GrHandle,long x,long y,int Alpha,bool Trans)
+void DrawRotaGraphAlpha(int GrHandle,float Angle,long cx,long cy,int Alpha,bool Trans)
 {
-	SetDrawBlendModeLight(DX_BLENDMODE_ALPHA,(Alpha%256));
-	kvarco::DrawGraph_H(GrHandle,x,y,Trans,true);
+	kvarco::SetDrawBlendModeLight(DX_BLENDMODE_ALPHA,(Alpha&0xFF));
+	DrawRotaGraph(GrHandle,Angle,cx,cy,(int )Trans,true);
 }
 
-void kvarco::DrawRotaGraphAlpha_H(int GrHandle,float Angle,long cx,long cy,int Alpha,bool Trans)
+void DrawZoom(const CharParamPtrX& char_param,bool trans,bool call_alpha)
 {
-	SetDrawBlendModeLight(DX_BLENDMODE_ALPHA,(Alpha%256));
-	kvarco::DrawRotaGraph_H(GrHandle,Angle,cx,cy,(int )Trans,true);
+	CharParam::Type half_x=char_param->texture_->GetSize().width_ *char_param->scale_x_/2;
+	CharParam::Type half_y=char_param->texture_->GetSize().height_*char_param->scale_y_/2;
+	fRect zoomed(char_param->center_.x-half_x,char_param->center_.y-half_y,char_param->center_.x+half_x,char_param->center_.y+half_y);
+	
+	if(!call_alpha) kvarco::SetDrawBlendModeLight(DX_BLENDMODE_NOBLEND,0xFF);
+	DxLib::DrawExtendGraph(zoomed.left_,zoomed.top_,zoomed.right_,zoomed.bottom_,char_param->texture_->Get(),true);
 }
 
-void kvarco::DrawRotaGraphAlpha2_H(int GrHandle,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans)
+void DrawZoomAlpha(const CharParamPtrX& char_param,int Alpha)
 {
-	SetDrawBlendModeLight(DX_BLENDMODE_ALPHA,(Alpha%256));
-	kvarco::DrawRotaGraph2_H(GrHandle,Angle,x,y,cx,cy,(int )Trans,true);
+	kvarco::SetDrawBlendModeLight(DX_BLENDMODE_ALPHA,(char_param->alpha_&0xFF));
+	DrawZoom(char_param,true,true);
 }
 
-void kvarco::DrawZoom_H(int GrHandle,float ZoomRateX,float ZoomRateY,long cx,long cy,bool Trans,bool call_alpha)
+void DrawRotaZoom(const CharParamPtrX& char_param,bool Trans,bool call_alpha)
 {
-	int w,h;
-	DxLib::GetGraphSize(GrHandle,&w,&h);
-	long Halfx=static_cast<long>(w*ZoomRateX*0.5f);
-	long Halfy=static_cast<long>(h*ZoomRateY*0.5f);
-	if(!call_alpha) SetDrawBlendModeLight(DX_BLENDMODE_NOBLEND,255);
-	DxLib::DrawExtendGraph(cx-Halfx,cy-Halfy,cx+Halfx,cy+Halfy,GrHandle,(int )Trans);
-}
-
-void kvarco::DrawZoomAlpha_H(int GrHandle,float ZoomRateX,float ZoomRateY,long x,long y,int Alpha,bool Trans)
-{
-	SetDrawBlendModeLight(DX_BLENDMODE_ALPHA,(Alpha%256));
-	kvarco::DrawZoom_H(GrHandle,ZoomRateX,ZoomRateY,x,y,(int )Trans,true);
-}
-
-void kvarco::DrawRotaZoom_H(int GrHandle,float ZoomRateX,float ZoomRateY,float Angle,long cx,long cy,bool Trans,bool call_alpha)
-{
-	int w,h;
-	DxLib::GetGraphSize(GrHandle,&w,&h);
-	float Halfx=(w/2)	*ZoomRateX;
-	float Halfy=(h/2)	*ZoomRateY;
+	CharParam::Type half_x=char_param->texture_->GetSize().width_ *char_param->scale_x_/2;
+	CharParam::Type half_y=char_param->texture_->GetSize().height_*char_param->scale_y_/2;
+	fRect zoomed(char_param->center_.x-half_x,char_param->center_.y-half_y,char_param->center_.x+half_x,char_param->center_.y+half_y);
 
 	fPoint tmp[4];
+	tmp[0].x=zoomed.left_;	tmp[0].y=zoomed.top_;
+	tmp[1].x=zoomed.right_;	tmp[1].y=zoomed.top_;
+	tmp[2].x=zoomed.right_;	tmp[2].y=zoomed.bottom_;
+	tmp[3].x=zoomed.left_;	tmp[3].y=zoomed.bottom_;
 
-	tmp[0].x=cx-Halfx;	tmp[0].y=cy-Halfy;
-	tmp[1].x=cx+Halfx;	tmp[1].y=cy-Halfy;
-	tmp[2].x=cx+Halfx;	tmp[2].y=cy+Halfy;
-	tmp[3].x=cx-Halfx;	tmp[3].y=cy+Halfy;
-
-	float sin_=sin(Angle);
+	float sin_=sin(char_param->angle_.GetAsRadian());
 	float _sin_=-sin_;
-	float cos_=cos(Angle);
+	float cos_=cos(char_param->angle_.GetAsRadian());
 
 	fPoint res[4];
-	//加法定理
+	//線形変換による回転
 	for(int i=0; i<4; i++)
 	{
-		res[i].x=	_sin_*	tmp[i].y+	cos_*	tmp[i].x+	cx;
-		res[i].y=	cos_*	tmp[i].y+	sin_*	tmp[i].x+	cy;
+		res[i].x=	_sin_*	tmp[i].y+	cos_*	tmp[i].x+	char_param->center_.x;
+		res[i].y=	cos_*	tmp[i].y+	sin_*	tmp[i].x+	char_param->center_.y;
 	}
 
-	if(!call_alpha) SetDrawBlendModeLight(DX_BLENDMODE_NOBLEND,255);
+	if(!call_alpha) kvarco::SetDrawBlendModeLight(DX_BLENDMODE_NOBLEND,0xFF);
 	DxLib::DrawModiGraph(
 		static_cast<int>(res[0].x),static_cast<int>(res[0].y),
 		static_cast<int>(res[1].x),static_cast<int>(res[1].y),
 		static_cast<int>(res[2].x),static_cast<int>(res[2].y),
 		static_cast<int>(res[3].x),static_cast<int>(res[3].y),
-		GrHandle,(int )Trans);
+		char_param->texture_->Get(),(int )Trans);
 }
 
-//void kvarco::DrawRotaZoom2_H(int GrHandle,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,bool Trans);
-void kvarco::DrawRotaZoomAlpha_H(int GrHandle,float ZoomRateX,float ZoomRateY,float Angle,long cx,long cy,int Alpha,bool Trans)
+void DrawRotaZoomAlpha(const CharParamPtrX& char_param,bool Trans)
 {
-	SetDrawBlendModeLight(DX_BLENDMODE_ALPHA,(Alpha%256));
-	kvarco::DrawRotaZoom_H(GrHandle,ZoomRateX,ZoomRateY,Angle,cx,cy,Trans,true);
+	SetDrawBlendModeLight(DX_BLENDMODE_ALPHA,(char_param->alpha_&0xFF));
+	DrawRotaZoom(char_param,Trans,true);
 }
-//void kvarco::DrawRotaZoomAlpha2_H(int GrHandle,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans);
 
-/**
-///////////////////////////////////////////
-//////////グラフィックネーム指定型///////////
-///////////////////////////////////////////
-#define USE_GR_HANDLE(grhandle,name) int grhandle=GetGrHandle(name);if(grhandle!=-1)
+} //namespace detail
+} //namespace kvarco
 
-void kvarco::DrawGraph_N(xtal::String GrName,long x,long y,bool Trans)
+namespace kvarco
 {
-	USE_GR_HANDLE(GrHandle,GrName) kvarco::DrawGraph_H(GrHandle,x,y,Trans);
-}
-void kvarco::DrawRotaGraph_N(xtal::String GrName,float Angle,long cx,long cy,bool Trans)
-{
-	USE_GR_HANDLE(GrHandle,GrName) kvarco::DrawRotaGraph_H(GrHandle,Angle,cx,cy,Trans);
-}
-void kvarco::DrawRotaGraph2_N(xtal::String GrName,float Angle,long x,long y,long cx,long cy,bool Trans)
-{
-	USE_GR_HANDLE(GrHandle,GrName) DrawRotaGraph2_H(GrHandle,Angle,x,y,cx,cy,Trans);
-}
-void kvarco::DrawGraphAlpha_N(xtal::String GrName,long x,long y,int Alpha,bool Trans)
-{
-	USE_GR_HANDLE(GrHandle,GrName) DrawGraphAlpha_H(GrHandle,x,y,Alpha,Trans);
-}
-void kvarco::DrawRotaGraphAlpha_N(xtal::String GrName,float Angle,long cx,long cy,int Alpha,bool Trans)
-{
-	USE_GR_HANDLE(GrHandle,GrName) DrawRotaGraphAlpha_H(GrHandle,Angle,cx,cy,Alpha,Trans);
-}
-void kvarco::DrawRotaGraphAlpha2_N(xtal::String GrName,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans)
-{
-	USE_GR_HANDLE(GrHandle,GrName) DrawRotaGraphAlpha2_H(GrHandle,Angle,x,y,cx,cy,Alpha,Trans);
-}
-void kvarco::DrawZoom_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,long x,long y,bool Trans)
-{
-	USE_GR_HANDLE(GrHandle,GrName) DrawZoom_H(GrHandle,ZoomRateX,ZoomRateY,x,y,Trans);
-}
-void kvarco::DrawZoomAlpha_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,long x,long y,int Alpha,bool Trans)
-{
-	USE_GR_HANDLE(GrHandle,GrName) DrawZoomAlpha_H(GrHandle,ZoomRateX,ZoomRateY,x,y,Alpha,Trans);
-}
-void kvarco::DrawRotaZoom_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long cx,long cy,bool Trans)
-{
-	USE_GR_HANDLE(GrHandle,GrName) DrawRotaZoom_H(GrHandle,ZoomRateX,ZoomRateY,ZoomRateY,cx,cy,Trans);
-}
-//void kvarco::DrawRotaZoom2_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,bool Trans);
-void kvarco::DrawRotaZoomAlpha_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long cx,long cy,int Alpha,bool Trans)
-{
-	USE_GR_HANDLE(GrHandle,GrName) DrawRotaZoomAlpha_H(GrHandle,ZoomRateX,ZoomRateY,Angle,cx,cy,Alpha,Trans);
-}
-//void kvarco::DrawRotaZoomAlpha2_N(xtal::String GrName,float ZoomRateX,float ZoomRateY,float Angle,long x,long y,long cx,long cy,int Alpha,bool Trans);
 
-**/
+void DrawGraphAllDisabled(const CharParamPtrX& char_param)
+{
+	CharParam::PointPtrX upper_left=char_param->GetUpperLeftCorner();
+	kvarco::detail::DrawGraphRaw(char_param->texture_->Get(),upper_left->x,upper_left->y,true,false);
+}
+
+void DrawGraph(const CharParamPtrX& char_param)
+{
+	bool enable_alpha	=char_param->alpha_!=0.0;
+	bool enable_rota	=char_param->angle_.GetAngle()!=0.0;
+	bool enable_zoom	=(char_param->scale_x_!=1.0) && (char_param->scale_y_!=1.0);
+
+	DrawGraphEnabledFeatures(char_param,enable_alpha,enable_rota,enable_zoom);
+}
+
+void DrawGraphEnabledFeatures(const CharParamPtrX& char_param,bool enable_alpha,bool enable_rota,bool enable_zoom)
+{
+	// bit 1 : enable_alpha
+	// bit 2 : enable_rota
+	// bit 3 : enable_zoom
+	char switch_flag=((enable_zoom? 1:0)<<2)|((enable_rota ? 1:0)<<1)|((enable_alpha ? 1:0)<<0);
+
+	//transをoffにしたい? え? なに言ってるの? それ知らない
+	switch(switch_flag)
+	{
+		case 0: // enable_alpha=false | enable_rota=false | enable_zoom=false
+		{
+			DrawGraphAllDisabled(char_param);
+		}
+		break;
+
+		case 1: // enable_alpha=true  | enable_rota=false | enable_zoom=false
+		{
+			CharParam::PointPtrX upper_left=char_param->GetUpperLeftCorner();
+			kvarco::detail::DrawGraphAlpha(char_param->texture_->Get(),upper_left->x,upper_left->y,char_param->alpha_,true);
+		}
+		break;
+
+		case 2: // enable_alpha=false | enable_rota=true  | enable_zoom=false
+		{
+			kvarco::detail::DrawRotaGraph
+				(char_param->texture_->Get(),char_param->angle_.GetAsRadian(),char_param->center_.x,char_param->center_.y,true,false);
+		}
+		break;
+
+		case 3: // enable_alpha=true  | enable_rota=true  | enable_zoom=false
+		{
+			kvarco::detail::DrawRotaGraphAlpha
+				(char_param->texture_->Get(),char_param->angle_.GetAsRadian(),char_param->center_.x,char_param->center_.y,char_param->alpha_,false);
+		}
+		break;
+
+		case 4: // enable_alpha=false | enable_rota=false | enable_zoom=true
+		{
+			kvarco::detail::DrawZoom(char_param,true,false);
+		}
+		break;
+		
+		case 5: // enable_alpha=true  | enable_rota=false | enable_zoom=true
+		{
+			kvarco::detail::DrawZoomAlpha(char_param,true);
+		}
+		break;
+		
+		case 6: // enable_alpha=false | enable_rota=true  | enable_zoom=true
+		{
+			kvarco::detail::DrawRotaZoom(char_param,true,false);
+		}
+		break;
+		
+		case 7: // enable_alpha=true  | enable_rota=true  | enable_zoom=true
+		{
+			kvarco::detail::DrawRotaZoomAlpha(char_param,true);
+		}
+		break;
+	}
+}
+
+}

@@ -183,6 +183,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\BaseActor.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Bezier.cpp"
 				>
 			</File>
@@ -203,10 +207,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GeoStruct.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\InitFromIniFile.cpp"
 				>
 			</File>
@@ -224,10 +224,6 @@
 			</File>
 			<File
 				RelativePath=".\Main.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Warning.cpp"
 				>
 			</File>
 			<File
@@ -298,6 +294,10 @@
 			</File>
 			<File
 				RelativePath=".\Bezier.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CharacterParam.h"
 				>
 			</File>
 			<File
@@ -433,6 +433,10 @@
 				</File>
 				<File
 					RelativePath=".\BaseActor.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Tag.h"
 					>
 				</File>
 			</Filter>

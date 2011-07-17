@@ -11,6 +11,10 @@ public:
 	typedef boost::shared_ptr<ArchiveType::ArchivedFile>	ArchiveFileSharedPtrType;
 	typedef boost::unordered_map<fsys::path,ArchivePtrType>	ArchivesMapType;
 	typedef ArchivesMapType::value_type						ArchiveInfoType;
+	typedef boost::shared_ptr<char>							AllocatedMemoryType;
+	
+	typedef xtal::StringPtr									PathTypeX;
+	typedef xtal::StringPtr									StringTypeX;
 	
 private:
 	/// ".XXX"形式のアーカイブファイルの拡張子
@@ -33,7 +37,7 @@ private:
 
 	///メモリを確保してから展開(実装)
 	template<typename Type,typename Alloc>
-	Type* UnzipToMemory_impl(fsys::path& file,boost::intmax_t* buf_size);
+	Type* UnzipToMemory_impl(const fsys::path& file,boost::intmax_t* buf_size);
 
 	ArchiveFileSharedPtrType GetArchivedFile(const fsys::path& file);
 
@@ -52,7 +56,7 @@ public:
 		}
 
 	/// \param ext アーカイブファイルの拡張子(標準では"kcz")(ver.xtal)
-	void SetExtentionOfArchiveX(xtal::String& ext)
+	void SetExtentionOfArchiveX(StringTypeX& ext)
 		{
 			static const xtal::String dot(".");
 			xtal::StringPtr full=dot.cat(ext.to_s());
@@ -60,9 +64,9 @@ public:
 		}
 
 	/// \param password アーカイブファイルのパスワード(ver.xtal)
-	void SetPasswordX(xtal::String& password)
+	void SetPasswordX(StringTypeX& password)
 		{
-			password_=password.c_str();
+			password_=password->c_str();
 		}
 
 	/// \return 指定されたファイルがあったらtrue。アーカイブ違いでもfalseになる
@@ -76,24 +80,23 @@ public:
 	inline bool ArchiveExists(const fsys::path& archive);
 
 	/// ArchiveExists() ver.xtal
-	inline bool ArchiveExistsX(const xtal::String archive);
+	inline bool ArchiveExistsX(const PathTypeX archive);
 	
 	/// 指定されたアーカイブを読み込む(ver.native)
 	ArchivePtrType LoadArchive(const fsys::path& archive);
 
 	/// 指定されたアーカイブを読み込む(ver.xtal)
-	void LoadArchiveX(const xtal::String& archive);
+	void LoadArchiveX(const PathTypeX& archive);
 
 	/// すでに確保されたメモリに展開
 	/// \return ファイル展開に成功した場合はtrue,失敗した場合はfalse
 	bool UnzipToMemory(const fsys::path& file,BYTE* dst,boost::intmax_t dst_size,boost::intmax_t* res_size);
 
 	/// メモリを確保してから展開(ver.native)
-	template<typename Type,typename Alloc>
-	boost::shared_array<Type> UnzipToAllocatedMemory(const fsys::path& file,boost::intmax_t* buf_size);
+	AllocatedMemoryType UnzipToAllocatedMemory(const fsys::path& file,boost::intmax_t* buf_size);
 
 	/// メモリを確保してから展開(ver.xtal)
-	//xtal::MemoryStreamPtr UnzipToAllocatedMemoryX(xtal::String& file,DWORD* buf_size);
+	xtal::MemoryStreamPtr UnzipToAllocatedMemoryX(PathTypeX& file);
 
 	/// 指定ファイルに展開
 	bool UnzipToFile(fsys::path& file,fsys::path& dst_file);

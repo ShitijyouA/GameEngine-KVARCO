@@ -4,13 +4,14 @@
 class ColPolygon;
 typedef xtal::SmartPtr<ColPolygon> ColPolygonPtrX;
 
-typedef std::vector<fPoint> POLYGON;
 class ColPolygon
 {
+public:
+	typedef std::vector<fPoint> PolygonType;
+
 protected:
-//	friend class ColPolygon;
-	POLYGON Polygon;		//各頂点
-	lRect	AABB;			//AABB
+	PolygonType polygon_;		//各頂点
+	lRect		aabb_;			//AABB
 
 	bool ColWithPoint(fPoint Point);
 	bool ColWithPoint(float x,float y);
@@ -19,6 +20,7 @@ protected:
 
 	virtual void SetAABB();
 	bool CheckAABB(ColPolygonPtrX col);						//大雑把な判定をする
+
 public:
 	ColPolygon(DWORD poly_num);								//頂点数
 	virtual void SetBox(float width,float height);			//矩形をセット

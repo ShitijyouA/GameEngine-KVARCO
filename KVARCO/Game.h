@@ -117,10 +117,6 @@ public:
 
 namespace kvarco
 {
-/**
-	//イメージ名とイメージハンドルを登録するmap
-	extern boost::unordered_map<std::string,GrInfo>	ImageNameList;
-**/
 	//ローディングクラスのポインタ。実行してないとNULL
 	extern LoadThread*	LoadingThread;
 

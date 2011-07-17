@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "ActorManager.h"
+#include "XtalHelper.h"
 
 void ActorManager::AddActor(xtal::AnyPtr actor,bool debug)
 {
@@ -12,7 +13,7 @@ void ActorManager::AddActor(xtal::AnyPtr actor,bool debug)
 
 void ActorManager::RunAll(bool debug,bool gc)
 {
-	ActorList_tag_Type& list=AllActors.get<tag_Type>();
+	ActorList_tag_Type& list=AllActors.get<kvarco::tag::Type>();
 	ActorList_tag_Type::iterator i=list.begin();
 	DWORD size=list.size();
 	while(i!=list.end())
@@ -33,7 +34,8 @@ void ActorManager::RunAll(bool debug,bool gc)
 			//削除
 			it->Run->send(Xid(halt)); xtal::vmachine()->catch_except();
 			i=list.erase(i);
-			LayerManager::GetInst()->EraseActor(LayerManager::GetInst()->GetHandle(it->LayerName),it);
+			int layer_handle=LayerManager::GetInst()->GetHandle(it->LayerName);
+			LayerManager::GetInst()->EraseActor(layer_handle,it);
 			it->Run=xtal::null;	//Actorの息の根を止める
 
 			//一応GCかけておく
@@ -48,7 +50,7 @@ void ActorManager::RunAll(bool debug,bool gc)
 
 xtal::ArrayPtr ActorManager::GetByType(DWORD type)
 {
-	ActorList_tag_Type& list=AllActors.get<tag_Type>();
+	ActorList_tag_Type& list=AllActors.get<kvarco::tag::Type>();
 	typedef std::pair<ActorList_tag_Type::iterator,ActorList_tag_Type::iterator> IteRangeType;
 	IteRangeType equal=list.equal_range(type);
 
@@ -65,7 +67,7 @@ xtal::ArrayPtr ActorManager::GetAllActor()
 {
 	xtal::ArrayPtr ar=xtal::xnew<xtal::Array>();
 
-	ActorList_tag_Seq& list=AllActors.get<tag_Seq>();
+	ActorList_tag_Seq& list=AllActors.get<kvarco::tag::Sequence>();
 	BOOST_FOREACH(const xtal::AnyPtr& i,list)
 	{
 		BaseActorPtrX	it=xtal::unchecked_ptr_cast<BaseActor>(i);
@@ -133,7 +135,7 @@ void ActorManager::ReleaseAllActor()
 {
 	//AllActorsから全て削除
 	{
-		ActorList_tag_Type& list=AllActors.get<tag_Type>();
+		ActorList_tag_Type& list=AllActors.get<kvarco::tag::Type>();
 		ActorList_tag_Type::iterator i=list.begin();
 		while(i!=list.end())
 		{

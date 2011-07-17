@@ -33,12 +33,8 @@ public:
 	//singleton pattern
 	//コンストラクタを書かなくてはならなかったのでマクロは使わずに
 private:
-	friend xtal::SmartPtr<SceneManager> xtal::xnew();
-	friend class xtal::SmartPtr<SceneManager>;
-	friend struct xtal::XNew<SceneManager>;
-	friend struct xtal::XXNew<SceneManager,3>;
+	FRIENDS_FOR_XTAL(SceneManager)
 	SceneManager();
-	//static SceneMngrPtr Inst;
 public:
 	static SceneMngrPtr GetInst();
 

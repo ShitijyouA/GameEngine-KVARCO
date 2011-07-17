@@ -1,20 +1,17 @@
 ﻿#include "pch.h"
 #include "ScriptManager.h"
+#include "ArchiveManager.h"
 
 //コンパイルするが、loaded_scripts_には登録されない
 xtal::CodePtr ScriptManager::CompileOneFile_impl(const fsys::path& abs_file_path)
 {
-	if(!fsys::exists(abs_file_path))
-		return xtal::null;
-	else
-	{
-		std::string temp=abs_file_path.string();
-		return xtal::compile_file(temp.c_str());
-	}
+	std::string temp=abs_file_path.string();
+	return xtal::compile_file(temp.c_str());
 }
 
 xtal::CodePtr ScriptManager::CompileOneFile(const xtal::StringPtr& file_path)
 {
+	if(!fsys::exists(file_path->c_str())) xtal::null;
 	fsys::path abs_path(fsys::absolute(file_path->c_str(),kvarco::ExePath));
 	return CompileOneFile_impl(abs_path);
 }
@@ -23,7 +20,7 @@ xtal::CodePtr ScriptManager::CompileOneFile(const xtal::StringPtr& file_path)
 bool ScriptManager::IsLoaded(const PathType& path,const TimeStampType& time_stamp)
 {
 	LoadedScriptMap_tag_Path::iterator i;
-	const LoadedScriptMap_tag_Path& path_list=loaded_scripts_.get<tag_Path>();
+	const LoadedScriptMap_tag_Path& path_list=loaded_scripts_.get<kvarco::tag::Path>();
 	i=path_list.find(path);
 
 	if(i==path_list.end())
@@ -32,20 +29,36 @@ bool ScriptManager::IsLoaded(const PathType& path,const TimeStampType& time_stam
 		return i->time_stamp_==time_stamp;
 }
 
+xtal::CodePtr ScriptManager::CompileOneFileFromArchive(const fsys::path& abs_file_path)
+{
+	ArchiveManager::PathTypeX path=abs_file_path.string().c_str();
+	xtal::MemoryStreamPtr code_str=ArchiveManager::GetInst()->UnzipToAllocatedMemoryX(path);
+	xtal::CodePtr code=xtal::ptr_cast<xtal::Code>(code_str);
+	return code;
+}
+
 //
 xtal::AnyPtr ScriptManager::LoadOneFile_impl(const fsys::path& abs_file_path)
 {
-	if(!fsys::exists(abs_file_path)) return xtal::null;
-
+	LoadedFile load_info(abs_file_path,0);
+	
 	//check what this was loaded
-	const TimeStampType last_time_stamp=fsys::last_write_time(abs_file_path);
-	if(IsLoaded(abs_file_path,last_time_stamp)) return xtal::null;
+	if(fsys::exists(abs_file_path))
+		load_info.time_stamp_=fsys::last_write_time(abs_file_path);
 
-	LoadedFile load_info(abs_file_path,last_time_stamp);
-
+	if(IsLoaded(abs_file_path,load_info.time_stamp_)) return xtal::null;
+	
 	//compile
-	load_info.compiled_code_=CompileOneFile_impl(abs_file_path);
+	//is it archived file?
+	if(ArchiveManager::GetInst()->Exists(abs_file_path))
+		load_info.compiled_code_=CompileOneFileFromArchive(abs_file_path);
+	else
+	if(fsys::exists(abs_file_path))
+		load_info.compiled_code_=CompileOneFile_impl(abs_file_path);
+	else
+		return xtal::null;
 
+	//happened error?
 	bool IsFailed=false,IsRetry=false;
 	XtalHelper::processExcept(_T("Xtal runtime error on call\n"),&IsFailed,&IsRetry);
 
@@ -100,7 +113,8 @@ void ScriptManager::ReLoad_impl(LoadedScriptMap_tag_Seq::iterator i,LoadedScript
 {
 	const fsys::path& abs_file_path=(*i).abs_path_;
 
-	if(!fsys::exists(abs_file_path)) return;
+	//exists? archived?
+	if(!fsys::exists(abs_file_path) || ArchiveManager::GetInst()->Exists(abs_file_path)) return;
 
 	//check what this was loaded
 	const TimeStampType last_time_stamp=fsys::last_write_time(abs_file_path);
@@ -128,7 +142,7 @@ void ScriptManager::LoadFiles(const xtal::ArrayPtr& file_paths)
 
 void ScriptManager::ReLoad()
 {
-	LoadedScriptMap_tag_Seq& seq_list	=loaded_scripts_.get<tag_Seq>();
+	LoadedScriptMap_tag_Seq& seq_list	=loaded_scripts_.get<kvarco::tag::Sequence>();
 	LoadedScriptMap_tag_Seq::iterator i	=seq_list.begin();
 
 	for(;i!=seq_list.end(); ++i) ReLoad_impl(i,seq_list);
@@ -153,7 +167,7 @@ namespace
 
 void ScriptManager::Release()
 {
-	LoadedScriptMap_tag_Seq& seq_list	=loaded_scripts_.get<tag_Seq>();
+	LoadedScriptMap_tag_Seq& seq_list	=loaded_scripts_.get<kvarco::tag::Sequence>();
 	LoadedScriptMap_tag_Seq::iterator i	=seq_list.begin();
 
 	EraserX eraser;

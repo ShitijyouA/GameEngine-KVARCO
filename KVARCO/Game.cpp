@@ -6,13 +6,13 @@
 #include "SceneManager.h"
 #include "AudioManager.h"
 #include "Game.h"
+#include "Collision.h"
 
-boost::unordered_map<std::string,GrInfo>	kvarco::ImageNameList;
-LoadThread*									kvarco::LoadingThread;
+LoadThread* kvarco::LoadingThread;
 
-//スクリプトロードなどのみ。画像ロードなどは行わない
 namespace kvarco
 {
+
 // ファイル名からパスを取り出して返す
 std::string GetFilePath(std::string s)
 {

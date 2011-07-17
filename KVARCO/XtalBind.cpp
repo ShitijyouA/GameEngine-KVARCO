@@ -2,7 +2,6 @@
 #include "Game.h"
 
 #include "Utillity.h"
-#include "Warning.h"
 #include "Layer2.h"
 #include "BaseScene.h"
 #include "Collision.h"
@@ -63,6 +62,7 @@ XDEF_CTOR0_USE_BIND_METHOD(AudioManager)
 XDEF_CTOR0_USE_BIND_METHOD(SceneManager)
 XDEF_CTOR0_USE_BIND_METHOD(ActorManager)
 XDEF_CTOR0_USE_BIND_METHOD(ArchiveManager)
+XDEF_CTOR0_USE_BIND_METHOD(TextureManager)
 
 //各種構造体のバインド
 
@@ -104,10 +104,10 @@ XTAL_PREBIND(lRect)
 
 XTAL_BIND(lRect)
 {
-	Xdef_var(left);
-	Xdef_var(top);
-	Xdef_var(right);
-	Xdef_var(bottom);
+	Xdef_var(left_);
+	Xdef_var(top_);
+	Xdef_var(right_);
+	Xdef_var(bottom_);
 }
 
 //lPoint
@@ -127,16 +127,16 @@ XTAL_BIND(lPoint)
 XTAL_PREBIND(fRect)
 {
 	it->def_ctor4<fRect,float,float,float,float>()
-		->param(1,Xid(left_),0.0)->param(2,Xid(top_),0.0)
-		->param(3,Xid(right_),0.0)->param(4,Xid(bottom),0.0);
+		->param(1,Xid(left),0.0)->param(2,Xid(top),0.0)
+		->param(3,Xid(right),0.0)->param(4,Xid(bottom),0.0);
 }
 
 XTAL_BIND(fRect)
 {
-	Xdef_var(left);
-	Xdef_var(top);
-	Xdef_var(right);
-	Xdef_var(bottom);
+	Xdef_var(left_);
+	Xdef_var(top_);
+	Xdef_var(right_);
+	Xdef_var(bottom_);
 }
 
 //fPoint
@@ -165,6 +165,36 @@ XTAL_BIND(TriFunc)
 	Xdef_var(cos);
 }
 
+//Angle
+XTAL_PREBIND(Angle)
+{
+	it->def_ctor1<Angle,float>()->param(1,Xid(radian),0.0f);
+}
+
+XTAL_BIND(Angle)
+{
+	Xdef_method(SetAsRadian);
+	Xdef_method(SetAsDegree);
+	Xdef_method(GetAsDegree);
+	Xdef_method(GetAsRadian);
+	Xdef_method(GetAngle);
+	Xdef_method(Normalize);
+}
+
+//Radian
+XTAL_PREBIND(Radian)
+{
+	it->inherit(xtal::cpp_class<Angle>());
+	it->def_ctor1<Angle,float>()->param(1,Xid(radian),0.0f);
+}
+
+//Degree
+XTAL_PREBIND(Degree)
+{
+	it->inherit(xtal::cpp_class<Angle>());
+	it->def_ctor1<Angle,float>()->param(1,Xid(degree),0.0f);
+}
+
 //Font
 XTAL_PREBIND(NAME_IN_X(Font))
 {
@@ -190,25 +220,103 @@ XTAL_PREBIND(SE_Item)
 	it->def_ctor1<SE_Item,xtal::StringPtr>();
 }
 
-#define XTAL_BIND_CLASS(_class) xtal::lib()->def(Xid(_class),xtal::cpp_class<_class>())
+//concept::Texture<TextureInstType>
+XTAL_PREBIND(texture::TextureConcept)
+{}
+
+//メンバがvirtual関数ばっかりなのでここで
+//static関数内でvirtual関数参照できるの……?
+XTAL_BIND(texture::TextureConcept)
+{
+	Xdef_method(Get);
+	Xdef_method(GetSize);
+	Xdef_method(GetCenter);
+}
+
+//Texture
+XTAL_PREBIND(texture::Texture)
+{
+	it->inherit(xtal::cpp_class<texture::TextureConcept>());
+}
+
+XTAL_BIND(texture::Texture)
+{
+	texture::Texture::bind(it);
+}
+
+//TextureSet
+XTAL_PREBIND(texture::TextureSet)
+{
+	it->inherit(xtal::cpp_class<texture::TextureConcept>());
+}
+
+XTAL_BIND(texture::TextureSet)
+{
+	texture::TextureSet::bind(it);
+}
+
+//Animation
+XTAL_PREBIND(texture::Animation)
+{
+	it->inherit(xtal::cpp_class<texture::TextureConcept>());
+}
+
+XTAL_BIND(texture::Animation)
+{
+	texture::Animation::bind(it);
+}
+
+//TextureParam
+XTAL_PREBIND(TextureParam)
+{
+	it->def_ctor0<TextureParam>();
+}
+
+XTAL_BIND(TextureParam)
+{
+	TextureParam::bind(it);
+}
+
+//CharParam
+XTAL_PREBIND(CharParam)
+{
+	it->inherit(xtal::cpp_class<CharParam>());
+	it->def_ctor0<CharParam>();
+}
+
+XTAL_BIND(CharParam)
+{
+	CharParam::bind(it);
+}
+
+#define Xdef_class_lib(_class)				xtal::lib()->def(Xid(_class),xtal::cpp_class<_class>())
+#define Xdef_class_lib_alias(_name,_class)	xtal::lib()->def(Xid(_name),xtal::cpp_class<_class>())
 void Game::bind()
 {
 	kvarco::bind();
 
-	XTAL_BIND_CLASS(GameBootSetting);
-	xtal::lib()->def(Xid(GraphLoadItem),xtal::cpp_class<LoadItem::GraphLoadItem>());
-	XTAL_BIND_CLASS(lRect);
-	XTAL_BIND_CLASS(lPoint);
-	XTAL_BIND_CLASS(lSize);
-	XTAL_BIND_CLASS(fRect);
-	XTAL_BIND_CLASS(fPoint);
-	XTAL_BIND_CLASS(dSize);
-	XTAL_BIND_CLASS(TriFunc);
-	XTAL_BIND_CLASS(ColPolygon);
-	XTAL_BIND_CLASS(BaseScene);
-	XTAL_BIND_CLASS(BGM_Item);
-	XTAL_BIND_CLASS(SE_Item);
-	XTAL_BIND_CLASS(NAME_IN_X(Font));
+	Xdef_class_lib(GameBootSetting);
+	Xdef_class_lib_alias(GraphLoadItem,LoadItem::GraphLoadItem);
+	Xdef_class_lib(lRect);
+	Xdef_class_lib(lPoint);
+	Xdef_class_lib(lSize);
+	Xdef_class_lib(fRect);
+	Xdef_class_lib(fPoint);
+	Xdef_class_lib(dSize);
+	Xdef_class_lib(TriFunc);
+	Xdef_class_lib(ColPolygon);
+	Xdef_class_lib(BaseScene);
+	Xdef_class_lib(BGM_Item);
+	Xdef_class_lib(SE_Item);
+	Xdef_class_lib(NAME_IN_X(Font));
+	Xdef_class_lib(Angle);
+	Xdef_class_lib(Radian);
+	Xdef_class_lib(Degree);
+	Xdef_class_lib_alias(Texture,texture::Texture);
+	Xdef_class_lib_alias(TextureSet,texture::TextureSet);
+	Xdef_class_lib_alias(Animation,texture::Animation);
+	Xdef_class_lib(TextureParam);
+	Xdef_class_lib_alias(CharParam,CharacterParam);
 
 	//namespace Actor
 	xtal::ClassPtr Actors=xtal::xnew<xtal::Class>();
@@ -225,7 +333,7 @@ void Game::bind()
 
 	//Singletonのバインド
 #define XTAL_BIND_SINGLETON(_class,_name)\
-	XTAL_BIND_CLASS(_class);\
+	Xdef_class_lib(_class);\
 	xtal::lib()->def(Xid(_name),\
 	xtal::SmartPtr<_class>(_class::GetInst(),xtal::undeleter));
 
@@ -246,6 +354,9 @@ void Game::bind()
 
 	//ArchiveManager
 	XTAL_BIND_SINGLETON(ArchiveManager,ArchiveMngr)
+
+	//TextureManager
+	XTAL_BIND_SINGLETON(TextureManager,TextureMngr)
 
 #undef XTAL_BIND_SINGLETON
 }

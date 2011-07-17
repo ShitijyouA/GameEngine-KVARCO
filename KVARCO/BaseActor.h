@@ -1,8 +1,11 @@
 ﻿#pragma once
-#include "KVARCO.h"
 
 class BaseActor
 {
+public:
+	typedef xtal::AnyPtr BaseActorPtrX;
+
+private:
 	bool Dead;
 	xtal::AnyPtr Parent;
 
@@ -17,24 +20,9 @@ public:
 
 	xtal::FiberPtr Run;
 
-	BaseActor()
-		:ID(kvarco::MakeHandle()),Dead(false)
-	{
-		Z=			0;
-		ActorType=	0;
-		LayerName=	xtal::StringPtr("root");
-		Parent=		xtal::null;
+	BaseActor();
 
-		Run=		xtal::null;
-	}
-
-	void init(xtal::StringPtr belong_layer,DWORD actor_type,int z,xtal::AnyPtr parent)
-	{
-		LayerName	=belong_layer;
-		ActorType	=actor_type;
-		Z			=z;
-		Parent		=parent;
-	}
+	void init(xtal::StringPtr belong_layer,DWORD actor_type,int z,xtal::AnyPtr parent);
 
 	void Die()		{ Dead=true;		}
 	bool IsDead()	{ return Dead;		}
@@ -64,4 +52,4 @@ public:
 	}
 };
 
-typedef xtal::SmartPtr<BaseActor> BaseActorPtrX;
+typedef xtal::SmartPtr<BaseActor>	BaseActorPtrX;

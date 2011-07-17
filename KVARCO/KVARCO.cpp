@@ -1,9 +1,10 @@
 ﻿#include "pch.h"
 #include "Game.h"
 #include "KVARCO.h"
-#include "BaseActor.h"
 #include "XtalHelper.h"
 #include "LoadThread.h"
+#include "Texture.h"
+#include "Collision.h"
 
 namespace kvarco
 {
@@ -42,144 +43,30 @@ DWORD kvarco::GetKeyState(DWORD Key,int PlayerNo_)
 //描画範囲関係
 void SetDrawArea(lRect Area)
 {
-	DxLib::SetDrawArea(Area.left,Area.top,Area.right,Area.bottom);
+	DxLib::SetDrawArea(Area.left_,Area.top_,Area.right_,Area.bottom_);
 }
 
 void SetDrawArea(fRect Area)
 {
 	DxLib::SetDrawArea(
-		static_cast<int>(Area.left),
-		static_cast<int>(Area.top),
-		static_cast<int>(Area.right),
-		static_cast<int>(Area.bottom)
+		static_cast<int>(Area.left_),
+		static_cast<int>(Area.top_),
+		static_cast<int>(Area.right_),
+		static_cast<int>(Area.bottom_)
 		);
 }
 
 void SetDrawArea_default()
 {
 	lRect area;
-	area.left	=0;
-	area.top	=0;
-	area.right	=Game::GetInst()->Setting.WndWidth;
-	area.bottom	=Game::GetInst()->Setting.WndHeight;
+	area.left_	=0;
+	area.top_	=0;
+	area.right_	=Game::GetInst()->Setting.WndWidth;
+	area.bottom_=Game::GetInst()->Setting.WndHeight;
 
 	kvarco::SetDrawArea(area);
 }
-/**
-//グラフィック関係
-int	LoadGraph(xtal::String GrName,xtal::String RelaPath)
-{
-	std::string name=GrName.c_str();
-	fsys::path path=fsys::absolute(RelaPath.c_str(),kvarco::ExePath);
 
-	GrInfo grinfo;
-	grinfo.GrHandle=Warning::Retry_LoadGraph(path.string());
-
-	//""(NULL)の時はGrHadleを返すだけ
-	if(name!="")
-	{
-		//サイズ獲得
-		int w,h;
-		GetGraphSize(grinfo.GrHandle,&w,&h);
-#ifdef USE_SIZE_STRCT
-		grinfo.Size.width	=w;
-		grinfo.Size.height	=h;
-#else
-		grinfo.Size.left	=0;	grinfo.Size.top		=0;
-		grinfo.Size.right	=w;	grinfo.Size.bottom	=h;
-#endif
-		kvarco::ImageNameList.insert(std::make_pair(name,grinfo));
-	}
-
-	return grinfo.GrHandle;
-}
-
-GrInfo* GetGrInfo_p(xtal::String GrName)
-{
-	std::string name=GrName.c_str();
-
-	boost::unordered_map<std::string,GrInfo>::iterator i=kvarco::ImageNameList.find(name);
-	if(i!=kvarco::ImageNameList.end())
-		return &((*i).second);
-	return NULL;
-}
-
-GrInfo	GetGrInfo(xtal::String GrName)
-{
-	GrInfo* gr=GetGrInfo_p(GrName);
-	if(gr!=NULL) return (*gr);
-
-	GrInfo gr_null;	gr_null.GrHandle=NULL;
-	return gr_null;
-}
-
-int GetGrHandle(xtal::String GrName)
-{
-	GrInfo* gr=GetGrInfo_p(GrName);
-	if(gr!=NULL) return gr->GrHandle;
-	return -1;
-}
-
-#ifdef USE_SIZE_STRCT
-lSizePtrX GetGrSize(xtal::String GrName)
-{
-	GrInfo* gr=GetGrInfo_p(GrName);
-	if(gr!=NULL) return xtal::xnew<lSize>(gr->Size);
-	return lSizePtrX();
-}
-#else
-lRectPtrX GetGrSize(xtal::String GrName)
-{
-	GrInfo* gr=GetGrInfo_p(GrName);
-	if(gr!=NULL) return xtal::xnew<lRect>(gr->Size);
-	return lRectPtrX();
-}
-#endif
-
-//グラフィックハンドル指定型
-int	LoadCutGraph_H(xtal::String NewName,int GrHandle,long x,long y,long w,long h)
-{
-	GrInfo grnew;
-	grnew.GrHandle=DxLib::DerivationGraph(x,y,w,h,GrHandle);
-	
-	std::string name=NewName.c_str();
-	if(name!="")
-	{
-#ifdef USE_SIZE_STRCT
-		grnew.Size.width	=w;
-		grnew.Size.height	=h;
-#else
-		grnew.Size.left	=0;	grnew.Size.top		=0;
-		grnew.Size.right=w;	grnew.Size.bottom	=h;
-#endif
-
-		kvarco::ImageNameList.insert(make_pair(name,grnew));
-	}
-
-	return grnew.GrHandle;
-}
-
-void DeleteGraph_H(int GrHandle)
-{
-	if(GrHandle!=-1)	DxLib::DeleteGraph(GrHandle);
-}
-
-//グラフィックネーム指定型
-int	LoadCutGraph_N(xtal::String NewName,xtal::String GrName,long x,long y,long w,long h)
-{
-	int GrHandle=GetGrHandle(GrName);
-
-	if(GrHandle!=-1)
-		return LoadCutGraph_H(NewName,GrHandle,x,y,w,h);
-	return -1;
-}
-
-void DeleteGraph_N(xtal::String GrName)
-{
-	int GrHandle=GetGrHandle(GrName);
-	if(GrHandle!=-1) kvarco::DeleteGraph_H(GrHandle);
-}
-**/
 void SetDrawBlendModeLight(BYTE mode,BYTE param)
 {
 	static BYTE NowMode=DX_BLENDMODE_NOBLEND;
@@ -201,25 +88,25 @@ void DrawLine(long x1,long y1,long x2,long y2, int color,bool thickness)
 void DrawfRect(fRect Rect, bool fill,int color)
 {
 	DxLib::DrawBox(
-		static_cast<int>(Rect.top),
-		static_cast<int>(Rect.left),
-		static_cast<int>(Rect.bottom),
-		static_cast<int>(Rect.right),
+		static_cast<int>(Rect.top_),
+		static_cast<int>(Rect.left_),
+		static_cast<int>(Rect.bottom_),
+		static_cast<int>(Rect.right_),
 		static_cast<int>(fill),color
 		);
 }
 
-void DrawString( long x, long y, xtal::String str, int Color, int EdgeColor)
+void DrawString( long x, long y, xtal::StringPtr str, int Color, int EdgeColor)
 {
-	DxLib::DrawString(x,y,str.c_str(),Color,EdgeColor);
+	DxLib::DrawString(x,y,str->c_str(),Color,EdgeColor);
 }
 
 //Tools
 typedef std::string::size_type str_index;
-xtal::StringPtr SplitOption(xtal::String src_x,xtal::String opt_x)
+xtal::StringPtr SplitOption(const xtal::StringPtr& src_x,const xtal::StringPtr& opt_x)
 {
-	std::string src_=src_x.c_str();
-	std::string option=opt_x.c_str();
+	std::string src_	=src_x->c_str();
+	std::string option	=opt_x->c_str();
 
 	//[]の部分を切り出す
 	str_index psh,pse;
@@ -255,9 +142,9 @@ DWORD GetColorHandle(int r,int g,int b)
 	return DxLib::GetColor(r,g,b);
 }
 
-xtal::StringPtr SplitWords(xtal::String src_x)
+xtal::StringPtr SplitWords(const xtal::StringPtr& src_x)
 {
-	std::string src_=src_x.c_str();
+	std::string src_=src_x->c_str();
 
 	str_index pse;
 	pse=src_.find_last_of("]");
@@ -369,42 +256,6 @@ void bind()
 
 	Xdef_fun(MakeHandle);
 	Xdef_fun(GetKeyState);
-
-	Xdef_fun(GetGrSize);
-
-	Xdef_fun(LoadGraph);
-	Xdef_fun(GetGrHandle);
-	Xdef_fun(LoadCutGraph_H);
-	Xdef_fun(DeleteGraph_H);
-	Xdef_fun(LoadCutGraph_N);
-	Xdef_fun(DeleteGraph_N);
-
-	//描画関数
-	//グラフィックハンドル指定型
-	#define Xdef_param_(x) xtal::lib()->def(Xid(x),xtal::fun(&x)
-	Xdef_param_(DrawGraph_H)			->param(4,Xid(trans),true)->param(5,Xid(call_alpha),false));
-	Xdef_param_(DrawRotaGraph_H)		->param(5,Xid(trans),true)->param(6,Xid(call_alpha),false));
-	Xdef_param_(DrawRotaGraph2_H)		->param(7,Xid(trans),true)->param(8,Xid(call_alpha),false));
-	Xdef_param_(DrawGraphAlpha_H)		->param(5,Xid(trans),true));
-	Xdef_param_(DrawRotaGraphAlpha_H)	->param(6,Xid(trans),true));
-	Xdef_param_(DrawRotaGraphAlpha2_H)	->param(8,Xid(trans),true));
-	Xdef_param_(DrawZoom_H)				->param(6,Xid(trans),true)->param(7,Xid(call_alpha),false));
-	Xdef_param_(DrawZoomAlpha_H)		->param(7,Xid(trans),true));
-	Xdef_param_(DrawRotaZoom_H)			->param(7,Xid(trans),true)->param(8,Xid(call_alpha),false));
-	Xdef_param_(DrawRotaZoomAlpha_H)	->param(8,Xid(trans),true));
-
-	//グラフィックネーム指定型
-	Xdef_param_(DrawGraph_N)			->param(4,Xid(trans),true));
-	Xdef_param_(DrawRotaGraph_N)		->param(5,Xid(trans),true));
-	Xdef_param_(DrawRotaGraph2_N)		->param(7,Xid(trans),true));
-	Xdef_param_(DrawGraphAlpha_N)		->param(5,Xid(trans),true));
-	Xdef_param_(DrawRotaGraphAlpha_N)	->param(6,Xid(trans),true));
-	Xdef_param_(DrawRotaGraphAlpha2_N)	->param(8,Xid(trans),true));
-	Xdef_param_(DrawZoom_N)				->param(6,Xid(trans),true));
-	Xdef_param_(DrawZoomAlpha_N)		->param(7,Xid(trans),true));
-	Xdef_param_(DrawRotaZoom_N)			->param(7,Xid(trans),true));
-	Xdef_param_(DrawRotaZoomAlpha_N)	->param(8,Xid(trans),true));
-	#undef Xdef_param_
 
 	//文字列描画
 	Xdef_fun(GetColorHandle);
