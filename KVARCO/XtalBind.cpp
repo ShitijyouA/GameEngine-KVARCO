@@ -165,6 +165,32 @@ XTAL_BIND(TriFunc)
 	Xdef_var(cos);
 }
 
+//lSize
+XTAL_PREBIND(lSize)
+{
+	it->def_ctor2<lSize,long,long>()
+		->param(1,Xid(width_),0)->param(2,Xid(height_),0);
+}
+
+XTAL_BIND(lSize)
+{
+	Xdef_var(width_);
+	Xdef_var(height_);
+}
+
+//fSize
+XTAL_PREBIND(fSize)
+{
+	it->def_ctor2<fSize,float,float>()
+		->param(1,Xid(width_),0)->param(2,Xid(height_),0);
+}
+
+XTAL_BIND(fSize)
+{
+	Xdef_var(width_);
+	Xdef_var(height_);
+}
+
 //Angle
 XTAL_PREBIND(Angle)
 {
@@ -280,7 +306,7 @@ XTAL_BIND(TextureParam)
 //CharParam
 XTAL_PREBIND(CharParam)
 {
-	it->inherit(xtal::cpp_class<CharParam>());
+	it->inherit(xtal::cpp_class<TextureParam>());
 	it->def_ctor0<CharParam>();
 }
 
@@ -297,18 +323,21 @@ void Game::bind()
 
 	Xdef_class_lib(GameBootSetting);
 	Xdef_class_lib_alias(GraphLoadItem,LoadItem::GraphLoadItem);
+	
 	Xdef_class_lib(lRect);
 	Xdef_class_lib(lPoint);
 	Xdef_class_lib(lSize);
+	
 	Xdef_class_lib(fRect);
 	Xdef_class_lib(fPoint);
-	Xdef_class_lib(dSize);
+	Xdef_class_lib(fSize);
+	
 	Xdef_class_lib(TriFunc);
 	Xdef_class_lib(ColPolygon);
 	Xdef_class_lib(BaseScene);
 	Xdef_class_lib(BGM_Item);
 	Xdef_class_lib(SE_Item);
-	Xdef_class_lib(NAME_IN_X(Font));
+	Xdef_class_lib_alias(Font,NAME_IN_X(Font));
 	Xdef_class_lib(Angle);
 	Xdef_class_lib(Radian);
 	Xdef_class_lib(Degree);

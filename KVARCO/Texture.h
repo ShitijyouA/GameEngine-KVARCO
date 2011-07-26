@@ -22,13 +22,13 @@ namespace concept
 	{
 	public:
 		typedef TextureInstType			InstType;
-		typedef DWORD					SizeInstType;
+		typedef long					SizeInstType;
 		typedef tSize<SizeInstType>		SizeType;
 		typedef float					PointInstType;
 		typedef tPoint<PointInstType>	PointType;
 
 		virtual const InstType& Get()=0;
-		const InstType& operator()() { return Get(); }
+		//const InstType& operator()() { return Get(); }
 			
 		virtual const SizeType& GetSize()=0;
 		virtual const PointType& GetCenter()=0;

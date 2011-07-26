@@ -61,9 +61,9 @@ struct tSize
 };
 
 typedef tSize<long>		lSize;
-typedef tSize<float>	dSize;
+typedef tSize<float>	fSize;
 typedef xtal::SmartPtr<lSize>	lSizePtrX;
-typedef xtal::SmartPtr<dSize>	dSizePtrX;
+typedef xtal::SmartPtr<fSize>	fSizePtrX;
 
 //角度を表す構造体
 template<typename NUM=float>

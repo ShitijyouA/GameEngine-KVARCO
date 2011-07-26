@@ -99,7 +99,7 @@ namespace detail
 	extern void DrawGraphAlpha(int GrHandle,long x,long y,int Alpha,bool Trans);
 	extern void DrawRotaGraphAlpha(int GrHandle,float Angle,long cx,long cy,int Alpha,bool Trans);
 	extern void DrawZoom(const CharParamPtrX& char_param,bool trans,bool call_alpha);
-	extern void DrawZoomAlpha(const CharParamPtrX& char_param,int Alpha);
+	extern void DrawZoomAlpha(const CharParamPtrX& char_param);
 	extern void DrawRotaZoom(const CharParamPtrX& char_param,bool Trans,bool call_alpha);
 	extern void DrawRotaZoomAlpha(const CharParamPtrX& char_param,bool Trans);
 }

@@ -272,6 +272,9 @@ void bind()
 	//ローディング
 	Xdef_fun(StartGraphLoading);
 	Xdef_fun(IsLoadingEnd);
+	Xdef_fun(DrawGraph);
+	Xdef_fun(DrawGraphAllDisabled);
+	Xdef_fun(DrawGraphEnabledFeatures);
 
 	//便利関数
 	Xdef_fun(SplitOption);

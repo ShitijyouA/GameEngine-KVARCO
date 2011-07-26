@@ -26,11 +26,17 @@ void Layer::DrawThis()
 {
 	kvarco::SetDrawArea(Area);
 
-	//Z値が小さいものから描画
 	ActorList_tag_Z& list=Actors.get<kvarco::tag::Z_depth>();
-	BOOST_FOREACH(const xtal::AnyPtr& i,list)
+
+#if 1//beginからendへ
+	ActorList_tag_Z::iterator i;
+	for(i=list.begin(); i!=list.end(); i++)
+#else
+	ActorList_tag_Z::reverse_iterator i;
+	for(i=list.rbegin(); i!=list.rend(); i++)
+#endif
 	{
-		XtalHelper::send(i,Xid(Draw));
+		XtalHelper::send(*i,Xid(Draw));
 	}
 
 	kvarco::SetDrawArea_default();
@@ -132,7 +138,7 @@ void LayerManager::DrawAll()
 	for(i=layer_z_list.begin(); i!=layer_z_list.end(); i++)
 #else
 	LayerMap_tag_Z::reverse_iterator i;
-	for(i=layer_z_list.rbegin(); i!=layer_z_list.end(); i++)
+	for(i=layer_z_list.rbegin(); i!=layer_z_list.rend(); i++)
 #endif
 	{
 		(*i)->DrawThis();
@@ -219,6 +225,12 @@ void	LayerManager::AddActor(int layer_handle,BaseActor::BaseActorPtrX actor)
 void	LayerManager::EraseActor(int layer_handle,BaseActor::BaseActorPtrX actor)
 {	 SetByLayerHandle<BaseActor::BaseActorPtrX,&Layer::EraseActor>(layer_handle,actor);	}
 
+lSizePtrX LayerManager::GetSize (int layer_handle)
+{
+	fRect tmp=GetByLayerHandle_const<fRect,&Layer::GetArea>(layer_handle);
+	return xtal::xnew<lSize>(std::abs(tmp.left_-tmp.right_),std::abs(tmp.bottom_-tmp.top_));
+}
+
 //Layerの操作
 int LayerManager::NewLayer(xtal::StringPtr layer_name,int z,fRectPtrX area)
 {
@@ -258,20 +270,21 @@ void LayerManager::DeleteLayer(xtal::StringPtr layer_name)
 bool LayerManager::IsInLayer(const std::string& layer_name,const fRect& area,float margin)
 {
 	Layer* layer=GetPtr(layer_name.c_str());
+	if(layer==NULL) return false;
 	fRect layer_area=layer->GetArea();
 
 	layer_area.top_		-=margin; layer_area.left_	-=margin;
 	layer_area.bottom_	+=margin; layer_area.right_	+=margin;
 
-	return (area.top_		>layer_area.bottom_	&&
-			area.bottom_	<layer_area.top_	&&
-			area.left_		>layer_area.right_	&&
-			area.right_		<layer_area.left_	);
+	return (area.top_		>=layer_area.top_	&&
+			area.left_		>=layer_area.left_	&&
+			area.bottom_	<=layer_area.bottom_&&
+			area.right_		<=layer_area.right_	);
 }
 
 bool LayerManager::IsInLayerX(const xtal::String& layer_name,const fRectPtrX& area,float margin)
 {
-	return IsInLayer(layer_name.c_str(),*area);
+	return IsInLayer(layer_name.c_str(),*area,margin);
 }
 
 void LayerManager::ReleaseAllLayer()
@@ -301,6 +314,7 @@ void LayerManager::bind(const xtal::ClassPtr it)
 	Xdef_method(SetArea);
 	Xdef_method(SetZ);
 	Xdef_method(GetArea);
+	Xdef_method(GetSize);
 	Xdef_method(GetZ);
 	Xdef_method(GetName);
 	Xdef_method(TransPointLocal_p);

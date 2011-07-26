@@ -2,6 +2,7 @@
 #include "TextureManager.h"
 #include "ArchiveManager.h"
 #include "KVARCO.h"
+#include <boost/smart_ptr/weak_ptr.hpp>
 
 namespace dxlib_load_func_object
 {
@@ -143,10 +144,10 @@ TextureManager::TextureInstType TextureManager::DivLoadWithWarning(TextureManage
 	return result;
 }
 
-#define RETURN_ALLOCED_TEXTURE_PTR(inst,type,ptr_type)				\
-	type* tmp=new type(inst);										\
-	if(name.empty()) return ptr_type(tmp);							\
-	named_texture_map_.insert(std::make_pair(name,ptr_type(tmp)));	\
+#define RETURN_ALLOCED_TEXTURE_PTR(inst,type,ptr_type)							\
+	ptr_type tmp(new type(inst));												\
+	if(!name.empty())															\
+		named_texture_map_.insert(std::make_pair(name,boost::static_pointer_cast<TextureBaseType>(tmp)));	\
 	return ptr_type(tmp);
 
 //
@@ -159,7 +160,7 @@ TextureManager::TexturePtr TextureManager::Load(fsys::path& file,std::string& na
 	ArchiveManager::AllocatedMemoryType memory_image=ArchiveManager::GetInst()->UnzipToAllocatedMemory(path,&size);
 
 	//yes! >from archive?
-	if(!memory_image) return Load(memory_image.get(),size,name,not_use_3D);
+	if(memory_image!=NULL) return Load(memory_image.get(),size,name,not_use_3D);
 
 	//no >from archive?
 
@@ -167,7 +168,10 @@ TextureManager::TexturePtr TextureManager::Load(fsys::path& file,std::string& na
 	dxlib_load_func_object::LoadGraph op(const_cast<std::string&>(path.string()),not_use_3D);
 	TextureType::InstType inst=LoadWithWarning(&op);
 	
-	RETURN_ALLOCED_TEXTURE_PTR(inst,TextureType,TexturePtr);
+	TexturePtr tmp(new TextureType(inst));
+	if(!name.empty())
+		named_texture_map_.insert(std::make_pair(name,boost::static_pointer_cast<TextureBaseType>(tmp)));
+	return tmp;
 }
 
 TextureManager::TexturePtr TextureManager::Load(void* src,DWORD size,std::string& name,bool not_use_3D)
@@ -176,7 +180,7 @@ TextureManager::TexturePtr TextureManager::Load(void* src,DWORD size,std::string
 	dxlib_load_func_object::CreateGraphFromMem op(src,size,not_use_3D);
 	TextureType::InstType inst=LoadWithWarning(&op);
 
-	RETURN_ALLOCED_TEXTURE_PTR(inst,TextureType,TexturePtr);
+	RETURN_ALLOCED_TEXTURE_PTR(inst,TextureType,TexturePtr)
 }
 
 TextureManager::TextureSetPtr TextureManager::DivLoad(fsys::path& file,std::string& name,WORD all_num,WORD x_num,WORD y_num,WORD x_size,WORD y_size,bool not_use_3D)
@@ -195,7 +199,7 @@ TextureManager::TextureSetPtr TextureManager::DivLoad(fsys::path& file,std::stri
 	dxlib_load_func_object::LoadDivGraph op(file.string(),&(*buf.begin()),all_num,x_num,y_num,x_size,y_size,not_use_3D);
 	TextureType::InstType inst=DivLoadWithWarning(&op);
 
-	RETURN_ALLOCED_TEXTURE_PTR(buf,TextureSetType,TextureSetPtr);
+	RETURN_ALLOCED_TEXTURE_PTR(buf,TextureSetType,TextureSetPtr)
 }
 
 TextureManager::TextureSetPtr TextureManager::DivLoad(void* src,DWORD size,std::string& name,WORD all_num,WORD x_num,WORD y_num,WORD x_size,WORD y_size,bool not_use_3D)
@@ -224,9 +228,9 @@ TextureManager::AnimationPtr TextureManager::LoadAnimation(TypeOfAnimation anime
 	dxlib_load_func_object::LoadDivGraph op(file.string(),&(*buf.begin()),all_num,x_num,y_num,x_size,y_size,not_use_3D);
 	TextureType::InstType inst=DivLoadWithWarning(&op);
 
-	AnimationType* tmp=new AnimationType(buf,anime_type);
-	if(name.empty()) return AnimationPtr(tmp);
-	named_texture_map_.insert(std::make_pair(name,AnimationPtr(tmp)));
+	AnimationPtr tmp(new AnimationType(buf,anime_type));	
+	if(!name.empty())
+		named_texture_map_.insert(std::make_pair(name,boost::static_pointer_cast<TextureBaseType>(tmp)));
 	return AnimationPtr(tmp);
 }
 
@@ -237,9 +241,9 @@ TextureManager::AnimationPtr TextureManager::LoadAnimation(TypeOfAnimation anime
 	dxlib_load_func_object::CreateDivGraphFromMem op(src,size,&(*buf.begin()),all_num,x_num,y_num,x_size,y_size,not_use_3D);
 	TextureType::InstType inst=DivLoadWithWarning(&op);
 
-	AnimationType* tmp=new AnimationType(buf,anime_type);
-	if(name.empty()) return AnimationPtr(tmp);
-	named_texture_map_.insert(std::make_pair(name,AnimationPtr(tmp)));
+	AnimationPtr tmp(new AnimationType(buf,anime_type));	
+	if(!name.empty())
+		named_texture_map_.insert(std::make_pair(name,boost::static_pointer_cast<TextureBaseType>(tmp)));
 	return AnimationPtr(tmp);
 }
 
@@ -254,9 +258,9 @@ TextureManager::TexturePtr TextureManager::CutTexture(const TextureManager::Text
 			old_texture->Get()
 		);
 
-	TextureType* tmp=new TextureType(new_inst);
-	if(new_name.empty()) return TexturePtr(tmp);
-	named_texture_map_.insert(std::make_pair(new_name,TexturePtr(tmp)));
+	TexturePtr tmp(new TextureType(new_inst));	
+	if(!new_name.empty())
+		named_texture_map_.insert(std::make_pair(new_name,boost::static_pointer_cast<TextureBaseType>(tmp)));
 	return TexturePtr(tmp);
 }
 
@@ -267,7 +271,7 @@ TextureManager::TexturePtr TextureManager::CutTexture(const std::string& old_nam
 
 void TextureManager::UnloadTexture(const std::string& name)
 {
-	NamedTextureMapType::iterator i=GetRawIterator(name);
+	NamedTextureMapType::iterator i=named_texture_map_.find(name);
 	i->second->Unload();
 	named_texture_map_.erase(i);
 }
@@ -279,7 +283,7 @@ TextureManager::TexturePtrX TextureManager::CutTextureX(const TextureManager::Te
 
 void TextureManager::UnloadTextureX(const TextureManager::TextureNameType& name)
 {
-	NamedTextureMapType::iterator i=GetRawIterator(name);
+	NamedTextureMapType::iterator i=named_texture_map_.find(name->c_str());
 	i->second->Unload();
 	named_texture_map_.erase(i);
 }
@@ -288,7 +292,9 @@ TextureManager::TexturePtrX TextureManager::LoadX(PathType& file,TextureManager:
 {
 	fsys::path tmp_path(file->c_str());
 	std::string tmp_name(name->c_str());
-	return xtal::SmartPtr<TextureType>(Load(tmp_path,tmp_name,not_use_3D).get(),xtal::undeleter);
+	TexturePtr tmp=Load(tmp_path,tmp_name,not_use_3D);
+	TexturePtrX tmpx(tmp.get(),xtal::undeleter);
+	return tmpx;
 }
 
 TextureManager::TextureSetPtrX TextureManager::DivLoadX(TextureManager::PathType& file,TextureManager::TextureNameType& name,WORD all_num,WORD x_num,WORD y_num,WORD x_size,WORD y_size,bool not_use_3D)
@@ -306,62 +312,64 @@ TextureManager::AnimationPtrX TextureManager::LoadAnimationX(TextureManager::Typ
 	return xtal::SmartPtr<AnimationType>(tmp_ptr.get(),xtal::undeleter);
 }
 
-TextureManager::NamedTextureMapType::iterator TextureManager::GetRawIterator(const std::string& name)
+TextureManager::TextureBasePtr TextureManager::GetRawPtr(const std::string& name)
 {
-	return named_texture_map_.find(const_cast<std::string&>(name));
+	NamedTextureMapType::iterator ite=named_texture_map_.find(const_cast<std::string&>(name));
+	return (ite!=named_texture_map_.end()) ? ite->second : TextureBasePtr();
 }
 
-TextureManager::NamedTextureMapType::iterator TextureManager::GetRawIterator(const TextureManager::TextureNameType& name)
+TextureManager::TextureBasePtr TextureManager::GetRawPtr(const TextureManager::TextureNameType& name)
 {
-	return named_texture_map_.find(const_cast<TextureManager::TextureNameType&>(name)->c_str());
+	NamedTextureMapType::iterator ite=named_texture_map_.find(const_cast<TextureManager::TextureNameType&>(name)->c_str());
+	return (ite!=named_texture_map_.end()) ? ite->second : TextureBasePtr();
 }
 
 bool TextureManager::IsLoaded(const std::string& name)
 {
-	return GetRawIterator(name)!=named_texture_map_.end();
+	return GetRawPtr(name)!=NULL;
 }
 
 bool TextureManager::IsLoadedX(const TextureManager::TextureNameType& name)
 {
-	return GetRawIterator(name)!=named_texture_map_.end();
+	return GetRawPtr(name)!=NULL;
 }
 
 TextureManager::TexturePtrX TextureManager::GetAsTexture(const TextureManager::TextureNameType& name)
 {
 	TextureType* tmp=NULL;
+	TextureBasePtr raw_ptr=GetRawPtr(name);
 	try
 	{
-		tmp=dynamic_cast<TextureType*>(GetRawIterator(name)->second.get());
-	}
-	catch(...)
-	{}
+		tmp=dynamic_cast<TextureType*>(raw_ptr.get());
+	}catch(...){}
 
+	if(tmp==NULL) return xtal::null;
 	return xtal::SmartPtr<TextureType>(tmp,xtal::undeleter);
 }
 
 TextureManager::TextureSetPtrX TextureManager::GetAsTextureSet(const TextureManager::TextureNameType& name)
 {
 	TextureSetType* tmp=NULL;
+	TextureBasePtr raw_ptr=GetRawPtr(name);
 	try
 	{
-		tmp=dynamic_cast<TextureSetType*>(GetRawIterator(name)->second.get());
-	}
-	catch(...)
-	{}
+		tmp=dynamic_cast<TextureSetType*>(raw_ptr.get());
+	}catch(...){}
 
+	if(tmp==NULL) return xtal::null;
 	return xtal::SmartPtr<TextureSetType>(tmp,xtal::undeleter);
 }
 
 TextureManager::AnimationPtrX TextureManager::GetAsAnimation(const TextureManager::TextureNameType& name)
 {
 	AnimationType* tmp=NULL;
+	TextureBasePtr raw_ptr=GetRawPtr(name);
 	try
 	{
-		tmp=dynamic_cast<AnimationType*>(GetRawIterator(name)->second.get());
-	}
-	catch(...)
-	{}
+		tmp=dynamic_cast<AnimationType*>(raw_ptr.get());
+	}catch(...){}
 
+	if(tmp==NULL) return xtal::null;
 	return xtal::SmartPtr<AnimationType>(tmp,xtal::undeleter);
 }
 
@@ -369,17 +377,17 @@ void TextureManager::bind(xtal::ClassPtr it)
 {
 	USE_XDEFZ(TextureManager);
 
-#define Xdef_param_alias(name,x) xtal::lib()->def(Xid(name),xtal::fun(x)
+#define Xdef_param_alias(name,x) it->def(Xid(name),xtal::method(x)
 
-	Xdef_param_alias(RetrySetting		,&RetrySettingX)	->param(3,Xid(error_message),""));
+	Xdef_param_alias(RetrySetting		,&RetrySettingX)	->param(2,Xid(error_message),""));
 	Xdef_method(NotUseRetry);
 
-	Xdef_param_alias(Load				,&LoadX)			->param(3,Xid(not_use_3D),true));
-	Xdef_param_alias(DivLoad			,&DivLoadX)			->param(8,Xid(not_use_3D),true));
-	Xdef_param_alias(LoadAnimation		,&LoadAnimationX)	->param(9,Xid(not_use_3D),true));
+	Xdef_param_alias(Load				,&Self::LoadX)			->param(3,Xid(not_use_3D),true));
+	Xdef_param_alias(DivLoad			,&Self::DivLoadX)		->param(8,Xid(not_use_3D),true));
+	Xdef_param_alias(LoadAnimation		,&Self::LoadAnimationX)	->param(9,Xid(not_use_3D),true));
 	Xdef_method_alias(IsLoaded			,&IsLoadedX);
 	Xdef_method_alias(CutTexture		,&CutTextureX);
-	Xdef_method_alias(UnloadTextureX	,&UnloadTextureX);
+	Xdef_method_alias(UnloadTexture		,&UnloadTextureX);
 
 	Xdef_method(GetAsTexture);
 	Xdef_method(GetAsTextureSet);

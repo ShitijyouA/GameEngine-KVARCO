@@ -61,8 +61,8 @@ private:
 	TextureInstType LoadWithWarning(LoadGraphFromSomeSource* op);
 	TextureInstType DivLoadWithWarning(LoadGraphFromSomeSource* op);
 
-	NamedTextureMapType::iterator GetRawIterator(const std::string& name);
-	NamedTextureMapType::iterator GetRawIterator(const TextureNameType& name);
+	TextureBasePtr GetRawPtr(const std::string& name);
+	TextureBasePtr GetRawPtr(const TextureNameType& name);
 
 public:
 	void RetrySetting(BYTE retry_time=10,const std::string error_message="")
@@ -118,7 +118,7 @@ private:
 	FRIENDS_FOR_XTAL(TextureManager)
 	TextureManager()
 		{
-			RetrySetting();
+			RetrySetting(10,"âÊëúÇÃì«Ç›çûÇ›Ç…é∏îsÇµÇ‹ÇµÇΩ");
 		}
 
 public:
@@ -137,7 +137,7 @@ public:
 		}
 
 	void Release()
-	{
-		ReleaseAllTexture();
-	}
+		{
+			ReleaseAllTexture();
+		}
 };

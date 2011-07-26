@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 class BaseActor
 {
@@ -10,15 +10,11 @@ private:
 	xtal::AnyPtr Parent;
 
 public:
-
-	fPoint	Point;
-	int		Z;
-
-	DWORD ID;
-	DWORD ActorType;
-	xtal::StringPtr LayerName;
-
-	xtal::FiberPtr Run;
+	int				Z;
+	DWORD			ID;
+	DWORD			ActorType;
+	xtal::StringPtr	LayerName;
+	xtal::FiberPtr	Run;
 
 	BaseActor();
 
@@ -28,28 +24,27 @@ public:
 	bool IsDead()	{ return Dead;		}
 
 	~BaseActor()
-	{
-		Parent	=xtal::null;
-		Run		=xtal::null;
-		//kvarco::DebugOut("ActorDead\n");
-	}
+		{
+			Parent	=xtal::null;
+			Run		=xtal::null;
+			//kvarco::DebugOut("ActorDead\n");
+		}
 
 	static void bind(xtal::ClassPtr it)
-	{
-		USE_XDEFZ(BaseActor);
+		{
+			USE_XDEFZ(BaseActor);
 
-		Xdef_var(Point);
-		Xdef_var(Z);
-		Xdef_var(ID);
-		Xdef_var(ActorType);
-		Xdef_var(Parent);
-		Xdef_var(LayerName);
-		Xdef_var(Run);
+			Xdef_var(Z);
+			Xdef_var(ID);
+			Xdef_var(ActorType);
+			Xdef_var(Parent);
+			Xdef_var(LayerName);
+			Xdef_var(Run);
 
-		Xdef_method(init);
-		Xdef_method(Die);
-		Xdef_method(IsDead);
-	}
+			Xdef_method(init);
+			Xdef_method(Die);
+			Xdef_method(IsDead);
+		}
 };
 
 typedef xtal::SmartPtr<BaseActor>	BaseActorPtrX;

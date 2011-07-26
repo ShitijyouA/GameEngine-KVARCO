@@ -134,7 +134,7 @@ template<typename Type,typename Alloc>
 Type* ArchiveManager::UnzipToMemory_impl(const fsys::path& file,boost::intmax_t* buf_size)
 {
 	ArchiveFileSharedPtrType the_file(GetArchivedFile(file));
-	if(!the_file->Exists()) return NULL;
+	if(!the_file || !the_file->Exists()) return NULL;
 	DWORD size=the_file->RawSize();
 
 	Alloc alloc;

@@ -43,7 +43,7 @@ void Game::Boot(const fsys::path& ini_file)
 	using kvarco::OutputLog;
 
 	OutputLog("*********************************************************");
-	OutputLog("    -KVARCO ver1.12- %s","2011-06-27");
+	OutputLog("    -KVARCO ver1.30- %s","2011-07-17");
 	OutputLog("動作ログ");
 	OutputLog("*********************************************************\n");
 

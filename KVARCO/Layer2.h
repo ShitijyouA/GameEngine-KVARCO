@@ -53,9 +53,9 @@ typedef multi_index_container
 		Layer*,
 		indexed_by
 		<
-			ordered_unique<kvarco::tag::detail::Name,	const_mem_fun<Layer,std::string,&Layer::GetName_s	> >,
-			ordered_unique<kvarco::tag::detail::Z_depth,const_mem_fun<Layer,int,		&Layer::GetZ		> >,
-			ordered_unique<kvarco::tag::detail::Handle,	const_mem_fun<Layer,int,		&Layer::GetHandle	> >
+			ordered_unique<kvarco::tag::detail::Name,		const_mem_fun<Layer,std::string,&Layer::GetName_s	> >,
+			ordered_non_unique<kvarco::tag::detail::Z_depth,const_mem_fun<Layer,int,		&Layer::GetZ		> >,
+			ordered_unique<kvarco::tag::detail::Handle,		const_mem_fun<Layer,int,		&Layer::GetHandle	> >
 		>
 	> LayerMap;
 
@@ -80,6 +80,7 @@ public:
 	void			SetArea		(int layer_handle,fRectPtrX area);
 	void			SetZ		(int layer_handle,int z);
 	fRectPtrX		GetArea		(int layer_handle);
+	lSizePtrX		GetSize		(int layer_handle);	//TODO
 	int				GetZ		(int layer_handle);
 	xtal::StringPtr GetName		(int layer_handle);
 
@@ -96,6 +97,7 @@ public:
 	void DeleteLayer(xtal::StringPtr layer_name);
 
 	//utility
+	/// \return area‚ªlayer_name‚ÌƒŒƒCƒ„[“à‚É‚ ‚é‚Æ‚«true‚ğ•Ô‚·
 	bool IsInLayer(const std::string& layer_name,const fRect& area,float margin=0.0f);
 	bool IsInLayerX(const xtal::String& layer_name,const fRectPtrX& area,float margin=0.0f);
 
