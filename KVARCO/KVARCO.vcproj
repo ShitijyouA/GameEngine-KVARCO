@@ -125,6 +125,7 @@
 				EnableFunctionLevelLinking="true"
 				FloatingPointModel="2"
 				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="pch.h"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
