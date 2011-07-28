@@ -261,12 +261,12 @@ TextureManager::TexturePtr TextureManager::CutTexture(const TextureManager::Text
 	TexturePtr tmp(new TextureType(new_inst));	
 	if(!new_name.empty())
 		named_texture_map_.insert(std::make_pair(new_name,boost::static_pointer_cast<TextureBaseType>(tmp)));
-	return TexturePtr(tmp);
+	return tmp;
 }
 
 TextureManager::TexturePtr TextureManager::CutTexture(const std::string& old_name,const std::string& new_name,RectType cut_range)
 {
-	return CutTexture(GetAsTexture(old_name.c_str()),new_name,cut_range);
+	return CutTexture(GetAsTextureX(old_name.c_str()),new_name,cut_range);
 }
 
 void TextureManager::UnloadTexture(const std::string& name)
@@ -334,43 +334,44 @@ bool TextureManager::IsLoadedX(const TextureManager::TextureNameType& name)
 	return GetRawPtr(name)!=NULL;
 }
 
-TextureManager::TexturePtrX TextureManager::GetAsTexture(const TextureManager::TextureNameType& name)
+TextureManager::TexturePtr TextureManager::GetAsTexture(const std::string& name)
 {
-	TextureType* tmp=NULL;
-	TextureBasePtr raw_ptr=GetRawPtr(name);
-	try
-	{
-		tmp=dynamic_cast<TextureType*>(raw_ptr.get());
-	}catch(...){}
-
-	if(tmp==NULL) return xtal::null;
-	return xtal::SmartPtr<TextureType>(tmp,xtal::undeleter);
+	return boost::dynamic_pointer_cast<TextureType>(GetRawPtr(name));
 }
 
-TextureManager::TextureSetPtrX TextureManager::GetAsTextureSet(const TextureManager::TextureNameType& name)
+TextureManager::TextureSetPtr TextureManager::GetAsTextureSet(const std::string& name)
 {
-	TextureSetType* tmp=NULL;
-	TextureBasePtr raw_ptr=GetRawPtr(name);
-	try
-	{
-		tmp=dynamic_cast<TextureSetType*>(raw_ptr.get());
-	}catch(...){}
-
-	if(tmp==NULL) return xtal::null;
-	return xtal::SmartPtr<TextureSetType>(tmp,xtal::undeleter);
+	return boost::dynamic_pointer_cast<TextureSetType>(GetRawPtr(name));
 }
 
-TextureManager::AnimationPtrX TextureManager::GetAsAnimation(const TextureManager::TextureNameType& name)
+TextureManager::AnimationPtr TextureManager::GetAsAnimation(const std::string& name)
 {
-	AnimationType* tmp=NULL;
-	TextureBasePtr raw_ptr=GetRawPtr(name);
-	try
-	{
-		tmp=dynamic_cast<AnimationType*>(raw_ptr.get());
-	}catch(...){}
+	return boost::dynamic_pointer_cast<AnimationType>(GetRawPtr(name));
+}
 
-	if(tmp==NULL) return xtal::null;
-	return xtal::SmartPtr<AnimationType>(tmp,xtal::undeleter);
+TextureManager::TexturePtrX TextureManager::GetAsTextureX(const TextureManager::TextureNameType& name)
+{
+	TexturePtr ptr=GetAsTexture(name->c_str());
+
+	if(ptr==NULL) return xtal::null;
+	return xtal::SmartPtr<TextureType>(ptr.get(),xtal::undeleter);
+}
+
+TextureManager::TextureSetPtrX TextureManager::GetAsTextureSetX(const TextureManager::TextureNameType& name)
+{
+	TextureSetPtr ptr=GetAsTextureSet(name->c_str());
+
+	if(ptr==NULL) return xtal::null;
+	return xtal::SmartPtr<TextureSetType>(ptr.get(),xtal::undeleter);
+}
+
+
+TextureManager::AnimationPtrX TextureManager::GetAsAnimationX(const TextureManager::TextureNameType& name)
+{
+	AnimationPtr ptr=GetAsAnimation(name->c_str());
+
+	if(ptr==NULL) return xtal::null;
+	return xtal::SmartPtr<AnimationType>(ptr.get(),xtal::undeleter);
 }
 
 void TextureManager::bind(xtal::ClassPtr it)
@@ -389,9 +390,9 @@ void TextureManager::bind(xtal::ClassPtr it)
 	Xdef_method_alias(CutTexture		,&CutTextureX);
 	Xdef_method_alias(UnloadTexture		,&UnloadTextureX);
 
-	Xdef_method(GetAsTexture);
-	Xdef_method(GetAsTextureSet);
-	Xdef_method(GetAsAnimation);
+	Xdef_method_alias(GetAsTexture		,&GetAsTextureX);
+	Xdef_method_alias(GetAsTextureSet	,&GetAsTextureSetX);
+	Xdef_method_alias(GetAsAnimation	,&GetAsAnimationX);
 
 #undef Xdef_param_alias
 }

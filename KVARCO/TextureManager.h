@@ -98,8 +98,6 @@ public:
 
 	//unload
 	void UnloadTexture(const std::string& name);
-
-	bool IsLoaded(const std::string& name);
 	
 	//Load for xtal
 	TexturePtrX LoadX(PathType& file,TextureNameType& name,bool not_use_3D=true);
@@ -108,11 +106,17 @@ public:
 	TexturePtrX CutTextureX(const TextureNameType& old_name,const TextureNameType& new_name,RectTypePtrX cut_range);
 	void UnloadTextureX(const TextureNameType& name);
 
+	//for native
+	bool IsLoaded(const std::string& name);
+	TexturePtr GetAsTexture(const std::string& name);
+	TextureSetPtr GetAsTextureSet(const std::string& name);
+	AnimationPtr GetAsAnimation(const std::string& name);
+
 	//for xtal
 	bool IsLoadedX(const TextureNameType& name);
-	TexturePtrX GetAsTexture(const TextureNameType& name);
-	TextureSetPtrX GetAsTextureSet(const TextureNameType& name);
-	AnimationPtrX GetAsAnimation(const TextureNameType& name);
+	TexturePtrX GetAsTextureX(const TextureNameType& name);
+	TextureSetPtrX GetAsTextureSetX(const TextureNameType& name);
+	AnimationPtrX GetAsAnimationX(const TextureNameType& name);
 
 private:
 	FRIENDS_FOR_XTAL(TextureManager)

@@ -108,7 +108,15 @@ void DrawGraphAllDisabled(const CharParamPtrX& char_param)
 {
 	if(xtal::is_null(char_param->texture_)) return;
 
-	kvarco::detail::DrawGraphRaw(char_param->texture_->Get(),char_param->center_.x,char_param->center_.y,char_param->trans_,false);
+	const texture::Texture::PointType& texture_center=char_param->texture_->GetCenter();
+	kvarco::detail::DrawGraphRaw
+		(
+			char_param->texture_->Get(),
+			char_param->center_.x-texture_center.x,
+			char_param->center_.y-texture_center.y,
+			char_param->trans_,
+			false
+		);
 }
 
 void DrawGraph(const CharParamPtrX& char_param)
@@ -140,7 +148,6 @@ void DrawGraphEnabledFeatures(const CharParamPtrX& char_param,bool enable_alpha,
 	char_param->center_.x=tmp_gp->x;
 	char_param->center_.y=tmp_gp->y;
 
-	//transをoffにしたい? え? なに言ってるの? それ知らない
 	switch(switch_flag)
 	{
 		case 0: // enable_alpha=false | enable_rota=false | enable_zoom=false
@@ -151,10 +158,12 @@ void DrawGraphEnabledFeatures(const CharParamPtrX& char_param,bool enable_alpha,
 
 		case 1: // enable_alpha=true  | enable_rota=false | enable_zoom=false
 		{
+			const texture::Texture::PointType& texture_center=char_param->texture_->GetCenter();
 			kvarco::detail::DrawGraphAlpha
 				(
 					char_param->texture_->Get(),
-					char_param->center_.x,char_param->center_.y,
+					char_param->center_.x-texture_center.x,
+					char_param->center_.y-texture_center.y,
 					char_param->alpha_,
 					char_param->trans_
 				);

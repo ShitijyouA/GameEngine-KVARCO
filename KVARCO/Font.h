@@ -12,10 +12,10 @@
 class Font
 {
 public:
-	typedef TextureManager::TexturePtr		TextureType;
-	typedef std::vector<const TextureType>	CharArray;
-	typedef lPoint*							lPointPtr;
-	typedef boost::optional<lSize>			lSize_o;
+	typedef TextureManager::TexturePtr	TextureType;
+	typedef std::vector<TextureType>	CharArray;
+	typedef lPoint*						lPointPtr;
+	typedef boost::optional<lSize>		lSize_o;
 
 #ifndef USE_WCHAR
 	typedef boost::array<TextureType,0xFF>	FontGraphArray;
@@ -27,14 +27,14 @@ protected:
 	FontGraphArray Chars;
 	void LoadFontGraph(TextureType texture,const std::string& set_string,const lPoint& offset,lSize_o size);
 
-	lSize FontSize;
+	fSize FontSize;
 	DWORD GetLineNum(const std::string& string_);
 	DWORD GetMaxCharNumInLine(const std::string& string_);
 
+public:
 	static const std::string StdSetString;
 	static const lPoint StdOffset;
 
-public:
 	Font() {}
 	Font(std::string& set_gr_name);
 	Font(std::string& set_gr_name,std::string& set_string);
@@ -50,7 +50,7 @@ public:
 class FontX : public Font
 {
 public:
-	NAME_IN_X(Font)(xtal::StringPtr set_gr_name,xtal::StringPtr set_string,lPointPtrX offset,lSizePtrX size);
+	NAME_IN_X(Font)(xtal::StringPtr set_gr_name,lSizePtrX size,lPointPtrX offset,xtal::StringPtr set_string);
 	xtal::ArrayPtr NAME_IN_X(ToStringInFont)(xtal::StringPtr string_);
 	void NAME_IN_X(DrawInFont)(long x,long y,xtal::StringPtr string_);
 

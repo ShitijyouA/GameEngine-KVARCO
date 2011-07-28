@@ -1,7 +1,6 @@
 ﻿//STLヘッダ
 #pragma once
 
-#define _CRT_SECURE_NO_WARNINGS //Xtalのヘッダでfopen()を使っているため
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>

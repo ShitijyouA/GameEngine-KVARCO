@@ -6,6 +6,8 @@
 
 class TextureManager;
 
+namespace texture
+{
 template<typename TextureInstType>
 class BasicTexture;
 
@@ -14,6 +16,7 @@ class BasicTextureSet;
 
 template<typename TextureInstType>
 class BasicAnimation;
+}
 
 namespace concept
 {
@@ -34,6 +37,35 @@ namespace concept
 		virtual const PointType& GetCenter()=0;
 
 		virtual void Unload()=0;
+
+		typedef texture::BasicTexture<TextureInstType>		TextureType;
+		typedef texture::BasicTextureSet<TextureInstType>	TextureSetType;
+		typedef texture::BasicAnimation<TextureInstType>	AnimationType;
+
+		typedef xtal::SmartPtr<TextureType>					TexturePtrX;
+		typedef xtal::SmartPtr<TextureSetType>				TextureSetPtrX;
+		typedef xtal::SmartPtr<AnimationType>				AnimationPtrX;
+
+		TexturePtrX AsTexture()
+		{
+			TextureType* tmp=dynamic_cast<TextureType*>(this);
+			if(tmp==NULL) return xtal::null;
+			return TexturePtrX(tmp,xtal::undeleter);
+		}
+
+		TextureSetPtrX AsTextureSet()
+		{
+			TextureSetType* tmp=dynamic_cast<TextureSetType*>(this);
+			if(tmp==NULL) return xtal::null;
+			return TextureSetPtrX(tmp,xtal::undeleter);
+		}
+
+		AnimationPtrX AsAnimation()
+		{
+			AnimationType* tmp=dynamic_cast<AnimationType*>(this);
+			if(tmp==NULL) return xtal::null;
+			return AnimationPtrX(tmp,xtal::undeleter);
+		}
 	};
 }
 
@@ -67,12 +99,9 @@ protected:
 			int buf_width	=0;
 			int buf_height	=0;
 			int ggs_res=::DxLib::GetGraphSize(inst_,&buf_width,&buf_height);
-			
-			if(ggs_res!=-1)
-			{
-				size_.width_	=buf_width;
-				size_.height_	=buf_height;
-			}
+
+			size_.width_	=buf_width;
+			size_.height_	=buf_height;
 
 			center_.x=static_cast<PointInstType>(size_.width_)	*0.5;
 			center_.y=static_cast<PointInstType>(size_.height_)	*0.5;
@@ -81,7 +110,7 @@ protected:
 
 public:
 	BasicTexture()	//–³Œø’l
-		:inst_(0)
+		:inst_(-1)
 	{}
 
 	virtual const InstType& Get()
@@ -122,8 +151,10 @@ class BasicTextureSet
 	: public concept::Texture<TextureInstType>,public std::vector<TextureInstType>
 {
 public:
-	typedef std::vector<InstType>		TextureListType;
-	typedef BasicTextureSet<InstType>	TextureSetType;
+	typedef std::vector<InstType>				TextureListType;
+	typedef typename TextureListType::size_type	NumType;
+	typedef BasicTexture<InstType>				TextureType;
+	typedef BasicTextureSet<InstType>			TextureSetType;
 
 private:
 	SizeType	size_;
@@ -132,20 +163,20 @@ private:
 	friend class TextureManager;
 	BasicTextureSet(const InstType* instz,const SizeType num)
 		:std::vector<TextureInstType>(const_cast<InstType*>(instz),const_cast<InstType*>(instz)+num)
-	{
-		TextureSetType	temp(this->at(0));
-		size_	=const_cast<SizeType&>(temp.GetSize());
-		center_	=const_cast<PointType&>(temp.GetCenter());
-	}
+		{
+			TextureSetType	temp(this->at(0));
+			size_	=const_cast<SizeType&>(temp.GetSize());
+			center_	=const_cast<PointType&>(temp.GetCenter());
+		}
 
 	BasicTextureSet(std::vector<InstType>& instz)
 		:std::vector<TextureInstType>()
-	{
-		this->swap(instz);
-		texture::BasicTexture<InstType>	temp(this->at(0));
-		size_	=const_cast<SizeType&>(temp.GetSize());
-		center_	=const_cast<PointType&>(temp.GetCenter());
-	}
+		{
+			this->swap(instz);
+			TextureType	temp(this->at(0));
+			size_	=const_cast<SizeType&>(temp.GetSize());
+			center_	=const_cast<PointType&>(temp.GetCenter());
+		}
 
 public:
 	const InstType& Get()
@@ -153,9 +184,9 @@ public:
 			return at(0);
 		}
 
-	const InstType& GetAt(size_type pos)
+	const TextureType& GetAt(size_type pos)
 		{
-			return at(pos);
+			return TextureType(at(pos));
 		}
 	
 	const TextureListType& GetRawInstance()
@@ -168,18 +199,23 @@ public:
 			return size_;
 		}
 
+	const NumType GetNum()
+		{
+			return this->size();
+		}
+
 	const PointType& GetCenter()
 		{
 			return center_;
 		}
 
 	void Unload()
-	{
-		for(iterator i=begin(); i!=end(); ++i) ::DxLib::DeleteGraph(*i);
+		{
+			for(iterator i=begin(); i!=end(); ++i) ::DxLib::DeleteGraph(*i);
 
-		size_.width_=0;	size_.height_=0;
-		center_.x	=0;	center_.y	 =0;
-	}
+			size_.width_=0;	size_.height_=0;
+			center_.x	=0;	center_.y	 =0;
+		}
 
 	static void bind(xtal::ClassPtr it)
 		{
@@ -328,6 +364,11 @@ public:
 			return size_;
 		}
 
+	FrameCountType GetFrameNum()
+		{
+			return frame_list_.size();
+		}
+
 	const PointType& GetCenter()
 		{
 			return center_;
@@ -344,12 +385,12 @@ public:
 		}
 
 	void Unload()
-	{
-		BOOST_FOREACH(InstType& i,frame_list_) ::DxLib::DeleteGraph(i);
+		{
+			BOOST_FOREACH(InstType& i,frame_list_) ::DxLib::DeleteGraph(i);
 
-		size_.width_=0;	size_.height_=0;
-		center_.x	=0;	center_.y	 =0;
-	}
+			size_.width_=0;	size_.height_=0;
+			center_.x	=0;	center_.y	 =0;
+		}
 
 	static void bind(xtal::ClassPtr it)
 		{

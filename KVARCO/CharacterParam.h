@@ -48,17 +48,15 @@ struct BasicCharacterParam
 			if(angle_tmp.GetAsRadian()!=0 && angle_tmp.GetAsRadian()!=math::constants::pi<float>())
 				return xtal::xnew<PointType>(0.0f,0.0f);
 
-			const texture::Texture::SizeType& size=texture_->GetSize();
-			return xtal::xnew<PointType>(center_.x-size.width_/2,center_.y-size.height_/2);
+			const texture::Texture::PointType& texture_center=texture_->GetCenter();
+			return xtal::xnew<PointType>(center_.x-texture_center.x,center_.y-texture_center.y);
 		}
 
 	/// キャラクタの中心を矩形の中心にセットする
 	void SetInCenterOfRect(const SizePtrX rect_size)
 		{
-			const SizeType& size=texture_->GetSize();
-
-			center_.x=(rect_size->width_-size.width_)/2;
-			center_.y=(rect_size->height_-size.height_)/2;
+			center_.x=rect_size->width_/2;
+			center_.y=rect_size->height_/2;
 		}
 
 	/// キャラクタの中心をレイヤーの中心にセットする

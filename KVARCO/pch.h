@@ -17,6 +17,8 @@
 #endif
 
 // TODO: プログラムに必要な追加ヘッダーをここで参照してください。
+#define _CRT_SECURE_NO_WARNINGS //Xtalのヘッダでfopen()を使っているため
+
 #include "ForXtalBind.h"
 #include "OpenAL_Ogg_Default.h"
 #include "LibraryHeader.h"

@@ -143,9 +143,10 @@
 				AdditionalDependencies="xtallib.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_r.exe"
 				AdditionalLibraryDirectories="C:\Librarys\DxLib_VC;C:\Librarys\Xtal\lib;&quot;C:\Librarys\Ogg\vorbis\$(ConfigurationName)&quot;;&quot;C:\Librarys\Ogg\ogg\$(ConfigurationName)&quot;;C:\Librarys;C:\Librarys\OpenAL;C:\Librarys\boost\stage\lib;&quot;$(SolutionDir)&quot;"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				LinkTimeCodeGeneration="1"
 				TargetMachine="1"
 			/>
 			<Tool

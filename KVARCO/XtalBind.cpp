@@ -224,7 +224,9 @@ XTAL_PREBIND(Degree)
 //Font
 XTAL_PREBIND(NAME_IN_X(Font))
 {
-	it->def_ctor4<NAME_IN_X(Font),xtal::StringPtr,xtal::StringPtr,lPointPtrX,lSizePtrX>();
+	it->def_ctor4<NAME_IN_X(Font),xtal::StringPtr,lSizePtrX,lPointPtrX,xtal::StringPtr>()
+		->param(3,Xid(offset),&Font::StdOffset)
+		->param(4,Xid(set_string),Font::StdSetString.c_str());
 }
 
 XTAL_BIND(NAME_IN_X(Font))
@@ -257,6 +259,10 @@ XTAL_BIND(texture::TextureConcept)
 	Xdef_method(Get);
 	Xdef_method(GetSize);
 	Xdef_method(GetCenter);
+
+	Xdef_method(AsTexture);
+	Xdef_method(AsTextureSet);
+	Xdef_method(AsAnimation);
 }
 
 //Texture
