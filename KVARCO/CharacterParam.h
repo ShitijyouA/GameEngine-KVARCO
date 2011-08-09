@@ -76,12 +76,29 @@ struct BasicCharacterParam
 			center_.y+=velocity_.y;
 		}
 
+	/// LayerManager::IsInLayer()をもっと楽に使うためのラッパ
+	bool IsInLayer(PointInstType margin)
+	{
+		const BasicTextureType::SizeType& size=texture_->GetSize();
+		PointPtrX g_center=
+			LayerManager::GetInst()->TransPointGlobal(layer_id_,center_.x,center_.y);
+		fRect area
+		(
+			g_center->x-size.height_,
+			g_center->y- size.width_,
+			g_center->x+size.height_,
+			g_center->y+ size.width_
+		);
+
+		return LayerManager::GetInst()->IsInLayer(layer_name_->c_str(),area,margin);
+	}
+
 	/// キャラクタが矩形からはみ出さないようにする
 	void BeInRect( const RectPtrX rect,const SizePtrX custom_char_size)
 		{
-			RectType::Type w=custom_char_size->width_;
-			RectType::Type h=custom_char_size->height_;
-			RectType char_rect(0,0,+w,+h);
+			RectType::Type w=custom_char_size->width_/2;
+			RectType::Type h=custom_char_size->height_/2;
+			RectType char_rect(-w,-h,+w,+h);
 			
 			if(center_.x+char_rect.left_	<rect->left_)	center_.x=rect->left_	-char_rect.left_;
 			if(center_.y+char_rect.top_		<rect->top_)	center_.y=rect->top_	-char_rect.top_;
@@ -108,8 +125,15 @@ struct BasicCharacterParam
 		}
 
 	BasicCharacterParam()
-		:texture_(xtal::null),layer_name_(xtal::null),center_(0,0),velocity_(0,0),layer_id_(0)
+		:BasicTextureParam<ParamType>(),center_(0,0),velocity_(0,0),layer_id_(0)
 		{}
+
+	~BasicCharacterParam()
+		{
+			texture_	=xtal::null;
+			layer_name_	=xtal::null;
+			layer_id_	=0;
+		}
 
 	static void bind(xtal::ClassPtr it)
 		{
@@ -126,6 +150,7 @@ struct BasicCharacterParam
 			Xdef_method(SetInCenterOfRect);
 			Xdef_method(SetInCenterOfLayer);
 			Xdef_method(Move);
+			Xdef_method(IsInLayer);
 			Xdef_method(BeInRect);
 			Xdef_method(BeInLayer);
 			Xdef_method(AddAlpha);

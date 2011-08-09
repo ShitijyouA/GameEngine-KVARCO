@@ -78,7 +78,6 @@ protected:
 	const Type DEGREE_TO_RADIAN;
 	const Type RADIAN_TO_DEGREE;
 
-	friend class ThisType;
 	//内部ではradian
 	Type angle_;
 
@@ -138,7 +137,11 @@ public:
 			SetAsRadian(rad);
 		}
 
-	template<typename AngleRawType> void operator=(const tAngle<AngleRawType>& angle)  { angle_=angle.angle_; }
+	template<typename AngleRawType> void operator= (const tAngle<AngleRawType>& angle) { angle_=angle.angle_; }
+	template<typename AngleRawType> void operator+=(const tAngle<AngleRawType>& angle) { angle_+=angle.GetAsRadian(); }
+	template<typename AngleRawType> void operator-=(const tAngle<AngleRawType>& angle) { angle_-=angle.GetAsRadian(); }
+	template<typename AngleRawType> void operator*=(const tAngle<AngleRawType>& angle) { angle_*=angle.GetAsRadian(); }
+	template<typename AngleRawType> void operator/=(const tAngle<AngleRawType>& angle) { angle_/=angle.GetAsRadian(); }
 };
 
 typedef tAngle<float>			Angle;
@@ -156,11 +159,6 @@ struct tRadian
 		{
 			SetAsRadian(radian);
 		}
-
-	template<typename AngleRawType> void operator+=(const tAngle<AngleRawType>& angle) { angle_+=angle.GetAsRadian(); }
-	template<typename AngleRawType> void operator-=(const tAngle<AngleRawType>& angle) { angle_-=angle.GetAsRadian(); }
-	template<typename AngleRawType> void operator*=(const tAngle<AngleRawType>& angle) { angle_*=angle.GetAsRadian(); }
-	template<typename AngleRawType> void operator/=(const tAngle<AngleRawType>& angle) { angle_/=angle.GetAsRadian(); }
 };
 typedef tRadian<float>			Radian;
 typedef xtal::SmartPtr<Radian>	RadianPtrX;
@@ -178,11 +176,6 @@ struct tDegree
 		{
 			SetAsDegree(degree);
 		}
-
-	template<typename AngleRawType> void operator+=(const tAngle<AngleRawType>& angle) { angle_+=angle.GetAsDegree(); }
-	template<typename AngleRawType> void operator-=(const tAngle<AngleRawType>& angle) { angle_-=angle.GetAsDegree(); }
-	template<typename AngleRawType> void operator*=(const tAngle<AngleRawType>& angle) { angle_*=angle.GetAsDegree(); }
-	template<typename AngleRawType> void operator/=(const tAngle<AngleRawType>& angle) { angle_/=angle.GetAsDegree(); }
 };
 typedef tDegree<float>			Degree;
 typedef xtal::SmartPtr<Degree>	DegreePtrX;

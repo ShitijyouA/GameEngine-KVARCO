@@ -20,6 +20,8 @@ GameBootSetting kvarco::InitFromIniFile(const fsys::path& path)
 	SET_MEMBER		(RockFPS,		SystemSetting.RockFPS		);
 	SET_MEMBER		(AlwaysRun,		SystemSetting.AlwaysRun		);
 	SET_MEMBER		(UpPG_Priority,	SystemSetting.UpPG_Priority	);
+	SET_MEMBER		(BGM_Volume,	ScriptSetting.BGM_Volume	);
+	SET_MEMBER		(SE_Volume,		ScriptSetting.SE_Volume		);
 
 	SET_MEMBER		(LoadFileList,	ScriptSetting.LoadFileList	);
 

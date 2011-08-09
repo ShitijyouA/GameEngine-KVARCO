@@ -7,11 +7,21 @@
 #include "AudioManager.h"
 #include "Game.h"
 #include "Collision.h"
+#include "TextureManager.h"
+#include "ArchiveManager.h"
+#include "ConfigForArchive.h"
 
 LoadThread* kvarco::LoadingThread;
 
 namespace kvarco
 {
+
+//どうせ他から呼ばないのでこの関数はヘッダに書いてないよ
+void ReloadAllTexture()
+{
+	DxLib::ReloadFileGraphAll();
+	TextureManager::GetInst()->Reload();
+}
 
 // ファイル名からパスを取り出して返す
 std::string GetFilePath(std::string s)
@@ -61,6 +71,10 @@ void Game::Boot(const fsys::path& ini_file)
 
 	Game::bind();
 	OutputLog("各種バインド完了");
+
+	//アーカイブの設定をセット。設定は ConfigForArchive.h にすること
+	ArchiveManager::GetInst()->SetExtensionOfArchive(kvarco::ArchiveExtansion);
+	ArchiveManager::GetInst()->SetPassword(kvarco::ArchivePassword);
 
 	xtal::ArrayPtr list=ScriptManager::GetInst()->LoadOneFile(params.LoadFileList.c_str()).to_a();
 	ScriptManager::GetInst()->LoadFiles(list);
@@ -160,10 +174,17 @@ Game::Game(GameBootSetting gs,xtal::AnyPtr Framework)
 	}
 
 	//ウィンドウ設定
-	SetWindowSizeExtendRate(gs.WndWidth/StdWndWidth);
+	if(gs.WndWidth!=StdWndWidth)
+		SetWindowSizeExtendRate(gs.WndWidth/StdWndWidth);
 
 	Setting=gs;
+
+	//
+	//DxLib::TRUE
 	DxLib::SetMultiThreadFlag(TRUE);
+	DxLib::SetRestoreGraphCallback(&kvarco::ReloadAllTexture);
+	DxLib::SetDrawMode(DX_DRAWMODE_BILINEAR);
+	DxLib::SetOutApplicationLogValidFlag(TRUE);
 
 	//出来ればこのタイミングでShowWindow()
 }

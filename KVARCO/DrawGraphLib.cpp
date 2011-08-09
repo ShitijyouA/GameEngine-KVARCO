@@ -123,7 +123,7 @@ void DrawGraph(const CharParamPtrX& char_param)
 {
 	if(xtal::is_null(char_param->texture_)) return;
 
-	bool enable_alpha	=char_param->alpha_!=0.0;
+	bool enable_alpha	=char_param->alpha_!=255.0;
 	bool enable_rota	=char_param->angle_.GetAngle()!=0.0;
 	bool enable_zoom	=(char_param->scale_x_!=1.0) || (char_param->scale_y_!=1.0);
 

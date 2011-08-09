@@ -1,10 +1,12 @@
 #include "pch.h"
 #include "Font.h"
 #include "CharacterParam.h"
-const std::string Font::StdSetString=" !\"#$%&\'()*+,-./012\n3456789:;<=>?@ABCDE\nFGHIJKLMNOPQRSTUVWX\nYZ[\\]^_`abcdefghijk\nlmnopqrstuvwxyz{|}~";
+#include <tchar.h>
+
+const Font::StringType Font::StdSetString=" !\"#$%&\'()*+,-./012\n3456789:;<=>?@ABCDE\nFGHIJKLMNOPQRSTUVWX\nYZ[\\]^_`abcdefghijk\nlmnopqrstuvwxyz{|}~";
 const lPoint Font::StdOffset(0,0);
 
-void Font::LoadFontGraph(TextureType texture,const std::string& set_string,const lPoint& offset,lSize_o size)
+void Font::LoadFontGraph(TextureType texture,const Font::StringType& set_string,const lPoint& offset,lSize_o size)
 {
 	if(texture==NULL) return;
 	
@@ -30,11 +32,11 @@ void Font::LoadFontGraph(TextureType texture,const std::string& set_string,const
 	DWORD char_num	=set_string.size();
 
 	fPoint cut_offset(offset.x,offset.y);
-	BOOST_FOREACH(const char& i,set_string)
+	BOOST_FOREACH(const CharType& i,set_string)
 	{
-		if(i!='\n')
+		if(i!=_T('\n'))
 		{
-			TextureManager::RectType rect(cut_offset.x,cut_offset.y,cut_offset.x+FontSize.width_,cut_offset.y+FontSize.height_);
+			TextureManager::RectType rect(cut_offset.x,cut_offset.y-0.5,cut_offset.x+FontSize.width_,cut_offset.y+FontSize.height_);
 			TextureManager::TexturePtr tmp=TextureManager::GetInst()->CutTexture(texture.get(),"",rect);
 			Chars[i]=tmp;
 
@@ -47,24 +49,24 @@ void Font::LoadFontGraph(TextureType texture,const std::string& set_string,const
 		}
 	}
 
-	Chars['\n']=TextureManager::TexturePtr(new TextureManager::TextureType());
+	Chars[_T('\n')]=TextureManager::TexturePtr(new TextureManager::TextureType());
 }
 
-DWORD Font::GetLineNum(const std::string& string_)
+DWORD Font::GetLineNum(const Font::StringType& string_)
 {
 	DWORD res=0;
-	BOOST_FOREACH(const char& i,string_)
+	BOOST_FOREACH(const CharType& i,string_)
 	{
-		if(i=='\n') ++res;
+		if(i==_T('\n')) ++res;
 	}
 	return res+1;
 }
 
-DWORD Font::GetMaxCharNumInLine(const std::string& string_)
+DWORD Font::GetMaxCharNumInLine(const Font::StringType& string_)
 {
 	DWORD current_line_char_num	=0;
 	DWORD max_char_num			=0;
-	BOOST_FOREACH(const char& i,string_)
+	BOOST_FOREACH(const CharType& i,string_)
 	{
 		if(i=='\n')
 		{
@@ -77,12 +79,12 @@ DWORD Font::GetMaxCharNumInLine(const std::string& string_)
 	return max_char_num;
 }
 
-Font::CharArray Font::ToStringInFont(const std::string& string_)
+Font::CharArray Font::ToStringInFont(const Font::StringType& string_)
 {
 	CharArray res(string_.size());
 	res.clear();	//’Ç‰Á‚ðappend()‚É“ˆê‚·‚é‚½‚ß
 
-	BOOST_FOREACH(const char& i,string_)
+	BOOST_FOREACH(const CharType& i,string_)
 	{
 		res.push_back(Chars[i]);
 	}
@@ -90,7 +92,7 @@ Font::CharArray Font::ToStringInFont(const std::string& string_)
 	return res;
 }
 
-void Font::DrawInFont(long x,long y,const std::string& string_)
+void Font::DrawInFont(long x,long y,const Font::StringType& string_)
 {
 	lPoint draw_point(x,y);
 	CharArray in_font=ToStringInFont(string_);
@@ -116,28 +118,37 @@ Font::Font(std::string& set_gr_name)
 	LoadFontGraph(tmp,StdSetString,StdOffset,lSize_o());
 }
 
-Font::Font(std::string& set_gr_name,std::string& set_string)
+Font::Font(std::string& set_gr_name,Font::StringType& set_string)
 {
 	TextureManager::TexturePtr tmp(TextureManager::GetInst()->GetAsTexture(set_gr_name.c_str()));
 	LoadFontGraph(tmp,set_string,StdOffset,lSize_o());
 }
 
-Font::Font(std::string& set_gr_name,std::string& set_string,lSize& size)
+Font::Font(std::string& set_gr_name,Font::StringType& set_string,lSize& size)
 {
 	TextureManager::TexturePtr tmp(TextureManager::GetInst()->GetAsTexture(set_gr_name.c_str()));
 	LoadFontGraph(tmp,set_string,StdOffset,lSize_o(size));
 }
 
-Font::Font(std::string& set_gr_name,std::string& set_string,lPoint& offset)
+Font::Font(std::string& set_gr_name,Font::StringType& set_string,lPoint& offset)
 {
 	TextureManager::TexturePtr tmp(TextureManager::GetInst()->GetAsTexture(set_gr_name.c_str()));
 	LoadFontGraph(tmp,set_string,offset,lSize_o());
 }
 
-Font::Font(std::string& set_gr_name,std::string& set_string,lPoint& offset,lSize& size)
+Font::Font(std::string& set_gr_name,Font::StringType& set_string,lPoint& offset,lSize& size)
 {
 	TextureManager::TexturePtr tmp(TextureManager::GetInst()->GetAsTexture(set_gr_name.c_str()));
 	LoadFontGraph(tmp,set_string,offset,lSize_o(size));
+}
+
+Font::~Font()
+{
+#ifndef USE_WCHAR
+	BOOST_FOREACH(TextureType& i,Chars) i.reset();
+#else
+	Chars.clear();
+#endif
 }
 
 //NAME_IN_X(Font)
@@ -167,6 +178,15 @@ void NAME_IN_X(Font)::NAME_IN_X(DrawInFont)(long x,long y,xtal::StringPtr string
 {
 	std::string tmp_str=string_->c_str();
 	DrawInFont(x,y,tmp_str);
+}
+
+NAME_IN_X(Font)::~NAME_IN_X(Font)()
+{
+#ifndef USE_WCHAR
+	BOOST_FOREACH(TextureType& i,Chars) i.reset();
+#else
+	Chars.clear();
+#endif
 }
 
 void NAME_IN_X(Font)::bind(const xtal::ClassPtr it)

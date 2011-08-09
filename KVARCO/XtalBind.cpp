@@ -34,14 +34,7 @@ XTAL_PREBIND(ColPolygon)
 
 XTAL_BIND(ColPolygon)
 {
-	Xdef_method(SetBox);
-	Xdef_method(SetPolygon);
-	Xdef_method(SetPolygon2);
-	Xdef_method(Movep);
-	Xdef_method(Move);
-	Xdef_method(Check);
-	Xdef_method(Cancel);
-	Xdef_method(DrawCollision);
+	ColPolygon::bind(it);
 }
 
 XTAL_PREBIND(Bezier)
@@ -211,14 +204,14 @@ XTAL_BIND(Angle)
 XTAL_PREBIND(Radian)
 {
 	it->inherit(xtal::cpp_class<Angle>());
-	it->def_ctor1<Angle,float>()->param(1,Xid(radian),0.0f);
+	it->def_ctor1<Radian,float>()->param(1,Xid(radian),0.0f);
 }
 
 //Degree
 XTAL_PREBIND(Degree)
 {
 	it->inherit(xtal::cpp_class<Angle>());
-	it->def_ctor1<Angle,float>()->param(1,Xid(degree),0.0f);
+	it->def_ctor1<Degree,float>()->param(1,Xid(degree),0.0f);
 }
 
 //Font
@@ -256,9 +249,9 @@ XTAL_PREBIND(texture::TextureConcept)
 //static関数内でvirtual関数参照できるの……?
 XTAL_BIND(texture::TextureConcept)
 {
-	Xdef_method(Get);
-	Xdef_method(GetSize);
-	Xdef_method(GetCenter);
+	//Xdef_method(Get);
+	//Xdef_method(GetSize);
+	//Xdef_method(GetCenter);
 
 	Xdef_method(AsTexture);
 	Xdef_method(AsTextureSet);
@@ -347,9 +340,10 @@ void Game::bind()
 	Xdef_class_lib(Angle);
 	Xdef_class_lib(Radian);
 	Xdef_class_lib(Degree);
-	Xdef_class_lib_alias(Texture,texture::Texture);
-	Xdef_class_lib_alias(TextureSet,texture::TextureSet);
-	Xdef_class_lib_alias(Animation,texture::Animation);
+	Xdef_class_lib_alias(__TextureConcept__,texture::TextureConcept);
+	Xdef_class_lib_alias(__Texture__,texture::Texture);
+	Xdef_class_lib_alias(__TextureSet__,texture::TextureSet);
+	Xdef_class_lib_alias(__Animation__,texture::Animation);
 	Xdef_class_lib(TextureParam);
 	Xdef_class_lib_alias(CharParam,CharacterParam);
 

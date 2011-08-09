@@ -120,6 +120,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="C:\Librarys\DxLib_VC;C:\Librarys\Xtal\src\xtal;C:\Librarys\boost;C:\Librarys\Ogg;C:\Librarys\OpenAL"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -308,6 +309,10 @@
 			</File>
 			<File
 				RelativePath=".\Config.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ConfigForArchive.h"
 				>
 			</File>
 			<File

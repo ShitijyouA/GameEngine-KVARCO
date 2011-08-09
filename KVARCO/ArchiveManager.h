@@ -18,7 +18,7 @@ public:
 	
 private:
 	/// ".XXX"形式のアーカイブファイルの拡張子
-	std::string extention_;
+	std::string extension_;
 	std::string password_;
 
 	ArchivesMapType archives_map_;
@@ -43,10 +43,10 @@ private:
 
 public:
 	/// \param ext アーカイブファイルの拡張子(標準では"kcz")(ver.native)
-	void SetExtentionOfArchive(const fsys::path& ext)
+	void SetExtensionOfArchive(const fsys::path& ext)
 		{
 			static const std::string dot(".");
-			extention_=dot+ext.string();
+			extension_=dot+ext.string();
 		}
 
 	/// \param password アーカイブファイルのパスワード(ver.native)
@@ -56,11 +56,11 @@ public:
 		}
 
 	/// \param ext アーカイブファイルの拡張子(標準では"kcz")(ver.xtal)
-	void SetExtentionOfArchiveX(StringTypeX& ext)
+	void SetExtensionOfArchiveX(StringTypeX& ext)
 		{
 			static const xtal::String dot(".");
 			xtal::StringPtr full=dot.cat(ext.to_s());
-			extention_=full->c_str();
+			extension_=full->c_str();
 		}
 
 	/// \param password アーカイブファイルのパスワード(ver.xtal)
@@ -106,7 +106,7 @@ private:
 	FRIENDS_FOR_XTAL(ArchiveManager)
 
 	ArchiveManager()
-		:extention_("kcz"),password_("")
+		:extension_("kcz"),password_("")
 		{}
 
 public:

@@ -23,7 +23,7 @@ struct BasicTextureParam
 		}
 
 	BasicTextureParam()
-		:angle_(0),scale_x_(1),scale_y_(1),alpha_(0),trans_(true)
+		:angle_(0),scale_x_(1),scale_y_(1),alpha_(255.0),trans_(true)
 		{}
 	
 	static void bind(xtal::ClassPtr it)

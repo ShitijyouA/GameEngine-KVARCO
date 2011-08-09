@@ -161,6 +161,28 @@ ColPolygonPtrX ColPolygon::Movep(fPoint cPoint,float deg)
 	return Move(cPoint.x,cPoint.y,deg);
 }
 
+ColPolygonPtrX ColPolygon::Zoom(float scale)
+{
+	DWORD size=polygon_.size()-1;
+	if(size < 2) return xtal::null;
+	ColPolygonPtrX out=xtal::xnew<ColPolygon>(size);
+	
+	for(DWORD i=0; i<=size; ++i)
+	{
+		out->polygon_[i].x=polygon_[i].x;
+		out->polygon_[i].y=polygon_[i].y;
+
+		if(scale!=1.0)
+		{
+			out->polygon_[i].x*=scale;
+			out->polygon_[i].y*=scale;
+		}
+	}
+
+	out->SetAABB();
+	return out;
+}
+
 void ColPolygon::SetBox(float width,float height)
 {
 	if(polygon_.size()!=5) return;
@@ -178,13 +200,13 @@ void ColPolygon::SetPolygon(float radius,float offset_deg)
 	if(polygon_.size() <= 2) return;
 
 	DWORD poly_size=polygon_.size()-1;
-	Radian crad(math::constants::pi<float>()/poly_size);
+	Degree crad(360.0f/static_cast<float>(poly_size));
 	Degree tmp_offset(offset_deg);
 
 	for(DWORD i=0; i<poly_size; i++)
 	{
-		polygon_[i].x=cos(-tmp_offset.GetAsRadian())*radius;
-		polygon_[i].y=sin(-tmp_offset.GetAsRadian())*radius;
+		polygon_[i].x=std::cos(tmp_offset.GetAsRadian())*radius;
+		polygon_[i].y=std::sin(tmp_offset.GetAsRadian())*radius;
 		tmp_offset+=crad;
 	}
 	polygon_[poly_size]=polygon_[0];
@@ -222,4 +244,19 @@ void ColPolygon::DrawCollision(xtal::String layer_name,DWORD color)
 			color
 			);
 	}
+}
+
+void ColPolygon::bind(xtal::ClassPtr it)
+{
+	USE_XDEFZ(ColPolygon);
+
+	Xdef_method(SetBox);
+	Xdef_method(SetPolygon);
+	Xdef_method(SetPolygon2);
+	Xdef_method(Movep);
+	Xdef_method(Move);
+	Xdef_method(Zoom);
+	Xdef_method(Check);
+	Xdef_method(Cancel);
+	Xdef_method(DrawCollision);
 }

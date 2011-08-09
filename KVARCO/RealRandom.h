@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 class RealRandom
 {
@@ -36,6 +36,7 @@ public:
 			return Seed_BackUp;
 		}
 
+	/// [min_,max)
 	float Random(float min_,float max_)
 	{
 		if(min_>max_) return 0.0;

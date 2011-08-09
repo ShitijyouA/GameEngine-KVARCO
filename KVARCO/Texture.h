@@ -30,7 +30,12 @@ namespace concept
 		typedef float					PointInstType;
 		typedef tPoint<PointInstType>	PointType;
 
-		virtual const InstType& Get()=0;
+		virtual const InstType& Get()
+			{
+				static InstType null_texture;
+				return null_texture;
+			}
+
 		//const InstType& operator()() { return Get(); }
 			
 		virtual const SizeType& GetSize()=0;
@@ -47,25 +52,25 @@ namespace concept
 		typedef xtal::SmartPtr<AnimationType>				AnimationPtrX;
 
 		TexturePtrX AsTexture()
-		{
-			TextureType* tmp=dynamic_cast<TextureType*>(this);
-			if(tmp==NULL) return xtal::null;
-			return TexturePtrX(tmp,xtal::undeleter);
-		}
+			{
+				TextureType* tmp=dynamic_cast<TextureType*>(this);
+				if(tmp==NULL) return xtal::null;
+				return TexturePtrX(tmp,xtal::undeleter);
+			}
 
 		TextureSetPtrX AsTextureSet()
-		{
-			TextureSetType* tmp=dynamic_cast<TextureSetType*>(this);
-			if(tmp==NULL) return xtal::null;
-			return TextureSetPtrX(tmp,xtal::undeleter);
-		}
+			{
+				TextureSetType* tmp=dynamic_cast<TextureSetType*>(this);
+				if(tmp==NULL) return xtal::null;
+				return TextureSetPtrX(tmp,xtal::undeleter);
+			}
 
 		AnimationPtrX AsAnimation()
-		{
-			AnimationType* tmp=dynamic_cast<AnimationType*>(this);
-			if(tmp==NULL) return xtal::null;
-			return AnimationPtrX(tmp,xtal::undeleter);
-		}
+			{
+				AnimationType* tmp=dynamic_cast<AnimationType*>(this);
+				if(tmp==NULL) return xtal::null;
+				return AnimationPtrX(tmp,xtal::undeleter);
+			}
 	};
 }
 
@@ -148,50 +153,59 @@ public:
 
 template<typename TextureInstType>
 class BasicTextureSet
-	: public concept::Texture<TextureInstType>,public std::vector<TextureInstType>
+	: public concept::Texture<TextureInstType>
 {
 public:
 	typedef std::vector<InstType>				TextureListType;
 	typedef typename TextureListType::size_type	NumType;
 	typedef BasicTexture<InstType>				TextureType;
 	typedef BasicTextureSet<InstType>			TextureSetType;
+	typedef concept::Texture<TextureInstType>	TextureBaseType;
+	typedef xtal::SmartPtr<TextureBaseType>		TextureBasePtrX;
 
 private:
-	SizeType	size_;
-	PointType	center_;
+	TextureListType	texture_list_;
+	SizeType		size_;
+	PointType		center_;
 
 	friend class TextureManager;
 	BasicTextureSet(const InstType* instz,const SizeType num)
-		:std::vector<TextureInstType>(const_cast<InstType*>(instz),const_cast<InstType*>(instz)+num)
+		:texture_list_(const_cast<InstType*>(instz),const_cast<InstType*>(instz)+num)
 		{
-			TextureSetType	temp(this->at(0));
+			TextureSetType	temp(texture_list_.at(0));
 			size_	=const_cast<SizeType&>(temp.GetSize());
 			center_	=const_cast<PointType&>(temp.GetCenter());
 		}
 
 	BasicTextureSet(std::vector<InstType>& instz)
-		:std::vector<TextureInstType>()
+		:texture_list_()
 		{
-			this->swap(instz);
-			TextureType	temp(this->at(0));
+			texture_list_.swap(instz);
+			TextureType	temp(texture_list_.at(0));
 			size_	=const_cast<SizeType&>(temp.GetSize());
 			center_	=const_cast<PointType&>(temp.GetCenter());
 		}
 
 public:
-	const InstType& Get()
-		{
-			return at(0);
-		}
+	//const InstType& Get()
+	//	{
+	//		return texture_list_.at(0);
+	//	}
 
-	const TextureType& GetAt(size_type pos)
+	const TextureBasePtrX& GetAt(NumType pos)
 		{
-			return TextureType(at(pos));
+			TextureType* tmp=new TextureType(texture_list_.at(pos));
+			return TextureBasePtrX(static_cast<TextureBaseType*>(tmp));
 		}
 	
+	const TextureBasePtrX& operator[](NumType pos)
+		{
+			return GetAt(pos);
+		}
+
 	const TextureListType& GetRawInstance()
 		{
-			return *this;
+			return texture_list_;
 		}
 
 	const SizeType& GetSize()
@@ -201,7 +215,7 @@ public:
 
 	const NumType GetNum()
 		{
-			return this->size();
+			return texture_list_.size();
 		}
 
 	const PointType& GetCenter()
@@ -211,17 +225,21 @@ public:
 
 	void Unload()
 		{
-			for(iterator i=begin(); i!=end(); ++i) ::DxLib::DeleteGraph(*i);
+			BOOST_FOREACH(InstType& i,texture_list_) ::DxLib::DeleteGraph(i);
 
+			texture_list_.clear();
 			size_.width_=0;	size_.height_=0;
 			center_.x	=0;	center_.y	 =0;
 		}
+
 
 	static void bind(xtal::ClassPtr it)
 		{
 			USE_XDEFZ(TextureSetType);
 
-			Xdef_method(Get);
+			//Xdef_method(Get);
+			Xdef_method(GetAt);
+			Xdef_method(GetNum);
 			Xdef_method(GetSize);
 			Xdef_method(GetCenter);
 		}
@@ -353,11 +371,11 @@ public:
 			NextFrame();
 			return ret;
 		}
-	
-	const InstType& Get()
-		{
-			return GetNextFrame();
-		}
+
+	//const InstType& Get()
+	//	{
+	//		return GetNextFrame();
+	//	}
 
 	const SizeType& GetSize()
 		{
@@ -392,13 +410,17 @@ public:
 			center_.x	=0;	center_.y	 =0;
 		}
 
+
 	static void bind(xtal::ClassPtr it)
 		{
 			USE_XDEFZ(AnimationType);
 
-			Xdef_method(Get);
+			Xdef_method(GetNextFrame);
+			//Xdef_method(Get);
+			Xdef_method(GetFrameNum);
 			Xdef_method(GetSize);
 			Xdef_method(GetCenter);
+			Xdef_method(SetFrameSpeed);
 		}
 };
 

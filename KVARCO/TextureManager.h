@@ -26,7 +26,8 @@ public:
 	typedef concept::Texture<TextureInstType>						TextureBaseType;
 	typedef boost::shared_ptr<TextureBaseType>						TextureBasePtr;
 	typedef boost::unordered_map<std::string,TextureBasePtr>		NamedTextureMapType;
-	
+	typedef std::vector<TextureBasePtr>								UnnamedTextureVectorType;
+
 	typedef texture::BasicTexture<TextureInstType>					TextureType;
 	typedef texture::BasicTextureSet<TextureInstType>				TextureSetType;
 	typedef texture::BasicAnimation<TextureInstType>				AnimationType;
@@ -48,15 +49,55 @@ public:
 	struct LoadGraphFromSomeSource
 	{
 		typedef TextureManager::TextureInstType InstType;
+
+		const std::string& texture_name_;
+		LoadGraphFromSomeSource(std::string& name)
+			:texture_name_(name)
+		{}
+
 		virtual InstType operator()()=0;
 	};
+
+	struct LoadedTextureFromArchive
+	{
+		typedef TextureManager::TextureInstType InstType;
+		enum LoadType
+		{
+			LOAD,
+			DIV_LOAD,
+		};
+
+		fsys::path		path_;
+		std::string		name_;
+		enum LoadType	load_type_;
+
+		//for DivLoad
+		WORD			all_num_;
+		WORD			x_num_;
+		WORD			y_num_;
+		WORD			x_size_;
+		WORD			y_size_;
+
+		LoadedTextureFromArchive
+			(
+			fsys::path& path,std::string& name,enum LoadType load_type,
+				WORD all_num=0,WORD x_num=0,WORD y_num=0,WORD x_size=0,WORD y_size=0
+			)
+			:
+				path_(path),name_(name),load_type_(load_type),
+				all_num_(all_num),x_num_(x_num),y_num_(y_num),x_size_(x_size),y_size_(y_size)
+			{}
+	};
+	typedef std::vector<LoadedTextureFromArchive>					LoadedFileVectorFromArchiveType;
 
 private:
 	//for warning
 	xtal::String error_message_;
 	BYTE retry_time_;
 
-	NamedTextureMapType named_texture_map_;
+	NamedTextureMapType				named_texture_map_;
+	UnnamedTextureVectorType		unnamed_texture_vector_;
+	LoadedFileVectorFromArchiveType	file_path_from_archive_;
 
 	TextureInstType LoadWithWarning(LoadGraphFromSomeSource* op);
 	TextureInstType DivLoadWithWarning(LoadGraphFromSomeSource* op);
@@ -122,7 +163,7 @@ private:
 	FRIENDS_FOR_XTAL(TextureManager)
 	TextureManager()
 		{
-			RetrySetting(10,"‰æ‘œ‚Ì“Ç‚Ýž‚Ý‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
+			RetrySetting(10,"‰æ‘œ‚Ì“Ç‚Ýž‚Ý‚ÉŽ¸”s‚µ‚Ü‚µ‚½ : ");
 		}
 
 public:
@@ -138,10 +179,13 @@ public:
 		{
 			for(NamedTextureMapType::iterator i=named_texture_map_.begin(); i!=named_texture_map_.end();++i)
 				i->second->Unload();
+			named_texture_map_.clear();
 		}
 
 	void Release()
 		{
 			ReleaseAllTexture();
 		}
+
+	void Reload();
 };

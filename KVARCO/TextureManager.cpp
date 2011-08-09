@@ -2,7 +2,6 @@
 #include "TextureManager.h"
 #include "ArchiveManager.h"
 #include "KVARCO.h"
-#include <boost/smart_ptr/weak_ptr.hpp>
 
 namespace dxlib_load_func_object
 {
@@ -17,8 +16,11 @@ namespace dxlib_load_func_object
 		const int not_use_3D_flag_;
 
 	public:
-		LoadGraph(std::string& file_path,int not_use_3D_flag)
-			:file_path_(file_path),not_use_3D_flag_(not_use_3D_flag)
+		LoadGraph(std::string& file_path,std::string& name,int not_use_3D_flag)
+			:
+			file_path_(file_path),
+			TextureManager::LoadGraphFromSomeSource(name),
+			not_use_3D_flag_(not_use_3D_flag)
 			{}
 		
 		InstType operator()()
@@ -45,9 +47,17 @@ namespace dxlib_load_func_object
 		const int				not_use_3D_flag_;
 
 	public:
-		LoadDivGraph(const std::string& file_path,TextureManager::TextureSetType::InstType* buf_begin,WORD all_num,WORD x_num,WORD y_num,WORD x_size,WORD y_size,int not_use_3D)
+		LoadDivGraph
+			(
+				const std::string& file_path,
+				std::string& name,
+				TextureManager::TextureSetType::InstType* buf_begin,
+				WORD all_num,WORD x_num,WORD y_num,WORD x_size,WORD y_size,
+				int not_use_3D
+			)
 			:
 				file_path_(file_path),
+				TextureManager::LoadGraphFromSomeSource(name),
 				buf_begin_(buf_begin),
 				all_num_(all_num),x_num_(x_num),y_num_(y_num),x_size_(x_size),y_size_(y_size),
 				not_use_3D_flag_(not_use_3D)
@@ -55,7 +65,13 @@ namespace dxlib_load_func_object
 		
 		InstType operator()()
 			{
-				return ::DxLib::LoadDivGraph(file_path_.c_str(),all_num_,x_num_,y_num_,x_size_,y_size_,buf_begin_,not_use_3D_flag_);
+				return ::DxLib::LoadDivGraph
+					(
+						file_path_.c_str(),
+						all_num_,x_num_,y_num_,x_size_,y_size_,
+						buf_begin_,
+						not_use_3D_flag_
+					);
 			}
 	};
 
@@ -67,8 +83,8 @@ namespace dxlib_load_func_object
 		DWORD memory_image_size_;
 
 	public:
-		CreateGraphFromMem(void* memory_image,DWORD memory_image_size,int not_use_3D_flag)
-			:memory_image_(memory_image),memory_image_size_(memory_image_size),LoadGraph(std::string(),not_use_3D_flag)
+		CreateGraphFromMem(void* memory_image,DWORD memory_image_size,std::string& name,int not_use_3D_flag)
+			:memory_image_(memory_image),memory_image_size_(memory_image_size),LoadGraph(std::string(),name,not_use_3D_flag)
 			{}
 
 		InstType operator()()
@@ -85,10 +101,17 @@ namespace dxlib_load_func_object
 		DWORD memory_image_size_;
 
 	public:
-		CreateDivGraphFromMem(void* memory_image,DWORD memory_image_size,TextureManager::TextureSetType::InstType* buf_begin,WORD all_num,WORD x_num,WORD y_num,WORD x_size,WORD y_size,int not_use_3D)
+		CreateDivGraphFromMem
+			(
+				void* memory_image,DWORD memory_image_size,
+				std::string& name,
+				TextureManager::TextureSetType::InstType* buf_begin,
+				WORD all_num,WORD x_num,WORD y_num,WORD x_size,WORD y_size,
+				int not_use_3D
+			)
 			:
 			memory_image_(memory_image),memory_image_size_(memory_image_size),
-			LoadDivGraph("",buf_begin,all_num,x_num,y_num,x_size,y_size,not_use_3D)
+			LoadDivGraph("",name,buf_begin,all_num,x_num,y_num,x_size,y_size,not_use_3D)
 			{}
 
 		InstType operator()()
@@ -96,7 +119,8 @@ namespace dxlib_load_func_object
 			return ::DxLib::CreateDivGraphFromMem
 				(
 					memory_image_,memory_image_size_,
-					all_num_,x_num_,y_num_,x_size_,y_size_,buf_begin_,not_use_3D_flag_
+					all_num_,x_num_,y_num_,x_size_,y_size_,buf_begin_,
+					not_use_3D_flag_
 				);
 		}
 	};
@@ -109,13 +133,14 @@ TextureManager::TextureInstType TextureManager::LoadWithWarning(TextureManager::
 		i++;
 		if(i>retry_time_)
 		{
+			std::string error_message_and_name=std::string(error_message_.c_str())+op->texture_name_;
+			kvarco::OutputLog(error_message_and_name.c_str());
 			int result=
-				::MessageBox(NULL,error_message_.c_str(),"エラーが発生しました",MB_RETRYCANCEL | MB_ICONWARNING);
-			if(result==IDCANCEL)	exit(0);
-			else					gr_handle=i=0;
+				::MessageBox(NULL,error_message_and_name.c_str(),"エラーが発生しました",MB_RETRYCANCEL | MB_ICONWARNING);
+			if(result==IDCANCEL)	exit(-1);
+			else					{ i=0; gr_handle=0; }
 		}
 
-		//gr_handle=::DxLib::LoadGraph(file.string().c_str(),not_use_3D ? 1:0);
 		gr_handle=(*op)();
 	}while(gr_handle==-1);
 
@@ -124,30 +149,32 @@ TextureManager::TextureInstType TextureManager::LoadWithWarning(TextureManager::
 
 TextureManager::TextureInstType TextureManager::DivLoadWithWarning(TextureManager::LoadGraphFromSomeSource* op)
 {
-	int result=0,i=0;
-	bool go=false;
+	int load_result=0,i=0;
 
 	do{
 		i++;
 		if(i>retry_time_)
 		{
+			std::string error_message_and_name=std::string(error_message_.c_str())+op->texture_name_;
+			kvarco::OutputLog(error_message_and_name.c_str());
 			int result=
-				::MessageBox(GetMainWindowHandle(),error_message_.c_str(),"エラーが発生しました",MB_RETRYCANCEL | MB_ICONWARNING);
-			if(result==IDCANCEL)	exit(0);
-			else					{ go=false; i=0; result=0; }
+				::MessageBox(GetMainWindowHandle(),error_message_and_name.c_str(),"エラーが発生しました",MB_RETRYCANCEL | MB_ICONWARNING);
+			if(result==IDCANCEL)	exit(-1);
+			else					{ i=0; load_result=0; }
 		}
 
-		//result=DxLib::LoadDivGraph(file.string().c_str(),all_num,x_num,y_num,x_size,y_size,&(*buf.begin()),not_use_3D? 1:0);
-		result=(*op)();
-	}while(result==-1);
+		load_result=(*op)();
+	}while(load_result==-1);
 
-	return result;
+	return load_result;
 }
 
-#define RETURN_ALLOCED_TEXTURE_PTR(inst,type,ptr_type)							\
-	ptr_type tmp(new type(inst));												\
-	if(!name.empty())															\
-		named_texture_map_.insert(std::make_pair(name,boost::static_pointer_cast<TextureBaseType>(tmp)));	\
+#define RETURN_ALLOCED_TEXTURE_PTR(inst,type,ptr_type)	\
+	ptr_type tmp(new type(inst));						\
+	if(!name.empty())									\
+		named_texture_map_.insert(std::make_pair(name,boost::static_pointer_cast<TextureBaseType>(tmp)));\
+	else												\
+		unnamed_texture_vector_.push_back(boost::static_pointer_cast<TextureBaseType>(tmp));\
 	return ptr_type(tmp);
 
 //
@@ -160,24 +187,34 @@ TextureManager::TexturePtr TextureManager::Load(fsys::path& file,std::string& na
 	ArchiveManager::AllocatedMemoryType memory_image=ArchiveManager::GetInst()->UnzipToAllocatedMemory(path,&size);
 
 	//yes! >from archive?
-	if(memory_image!=NULL) return Load(memory_image.get(),size,name,not_use_3D);
+	if(memory_image!=NULL)
+	{
+		LoadedTextureFromArchive tmp(file,name,LoadedTextureFromArchive::LOAD);
+		file_path_from_archive_.push_back(tmp);
+		return Load(memory_image.get(),size,name,not_use_3D);
+	}
 
 	//no >from archive?
 
 	//load
-	dxlib_load_func_object::LoadGraph op(const_cast<std::string&>(path.string()),not_use_3D);
+	dxlib_load_func_object::LoadGraph op(const_cast<std::string&>(path.string()),name,not_use_3D);
 	TextureType::InstType inst=LoadWithWarning(&op);
+
+	kvarco::OutputLog("%sを%sからロード",name.c_str(),file.string().c_str());
 	
 	TexturePtr tmp(new TextureType(inst));
+	TextureBasePtr tmp2=boost::static_pointer_cast<TextureBaseType>(tmp);
 	if(!name.empty())
-		named_texture_map_.insert(std::make_pair(name,boost::static_pointer_cast<TextureBaseType>(tmp)));
+		named_texture_map_.insert(std::make_pair(name,tmp2));
+	else
+		unnamed_texture_vector_.push_back(tmp2);
 	return tmp;
 }
 
 TextureManager::TexturePtr TextureManager::Load(void* src,DWORD size,std::string& name,bool not_use_3D)
 {
 	//load
-	dxlib_load_func_object::CreateGraphFromMem op(src,size,not_use_3D);
+	dxlib_load_func_object::CreateGraphFromMem op(src,size,name,not_use_3D);
 	TextureType::InstType inst=LoadWithWarning(&op);
 
 	RETURN_ALLOCED_TEXTURE_PTR(inst,TextureType,TexturePtr)
@@ -192,12 +229,24 @@ TextureManager::TextureSetPtr TextureManager::DivLoad(fsys::path& file,std::stri
 	ArchiveManager::AllocatedMemoryType memory_image=ArchiveManager::GetInst()->UnzipToAllocatedMemory(path,&size);
 
 	//yes! >from archive?
-	if(!memory_image) return DivLoad(memory_image.get(),size,name,all_num,x_num,y_num,x_size,y_size,not_use_3D);
+	if(memory_image)
+	{
+		LoadedTextureFromArchive tmp
+			(
+				file,name,
+				LoadedTextureFromArchive::DIV_LOAD,
+				all_num,x_num,y_num,x_size,y_size
+			);
+		file_path_from_archive_.push_back(tmp);
+		return DivLoad(memory_image.get(),size,name,all_num,x_num,y_num,x_size,y_size,not_use_3D);
+	}
 
 	//load
-	std::vector<TextureInstType> buf(all_num);
-	dxlib_load_func_object::LoadDivGraph op(file.string(),&(*buf.begin()),all_num,x_num,y_num,x_size,y_size,not_use_3D);
+	std::vector<TextureInstType> buf(all_num,-1);
+	dxlib_load_func_object::LoadDivGraph op(file.string(),name,&(*buf.begin()),all_num,x_num,y_num,x_size,y_size,not_use_3D);
 	TextureType::InstType inst=DivLoadWithWarning(&op);
+
+	kvarco::OutputLog("%sを%sからロード",name.c_str(),file.string().c_str());
 
 	RETURN_ALLOCED_TEXTURE_PTR(buf,TextureSetType,TextureSetPtr)
 }
@@ -206,8 +255,8 @@ TextureManager::TextureSetPtr TextureManager::DivLoad(void* src,DWORD size,std::
 {
 	//load
 	std::vector<TextureInstType> buf(all_num);
-	dxlib_load_func_object::CreateDivGraphFromMem op(src,size,&(*buf.begin()),all_num,x_num,y_num,x_size,y_size,not_use_3D);
-	TextureType::InstType inst=DivLoadWithWarning(&op);
+	dxlib_load_func_object::CreateDivGraphFromMem op(src,size,name,&(*buf.begin()),all_num,x_num,y_num,x_size,y_size,not_use_3D);
+	DivLoadWithWarning(&op);
 
 	RETURN_ALLOCED_TEXTURE_PTR(buf,TextureSetType,TextureSetPtr);
 }
@@ -221,30 +270,50 @@ TextureManager::AnimationPtr TextureManager::LoadAnimation(TypeOfAnimation anime
 	ArchiveManager::AllocatedMemoryType memory_image=ArchiveManager::GetInst()->UnzipToAllocatedMemory(path,&size);
 
 	//yes! >from archive?
-	if(!memory_image) return LoadAnimation(anime_type,memory_image.get(),size,name,all_num,x_num,y_num,x_size,y_size,not_use_3D);
+	if(memory_image)
+	{
+		LoadedTextureFromArchive tmp
+			(
+				file,name,
+				LoadedTextureFromArchive::DIV_LOAD,
+				all_num,x_num,y_num,x_size,y_size
+			);
+		file_path_from_archive_.push_back(tmp);
+		return LoadAnimation(anime_type,memory_image.get(),size,name,all_num,x_num,y_num,x_size,y_size,not_use_3D);
+	}
 
 	//load
 	std::vector<TextureInstType> buf(all_num);
-	dxlib_load_func_object::LoadDivGraph op(file.string(),&(*buf.begin()),all_num,x_num,y_num,x_size,y_size,not_use_3D);
-	TextureType::InstType inst=DivLoadWithWarning(&op);
+	dxlib_load_func_object::LoadDivGraph op(file.string(),name,&(*buf.begin()),all_num,x_num,y_num,x_size,y_size,not_use_3D);
+	DivLoadWithWarning(&op);
 
-	AnimationPtr tmp(new AnimationType(buf,anime_type));	
+	kvarco::OutputLog("%sを%sからロード",name.c_str(),file.string().c_str());
+
+	AnimationPtr tmp(new AnimationType(buf,anime_type));
+	TextureBasePtr tmp2=boost::static_pointer_cast<TextureBaseType>(tmp);
 	if(!name.empty())
-		named_texture_map_.insert(std::make_pair(name,boost::static_pointer_cast<TextureBaseType>(tmp)));
-	return AnimationPtr(tmp);
+		named_texture_map_.insert(std::make_pair(name,tmp2));
+	else
+		unnamed_texture_vector_.push_back(tmp2);
+
+	return tmp;
 }
 
 TextureManager::AnimationPtr TextureManager::LoadAnimation(TypeOfAnimation anime_type,void* src,DWORD size,std::string& name,WORD all_num,WORD x_num,WORD y_num,WORD x_size,WORD y_size,bool not_use_3D)
 {
 	//load
 	std::vector<TextureInstType> buf(all_num);
-	dxlib_load_func_object::CreateDivGraphFromMem op(src,size,&(*buf.begin()),all_num,x_num,y_num,x_size,y_size,not_use_3D);
-	TextureType::InstType inst=DivLoadWithWarning(&op);
+	dxlib_load_func_object::CreateDivGraphFromMem op(src,size,name,&(*buf.begin()),all_num,x_num,y_num,x_size,y_size,not_use_3D);
+	DivLoadWithWarning(&op);
 
-	AnimationPtr tmp(new AnimationType(buf,anime_type));	
+	AnimationPtr tmp(new AnimationType(buf,anime_type));
+	TextureBasePtr tmp2=boost::static_pointer_cast<TextureBaseType>(tmp);
 	if(!name.empty())
 		named_texture_map_.insert(std::make_pair(name,boost::static_pointer_cast<TextureBaseType>(tmp)));
-	return AnimationPtr(tmp);
+	else
+		unnamed_texture_vector_.push_back(tmp2);
+
+	return tmp;
 }
 
 TextureManager::TexturePtr TextureManager::CutTexture(const TextureManager::TexturePtrX& old_texture,const std::string& new_name,TextureManager::RectType cut_range)
@@ -258,9 +327,13 @@ TextureManager::TexturePtr TextureManager::CutTexture(const TextureManager::Text
 			old_texture->Get()
 		);
 
-	TexturePtr tmp(new TextureType(new_inst));	
+	TexturePtr tmp(new TextureType(new_inst));
+	TextureBasePtr tmp2=boost::static_pointer_cast<TextureBaseType>(tmp);
 	if(!new_name.empty())
-		named_texture_map_.insert(std::make_pair(new_name,boost::static_pointer_cast<TextureBaseType>(tmp)));
+		named_texture_map_.insert(std::make_pair(new_name,tmp2));
+	else
+		unnamed_texture_vector_.push_back(tmp2);
+
 	return tmp;
 }
 
@@ -372,6 +445,61 @@ TextureManager::AnimationPtrX TextureManager::GetAsAnimationX(const TextureManag
 
 	if(ptr==NULL) return xtal::null;
 	return xtal::SmartPtr<AnimationType>(ptr.get(),xtal::undeleter);
+}
+
+void TextureManager::Reload()
+{
+	BOOST_FOREACH(LoadedTextureFromArchive& i,file_path_from_archive_)
+	{
+		TextureBasePtr basic=GetRawPtr(i.name_);
+		if(basic==NULL)
+		{
+			kvarco::OutputLog("%sのリロードを試みましたがこれはまだロードされてませんでした",i.name_.c_str());
+			continue;
+		}
+
+		fsys::path path=fsys::absolute(i.path_.string(),kvarco::ExePath);
+
+		boost::intmax_t size=0;
+		ArchiveManager::AllocatedMemoryType memory_image
+			=ArchiveManager::GetInst()->UnzipToAllocatedMemory(i.path_,&size);
+		if(!memory_image)
+		{
+			kvarco::OutputLog("%sのリロードを試みましたが%sが見つかりませんでした",i.name_.c_str(),i.path_.string().c_str());
+			continue;
+		}
+
+		//reload
+		if(i.load_type_==LoadedTextureFromArchive::LOAD)
+		{
+			TexturePtr tmp=boost::dynamic_pointer_cast<TextureType>(basic);
+			if(tmp) DxLib::ReCreateGraphFromMem(memory_image.get(),size,tmp->Get());
+		}
+		else
+		{
+			TextureSetPtr tmp_set	=boost::dynamic_pointer_cast<TextureSetType>(basic);
+			AnimationPtr tmp_anime	=boost::dynamic_pointer_cast<AnimationType>(basic);
+
+			if(tmp_set)
+			{
+				DxLib::ReCreateDivGraphFromMem
+					(
+						memory_image.get(),size,
+						i.all_num_,i.x_num_,i.y_num_,i.x_size_,i.y_size_,
+						&(*tmp_set->texture_list_.begin())
+					);
+			}
+			else if(tmp_anime)
+			{
+				DxLib::ReCreateDivGraphFromMem
+					(
+						memory_image.get(),size,
+						i.all_num_,i.x_num_,i.y_num_,i.x_size_,i.y_size_,
+						&(*tmp_anime->frame_list_.begin())
+					);
+			}
+		}
+	}
 }
 
 void TextureManager::bind(xtal::ClassPtr it)

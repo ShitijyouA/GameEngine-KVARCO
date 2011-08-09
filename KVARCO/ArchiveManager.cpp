@@ -29,7 +29,7 @@ fsys::path ArchiveManager::GetArchivePath(const fsys::path& archive)
 	for(fsys::path::iterator i=archive.begin(); i!=archive.end(); ++i)
 	{
 		tmp_path/=(*i);
-		if(fsys::exists(tmp_path/extention_)) break;
+		if(fsys::exists(tmp_path/extension_)) break;
 	}
 
 	return tmp_path;
@@ -43,7 +43,7 @@ void ArchiveManager::DivideArchivedFilePath(const fsys::path& file,fsys::path* a
 	for(i=file.begin(); i!=file.end(); ++i)
 	{
 		(*archive_path)/=(*i);
-		if(fsys::exists(archive_path->string()+extention_)) break;
+		if(fsys::exists(archive_path->string()+extension_)) break;
 	}
 
 	//copy different path range
@@ -179,7 +179,7 @@ void ArchiveManager::bind(xtal::ClassPtr it)
 {
 	USE_XDEFZ(ArchiveManager);
 
-	Xdef_method_alias(SetExtentionOfArchive,	&SetExtentionOfArchiveX);
+	Xdef_method_alias(SetExtensionOfArchive,	&SetExtensionOfArchiveX);
 	Xdef_method_alias(SetPassword,				&SetPasswordX);
 	Xdef_method_alias(Exists,					&ExistsX);
 	Xdef_method_alias(ArchiveExists,			&ArchiveExistsX);

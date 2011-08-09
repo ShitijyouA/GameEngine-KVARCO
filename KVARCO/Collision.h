@@ -29,6 +29,7 @@ public:
 
 	ColPolygonPtrX Movep(fPoint cPoint,float deg);			//回転、移動
 	ColPolygonPtrX Move(float cx,float cy,float deg);
+	ColPolygonPtrX Zoom(float scale);
 
 	bool Check(ColPolygonPtrX col);
 	ColPolygonPtrX Cancel()	{	return VoidPolygon;	}
@@ -37,4 +38,6 @@ public:
 
 	static void Release()
 		{	VoidPolygon=xtal::null;	}
+
+	static void bind(xtal::ClassPtr it);
 };

@@ -19,7 +19,8 @@ public:
 		WndWidth(640),WndHeight(480),
 		RockFPS(false),AlwaysRun(true),
 		UpPG_Priority(false),
-		LoadFileList("")
+		LoadFileList(""),
+		BGM_Volume(50),SE_Volume(50)
 	{;}
 
 	std::string	Title;
@@ -35,6 +36,9 @@ public:
 	bool	AlwaysRun;
 
 	bool	UpPG_Priority;
+
+	BYTE	BGM_Volume;
+	BYTE	SE_Volume;
 };
 
 typedef xtal::SmartPtr<GameBootSetting> GameBootSettingPtr;

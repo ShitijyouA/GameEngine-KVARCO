@@ -38,7 +38,7 @@ namespace LoadItem
 			TextureManager::PathType		path_ptr=const_cast<xtal::String*>(&path_);
 
 			TextureManager::GetInst()->LoadX(path_ptr,name_ptr);
-			kvarco::OutputLog("%sをロード",path_ptr->c_str());
+			//kvarco::OutputLog("%sをロード",path_ptr->c_str()); //LoadXで出力しているのでc/o
 			loaded_=true;
 		}
 	};
