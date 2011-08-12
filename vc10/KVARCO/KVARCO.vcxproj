@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\KVARCO\ActorList.h" />
+    <ClInclude Include="..\..\src\KVARCO\ArchiveManager.h" />
+    <ClInclude Include="..\..\src\KVARCO\AudioItem.h" />
+    <ClInclude Include="..\..\src\KVARCO\AudioManager.h" />
+    <ClInclude Include="..\..\src\KVARCO\BaseActor.h" />
+    <ClInclude Include="..\..\src\KVARCO\BaseScene.h" />
+    <ClInclude Include="..\..\src\KVARCO\Bezier.h" />
+    <ClInclude Include="..\..\src\KVARCO\CharacterParam.h" />
+    <ClInclude Include="..\..\src\KVARCO\Collision.h" />
+    <ClInclude Include="..\..\src\KVARCO\Config.h" />
+    <ClInclude Include="..\..\src\KVARCO\ConfigForArchive.h" />
+    <ClInclude Include="..\..\src\KVARCO\Font.h" />
+    <ClInclude Include="..\..\src\KVARCO\ForXtalBind.h" />
+    <ClInclude Include="..\..\src\KVARCO\Game.h" />
+    <ClInclude Include="..\..\src\KVARCO\GeoStruct.h" />
+    <ClInclude Include="..\..\src\KVARCO\InitFromIniFile.h" />
+    <ClInclude Include="..\..\src\KVARCO\Input.h" />
+    <ClInclude Include="..\..\src\KVARCO\KVARCO.h" />
+    <ClInclude Include="..\..\src\KVARCO\LayerManager.h" />
+    <ClInclude Include="..\..\src\KVARCO\LibraryHeader.h" />
+    <ClInclude Include="..\..\src\KVARCO\LoadItem.h" />
+    <ClInclude Include="..\..\src\KVARCO\LoadThread.h" />
+    <ClInclude Include="..\..\src\KVARCO\OpenAL_Ogg.h" />
+    <ClInclude Include="..\..\src\KVARCO\OpenAL_Ogg_Default.h" />
+    <ClInclude Include="..\..\src\KVARCO\pch.h" />
+    <ClInclude Include="..\..\src\KVARCO\PlayThread.h" />
+    <ClInclude Include="..\..\src\KVARCO\RealRandom.h" />
+    <ClInclude Include="..\..\src\KVARCO\resouce.h" />
+    <ClInclude Include="..\..\src\KVARCO\SceneManager.h" />
+    <ClInclude Include="..\..\src\KVARCO\ScriptManager.h" />
+    <ClInclude Include="..\..\src\KVARCO\SimplePlay.h" />
+    <ClInclude Include="..\..\src\KVARCO\Tag.h" />
+    <ClInclude Include="..\..\src\KVARCO\targetver.h" />
+    <ClInclude Include="..\..\src\KVARCO\Texture.h" />
+    <ClInclude Include="..\..\src\KVARCO\TextureManager.h" />
+    <ClInclude Include="..\..\src\KVARCO\TextureParam.h" />
+    <ClInclude Include="..\..\src\KVARCO\Utillity.h" />
+    <ClInclude Include="..\..\src\KVARCO\XtalHelper.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\KVARCO\ActorList.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\ActorManager.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\ArchiveManager.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\AudioItem.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\AudioManager.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\BaseActor.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\Bezier.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\Collision.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\DrawGraphLib.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\Font.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\Game.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\InitFromIniFile.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\Input.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\KVARCO.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\LayerManager.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\LoadThread.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\Main.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\OpenAL_Ogg.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\SceneManager.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\ScriptManager.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\SimplePlay.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\TextureManager.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\XtalBind.cpp" />
+    <ClCompile Include="..\..\src\KVARCO\XtalHelper.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\src\KVARCO\resouce.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\KVARCO\KVARCO.ico" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E2847E5B-CE9A-49DF-86C5-B3C2BBFC2FA5}</ProjectGuid>
+    <RootNamespace>GameEngine</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)_d</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>C:\Librarys\DxLib_VC;C:\Librarys\Xtal\src\xtal;C:\Librarys\boost;C:\Librarys\Ogg;C:\Librarys\OpenAL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/NODEFAULTLIB:MSVCRTD %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(ProjectName)_d.exe</OutputFile>
+      <AdditionalLibraryDirectories>C:\Librarys\DxLib_VC;C:\Librarys\Xtal\lib;C:\Librarys\Ogg\vorbis\$(Configuration);C:\Librarys\Ogg\ogg\$(Configuration);C:\Librarys;C:\Librarys\OpenAL;C:\Librarys\boost\stage\lib;$(SolutionDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <LinkTimeCodeGeneration>
+      </LinkTimeCodeGeneration>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>C:\Librarys\DxLib_VC;C:\Librarys\Xtal\src\xtal;C:\Librarys\boost;C:\Librarys\Ogg;C:\Librarys\OpenAL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>xtallib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>C:\Librarys\DxLib_VC;C:\Librarys\Xtal\lib;C:\Librarys\Ogg\vorbis\$(Configuration);C:\Librarys\Ogg\ogg\$(Configuration);C:\Librarys;C:\Librarys\OpenAL;C:\Librarys\boost\stage\lib;$(SolutionDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

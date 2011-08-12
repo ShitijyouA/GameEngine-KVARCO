@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{1808b894-3aea-42d8-8559-9c97c72037a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor">
+      <UniqueIdentifier>{64235b7b-ec59-4e1e-b807-5df57d5ea2a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script">
+      <UniqueIdentifier>{b365b3ed-785e-4df3-877a-ad09d2671ec8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{63c2bb1e-a7c8-4ed2-afe3-928c926148ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{a4ae922a-c1a6-4037-ae08-3c0b1fde12a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ForXtal">
+      <UniqueIdentifier>{48e5e8f2-c9e7-453f-8871-d58d11ca3acc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Layer">
+      <UniqueIdentifier>{e031fc3c-246f-4fce-9707-f4c3e174ec90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc">
+      <UniqueIdentifier>{b771cef3-0c5b-448e-9191-4a4329cde30f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archive">
+      <UniqueIdentifier>{92d3be4c-2fb6-419d-ae6c-dda6e7f54034}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pch">
+      <UniqueIdentifier>{655075eb-0bc3-486e-9b93-0db54ae8d33f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Load">
+      <UniqueIdentifier>{f1bab913-a4ba-46fd-a95b-c444cb540681}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{852ae9d8-9878-466e-a66e-586b099cb7fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{78adda7d-a57c-4138-8489-087d82f04d03}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\KVARCO\Texture.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\TextureManager.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\TextureParam.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\BaseActor.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\ActorList.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\ScriptManager.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\SceneManager.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\ArchiveManager.h">
+      <Filter>Archive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\LayerManager.h">
+      <Filter>Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\XtalHelper.h">
+      <Filter>ForXtal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\ForXtalBind.h">
+      <Filter>ForXtal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\AudioManager.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\AudioItem.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\BaseScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\Utillity.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\Bezier.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\CharacterParam.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\Collision.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\Font.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\GeoStruct.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\InitFromIniFile.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\Input.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\KVARCO.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\RealRandom.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\Tag.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\PlayThread.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\OpenAL_Ogg.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\OpenAL_Ogg_Default.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\pch.h">
+      <Filter>pch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\LoadItem.h">
+      <Filter>Load</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\LoadThread.h">
+      <Filter>Load</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\Game.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\targetver.h">
+      <Filter>pch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\LibraryHeader.h">
+      <Filter>pch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\resouce.h">
+      <Filter>リソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\KVARCO\ConfigForArchive.h" />
+    <ClInclude Include="..\..\src\KVARCO\Config.h" />
+    <ClInclude Include="..\..\src\KVARCO\SimplePlay.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\KVARCO\TextureManager.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\BaseActor.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\ActorList.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\ActorManager.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\ScriptManager.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\SceneManager.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\ArchiveManager.cpp">
+      <Filter>Archive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\LayerManager.cpp">
+      <Filter>Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\XtalBind.cpp">
+      <Filter>ForXtal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\XtalHelper.cpp">
+      <Filter>ForXtal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\AudioItem.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\AudioManager.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\Bezier.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\Collision.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\DrawGraphLib.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\Font.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\InitFromIniFile.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\Input.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\KVARCO.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\OpenAL_Ogg.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\pch.cpp">
+      <Filter>pch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\LoadThread.cpp">
+      <Filter>Load</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\Main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\Game.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\KVARCO\SimplePlay.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\src\KVARCO\resouce.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\KVARCO\KVARCO.ico">
+      <Filter>リソース ファイル</Filter>
+    </None>
+  </ItemGroup>
+</Project>
