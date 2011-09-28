@@ -1,12 +1,12 @@
 #pragma once
 #include "TextureParam.h"
 #include "Texture.h"
-#include "LayerManager.h"
 #include "GeoStruct.h"
+#include "DrawableByLayer.h"
 
 template<typename ParamType,typename PointInstType,typename TextureInstType>
 struct BasicCharacterParam
-	:public BasicTextureParam<ParamType>
+	:public BasicTextureParam<ParamType>,public DrawableByLayer
 {
 	typedef BasicCharacterParam<ParamType,PointInstType,TextureInstType>	ThisType;
 	typedef BasicTextureParam<ParamType>									TextureParamType;
@@ -23,20 +23,12 @@ struct BasicCharacterParam
 	typedef concept::Texture<int>::SizeType		SizeType;
 	typedef	xtal::SmartPtr<SizeType>			SizePtrX;
 
-	typedef xtal::StringPtr						LayerNamePtrX;
-	typedef int									LayerIdType;
 
 	PointType		center_;
 	PointType		velocity_;
 	TexturePtrX		texture_;
-	LayerNamePtrX	layer_name_;
-	LayerIdType		layer_id_;
 
 	/// レイヤーのIDを取得/適用しておく
-	void ApplyLayerId()
-		{
-			layer_id_=LayerManager::GetInst()->GetHandle(layer_name_);
-		}
 
 	/// 回転していないか、180度だけ回転している場合のみ有効。それ以外ではPointType(0,0)を返す
 	/// \return キャラの左上の座標
@@ -142,10 +134,7 @@ struct BasicCharacterParam
 			Xdef_var(center_);
 			Xdef_var(velocity_);
 			Xdef_var(texture_);
-			Xdef_var(layer_name_);
-			Xdef_var(layer_id_);
 
-			Xdef_method(ApplyLayerId);
 			Xdef_method(GetUpperLeftCorner);
 			Xdef_method(SetInCenterOfRect);
 			Xdef_method(SetInCenterOfLayer);
@@ -154,6 +143,12 @@ struct BasicCharacterParam
 			Xdef_method(BeInRect);
 			Xdef_method(BeInLayer);
 			Xdef_method(AddAlpha);
+			
+			//from DrawableByLayer
+			Xdef_var(layer_name_);
+			Xdef_var(layer_id_);
+
+			Xdef_method(ApplyLayerId);
 		}
 };
 

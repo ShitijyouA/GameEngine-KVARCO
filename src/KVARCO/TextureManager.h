@@ -178,7 +178,10 @@ public:
 	void ReleaseAllTexture()
 		{
 			for(NamedTextureMapType::iterator i=named_texture_map_.begin(); i!=named_texture_map_.end();++i)
+			{
 				i->second->Unload();
+				i->second.reset();
+			}
 			named_texture_map_.clear();
 		}
 

@@ -110,6 +110,7 @@ private:
 		{}
 
 public:
+	void Release(); //TODO
 	static void bind(xtal::ClassPtr it);
 	static ArchiveMngrPtr GetInst();
 };

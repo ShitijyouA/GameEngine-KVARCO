@@ -26,11 +26,11 @@ extern fsys::path ExePath;
 
 }
 
-#include "GeoStruct.h"
-#include "Utillity.h"
-#include "RealRandom.h"
-#include "Input.h"
-#include "CharacterParam.h"
+//#include "GeoStruct.h"
+//#include "Utillity.h"
+//#include "RealRandom.h"
+//#include "Input.h"
+//#include "CharacterParam.h"
 
 namespace kvarco
 {
@@ -39,7 +39,7 @@ namespace kvarco
 	extern std::string GetExePath();
 
 	//入力関係
-	extern DWORD GetKeyState(DWORD Key,int PlayerNo_=0);
+//    extern DWORD GetKeyState(DWORD Key,int PlayerNo_=0);
 
 	//描画範囲関係
 	extern void SetDrawArea(lRect Area);
@@ -47,13 +47,13 @@ namespace kvarco
 	extern void SetDrawArea_default();
 
 	//画像ブレンド設定(軽量)
-	extern inline void SetDrawBlendModeLight(BYTE mode,BYTE param);
+//    extern inline void SetDrawBlendModeLight(BYTE mode,BYTE param);
 
 	//描画関数
 	//CharacterParam指定型
-	extern void DrawGraph(const CharParamPtrX& char_param);	/// char_paramの該当するメンバがデフォルト値でない機能だけ有効
-	extern void DrawGraphAllDisabled(const CharParamPtrX& char_param);	/// 全部の機能が無効なDrawGraphEnabledFeatures()と同じ
-	extern void DrawGraphEnabledFeatures(const CharParamPtrX& char_param,bool enable_alpha=true,bool enable_rota=false,bool enable_zoom=false);
+//    extern void DrawGraph(const CharParamPtrX& char_param);	/// char_paramの該当するメンバがデフォルト値でない機能だけ有効
+//    extern void DrawGraphAllDisabled(const CharParamPtrX& char_param);	/// 全部の機能が無効なDrawGraphEnabledFeatures()と同じ
+//    extern void DrawGraphEnabledFeatures(const CharParamPtrX& char_param,bool enable_alpha=true,bool enable_rota=false,bool enable_zoom=false);
 
 	//文字列描画
 	extern DWORD GetColorHandle(int r,int g,int b);
@@ -64,25 +64,24 @@ namespace kvarco
 	extern void DrawfRect(fRect Rect, bool fill,int color);
 
 	//ローディング
-	extern void StartGraphLoading(xtal::AnyPtr LoadPathList);
-	extern bool IsLoadingEnd(void);
+//    extern void StartGraphLoading(xtal::AnyPtr LoadPathList);
+//    extern bool IsLoadingEnd(void);
 
 	//便利関数
 	extern xtal::StringPtr SplitOption(const xtal::StringPtr& Src,const xtal::StringPtr& Opt);	//[]内の指定オプションを取り出す。"-OPTION ARG"の形
 	extern xtal::StringPtr SplitWords(const xtal::StringPtr& Src);								//[]の後の文字列を取り出す。前後の空白は削除される
 
 	//乱数(mt19937使用)
-	extern RealRandom RandomGenerator;
-	extern void RandSeed();
-	extern float Rand(float min_,float max_);
-	extern int RandInt(int min_,int max_);
+//    extern RealRandom RandomGenerator;
+//    extern void RandSeed();
+//    extern float Rand(float min_,float max_);
+//    extern int RandInt(int min_,int max_);
 
 	//Info
 	extern float GetNowFPS();
 
 	//バインド
 	extern void bind();
-	extern void GE_KeyCode_bind(xtal::ClassPtr it);
 
 	//デバッグ
 	extern FILE* LogFile;
@@ -106,42 +105,3 @@ namespace detail
 
 }
 
-enum GE_KeyCode
-{
-	KEY_LEFT=0,
-	KEY_UP,
-	KEY_RIGHT,
-	KEY_DOWN,
-
-	KEY_Z,
-	KEY_X,
-	KEY_C,
-	KEY_A,
-	KEY_S,
-	KEY_D,
-	KEY_Q,
-	KEY_W,
-	KEY_ESC,
-	KEY_SPACE,
-	KEY_SHIFT,
-
-	KEY_F1,
-	KEY_F2,
-	KEY_F3,
-	KEY_F4,
-	KEY_F5,
-	KEY_F6,
-	KEY_F7,
-	KEY_F8,
-	KEY_F9,
-	KEY_F10,
-	KEY_F11,
-	KEY_F12,
-	KEY_F13,
-	KEY_F14,
-	KEY_F15,
-	KEY_F16,
-
-	KEY_DELETE,
-	KEY_INSERT,
-};

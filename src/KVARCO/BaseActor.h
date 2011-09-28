@@ -1,45 +1,45 @@
 #pragma once
 
-class BaseActor
+template<typename TempIdType>
+class BasicActor_impl
 {
 public:
-	typedef xtal::AnyPtr BaseActorPtrX;
+	typedef TempIdType					IdType;
+	typedef kvarco::uint32_t			TypeOfActorType;
+	typedef xtal::SmartPtr<BasicActor>	BasicActorPtrX;
 
 private:
-	bool Dead;
-	xtal::AnyPtr Parent;
+	bool			is_dead_;
+	IdType			id_;
+	TypeOfActorType	type_;
 
 public:
-	int				Z;
-	DWORD			ID;
-	DWORD			ActorType;
-	xtal::StringPtr	LayerName;
-	xtal::FiberPtr	Run;
+//    int				Z;
+//    xtal::StringPtr	LayerName;
+//    xtal::FiberPtr	Run;
 
-	BaseActor();
+	BasicActor();
 
-	void init(xtal::StringPtr belong_layer,DWORD actor_type,int z,xtal::AnyPtr parent);
+	void init(TypeOfActorType actor_type);
 
-	void Die()		{ Dead=true;		}
-	bool IsDead()	{ return Dead;		}
+	void Die()		{ is_dead_=true;	}
+	bool IsDead()	{ return is_dead_;	}
 
-	~BaseActor()
+	~BasicActor()
 		{
-			Parent	=xtal::null;
-			Run		=xtal::null;
+//            Run		=xtal::null;
 			//kvarco::DebugOut("ActorDead\n");
 		}
 
-	static void bind(xtal::ClassPtr it)
+	static void bind(xtal::ClassPtr& it)
 		{
-			USE_XDEFZ(BaseActor);
+			USE_XDEFZ(BasicActor);
 
-			Xdef_var(Z);
+//            Xdef_var(Z);
 			Xdef_var(ID);
 			Xdef_var(ActorType);
-			Xdef_var(Parent);
-			Xdef_var(LayerName);
-			Xdef_var(Run);
+//            Xdef_var(LayerName);
+//            Xdef_var(Run);
 
 			Xdef_method(init);
 			Xdef_method(Die);
@@ -47,4 +47,26 @@ public:
 		}
 };
 
-typedef xtal::SmartPtr<BaseActor>	BaseActorPtrX;
+template<typename ActorType>
+class ScopedActorKiller
+{
+	typedef xtal::SmartPtr<ActorType> ActorPtrX;
+
+	ActorTypeX actor_instance_;
+
+public:
+	ScopedActorKiller(ActorTypeX inst)
+		:actor_instance_(inst)
+		{}
+
+	virtual ~ScopedActorKiller()
+		{
+			actor_instance_.Die();
+		}
+};
+
+template<TempIdType>
+class RunableActor
+	:BasicActor<TempIdType>
+{
+};

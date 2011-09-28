@@ -141,7 +141,7 @@ CryptedZipプロジェクトの開発に必要なものは以下のとおり:
 =============
 
 twitter
-  七条彰紀 http:;twitter.com/shitijyou
+  七条彰紀 http:twitter.com/shitijyou
 e-mail
   shitijyou.a1072 (at) gmail.com
 辺りまでご連絡ください

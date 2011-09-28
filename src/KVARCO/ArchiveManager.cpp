@@ -26,12 +26,14 @@ fsys::path ArchiveManager::GetArchivedFilePath(const fsys::path& archive)
 fsys::path ArchiveManager::GetArchivePath(const fsys::path& archive)
 {
 	fsys::path tmp_path;
-	for(fsys::path::iterator i=archive.begin(); i!=archive.end(); ++i)
+	fsys::path::iterator i;
+	for(i=archive.begin(); i!=archive.end(); ++i)
 	{
 		tmp_path/=(*i);
 		fsys::path file_path=tmp_path.string()+extension_;
 		if(fsys::exists(file_path)) break;
 	}
+	if(i==archive.end()) return "";
 
 	return tmp_path.string()+extension_;
 }
@@ -45,6 +47,11 @@ void ArchiveManager::DivideArchivedFilePath(const fsys::path& file,fsys::path* a
 	{
 		(*archive_path)/=(*i);
 		if(fsys::exists(archive_path->string()+extension_)) break;
+	}
+	if(i==file.end())
+	{
+		archive_path->clear();
+		return;
 	}
 
 	//copy different path range
