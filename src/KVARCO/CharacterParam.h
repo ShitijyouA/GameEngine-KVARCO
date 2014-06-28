@@ -28,8 +28,6 @@ struct BasicCharacterParam
 	PointType		velocity_;
 	TexturePtrX		texture_;
 
-	/// レイヤーのIDを取得/適用しておく
-
 	/// 回転していないか、180度だけ回転している場合のみ有効。それ以外ではPointType(0,0)を返す
 	/// \return キャラの左上の座標
 	PointPtrX GetUpperLeftCorner()
